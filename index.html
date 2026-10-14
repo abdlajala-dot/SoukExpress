@@ -312,6 +312,13 @@ async function doLogin() {
       document.getElementById('stats-title').textContent = '📊 إحصائياتي';
       document.getElementById('store-btn').style.display = 'none';
       document.getElementById('toggle-stores-btn').style.display = 'none';
+    } else if (currentRole === 'customer') {
+      document.getElementById('stats-btn').style.display = 'none';
+      document.getElementById('store-btn').style.display = 'none';
+      document.getElementById('toggle-stores-btn').style.display = 'none';
+      const { data: myOrders } = await DB.from('orders').select('id').eq('customer_id', currentUser.id);
+      const orderCount = myOrders ? myOrders.length : 0;
+      document.getElementById('role').textContent = 'زبون (' + orderCount + ' طلب)';
     } else {
       document.getElementById('stats-btn').style.display = 'none';
       document.getElementById('store-btn').style.display = 'none';
