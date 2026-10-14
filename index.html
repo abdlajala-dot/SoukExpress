@@ -71,34 +71,51 @@ async function doSignup() {
   const name = document.getElementById('s-name').value;
   const phone = document.getElementById('s-phone').value;
   const role = document.getElementById('s-role').value;
+  
   if (!email || !pass || !role) { show('املأ جميع الخانات', false); return; }
+  
   show('⏳ جاري التسجيل...', true);
   try {
-    const r = await DB.auth.signUp({ email, password: pass });
+    const r = await DB.auth.signUp({ 
+      email: email, 
+      password: pass,
+      options: { 
+        data: { 
+          full_name: name, 
+          phone: phone, 
+          role: role 
+        } 
+      }
+    });
     if (r.error) throw r.error;
-    if (r.data.user) {
-      await DB.from('profiles').insert([{ id: r.data.user.id, full_name: name, phone: phone, role: role }]);
-    }
     show('✅ تم التسجيل! دابا دخل.', true);
-  } catch (e) { show('❌ ' + e.message, false); }
+  } catch (e) { 
+    show('❌ ' + e.message, false); 
+  }
 }
 
 async function doLogin() {
   const email = document.getElementById('l-email').value;
   const pass = document.getElementById('l-pass').value;
+  
   if (!email || !pass) { show('املأ الإيميل وكلمة السر', false); return; }
+  
   show('⏳ جاري الدخول...', true);
   try {
-    const r = await DB.auth.signInWithPassword({ email, password: pass });
+    const r = await DB.auth.signInWithPassword({ email: email, password: pass });
     if (r.error) throw r.error;
+    
     show('✅ مبروك! دخلت.', true);
     const p = await DB.from('profiles').select('*').eq('id', r.data.user.id).single();
+    
     document.getElementById('signup-box').classList.add('hidden');
     document.getElementById('login-box').classList.add('hidden');
     document.getElementById('dash-box').classList.remove('hidden');
     document.getElementById('welcome').textContent = 'أهلاً ' + (p.data && p.data.full_name ? p.data.full_name : email);
     document.getElementById('role').textContent = p.data && p.data.role ? p.data.role : '-';
-  } catch (e) { show('❌ ' + e.message, false); }
+  } catch (e) { 
+    show('❌ ' + e.message, false); 
+  }
 }
 
 async function doLogout() {
