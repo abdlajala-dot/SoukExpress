@@ -429,9 +429,14 @@ async function showStats() {
       const delivered = orders.filter(o => o.status === 'delivered').length;
       const cancelled = orders.filter(o => o.status === 'cancelled').length;
       const revenue = orders.filter(o => o.status === 'delivered').reduce((s, o) => s + parseFloat(o.total_price), 0);
+      const avgOrder = delivered > 0 ? (revenue / delivered).toFixed(1) : '0';
 
       content.innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="stat-card" style="background:#f8d7da; grid-column: span 2;">
+            <div class="stat-num" style="color:#dc3545;">${avgOrder} درهم</div>
+            <div class="stat-label">📊 متوسط قيمة الطلب</div>
+          </div>
           <div class="stat-card" style="background:#e7f3ff;">
             <div class="stat-num" style="color:#007bff;">${total}</div>
             <div class="stat-label">📋 مجموع الطلبات</div>
@@ -470,8 +475,13 @@ async function showStats() {
       const commission = totalRevenue * 0.1;
       const inProgress = deliveringOrders ? deliveringOrders.length : 0;
 
+      const emptyMsg = totalDelivered === 0 
+        ? '<p style="text-align:center; color:#fd7e14; background:#fff3cd; padding:12px; border-radius:10px; margin-top:15px; font-weight:bold;">💪 ابدا استقبل الطلبات وأوصلها باش تشوف الأرباح ديالك هنا!</p>' 
+        : '';
+
       content.innerHTML = `
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        ${emptyMsg}
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
           <div class="stat-card" style="background:#d4edda; grid-column: span 2;">
             <div class="stat-num" style="color:#28a745; font-size:36px;">${totalDelivered}</div>
             <div class="stat-label">🎉 مجموع التوصيلات</div>
