@@ -806,6 +806,12 @@ async function loadOrders() {
       `;
       div.appendChild(btnDiv);
     }
+    if (currentRole === 'customer' && o.status === 'pending') {
+      const btnDiv = document.createElement('div');
+      btnDiv.style.marginTop = '10px';
+      btnDiv.innerHTML = `<button class="red small-btn" onclick="cancelOrder('${o.id}')">❌ إلغاء الطلب</button>`;
+      div.appendChild(btnDiv);
+    }
     if (currentRole === 'merchant' && o.status === 'accepted') {
       const btnDiv = document.createElement('div');
       btnDiv.style.marginTop = '10px';
@@ -820,6 +826,16 @@ async function loadOrders() {
     }
     list.appendChild(div);
   }
+}
+
+async function cancelOrder(orderId) {
+  if (!confirm('واش متأكد من إلغاء الطلب؟')) return;
+  try {
+    const { error } = await DB.from('orders').update({ status: 'cancelled' }).eq('id', orderId).eq('customer_id', currentUser.id);
+    if (error) throw error;
+    show('✅ تم إلغاء الطلب', true);
+    loadOrders();
+  } catch (e) { show('❌ ' + e.message, false); }
 }
 
 async function updateOrderStatus(orderId, newStatus) {
