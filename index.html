@@ -8,19 +8,25 @@
 body { font-family: Arial; padding: 20px; background: #f4f4f4; max-width: 450px; margin: 0 auto; }
 .box { background: white; padding: 20px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 h2 { text-align: center; color: #333; }
-input, select, button { width: 100%; padding: 12px; margin: 6px 0; font-size: 16px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; }
+input, select, textarea, button { width: 100%; padding: 12px; margin: 6px 0; font-size: 16px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; }
 button { color: white; border: none; cursor: pointer; }
 .green { background: #28a745; }
 .blue { background: #007bff; }
 .red { background: #dc3545; }
+.orange { background: #fd7e14; }
 #msg { padding: 15px; border-radius: 5px; text-align: center; font-weight: bold; margin: 10px 0; }
 .ok { background: #d4edda; color: green; }
 .err { background: #f8d7da; color: red; }
 .hidden { display: none; }
+.store-item { background: #f8f9fa; padding: 12px; margin-bottom: 10px; border-radius: 8px; border-right: 4px solid #28a745; }
+.store-item h3 { margin: 0 0 5px 0; color: #333; }
+.store-item p { margin: 3px 0; font-size: 14px; color: #666; }
+.section-title { font-weight: bold; margin: 15px 0 10px 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 5px; }
 </style>
 </head>
 <body>
 
+<!-- التسجيل -->
 <div class="box" id="signup-box">
 <h2>🚀 تسجيل حساب جديد</h2>
 <input type="text" id="s-name" placeholder="الاسم الكامل">
@@ -38,6 +44,7 @@ button { color: white; border: none; cursor: pointer; }
 
 <div id="msg" class="hidden"></div>
 
+<!-- الدخول -->
 <div class="box" id="login-box">
 <h2>🔐 تسجيل الدخول</h2>
 <input type="email" id="l-email" placeholder="البريد الإلكتروني">
@@ -45,11 +52,33 @@ button { color: white; border: none; cursor: pointer; }
 <button class="blue" onclick="doLogin()">دخول</button>
 </div>
 
+<!-- لوحة التحكم -->
 <div class="box hidden" id="dash-box" style="text-align:center;">
 <h2>👋 مرحبا بك!</h2>
-<p id="welcome"></p>
+<p id="welcome" style="font-size: 18px;"></p>
 <p>نوع الحساب: <b id="role"></b></p>
 <button class="red" onclick="doLogout()">تسجيل الخروج</button>
+</div>
+
+<!-- زر إضافة متجر (للتاجر فقط) -->
+<div class="box hidden" id="add-store-box">
+<button class="orange" onclick="showStoreForm()">➕ إضافة متجر جديد</button>
+</div>
+
+<!-- فورم إضافة متجر -->
+<div class="box hidden" id="store-form-box">
+<h2>🏪 إضافة متجر جديد</h2>
+<input type="text" id="st-name" placeholder="اسم المتجر">
+<textarea id="st-desc" placeholder="وصف المتجر" rows="2"></textarea>
+<input type="text" id="st-address" placeholder="العنوان">
+<button class="green" onclick="doAddStore()">حفظ المتجر</button>
+<button class="red" onclick="hideStoreForm()">إلغاء</button>
+</div>
+
+<!-- قائمة المتاجر -->
+<div class="box hidden" id="stores-box">
+<div class="section-title">🏪 قائمة المتاجر</div>
+<div id="stores-list"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -57,12 +86,14 @@ button { color: white; border: none; cursor: pointer; }
 const supaURL = 'https://hzinjliwqixlsdqdvuma.supabase.co';
 const supaKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6aW5qbGl3cWl4bHNkcWR2dW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4OTE2NjAsImV4cCI6MjEwNzQ2NzY2MH0.575Tnk-RJOjJ7KhQdbxJOOKeDSBVxteBslZSoUDIyNs';
 const DB = window.supabase.createClient(supaURL, supaKEY);
+let currentUser = null;
 
 function show(txt, ok) {
   const m = document.getElementById('msg');
   m.textContent = txt;
   m.className = ok ? 'ok' : 'err';
   m.classList.remove('hidden');
+  setTimeout(() => m.classList.add('hidden'), 5000);
 }
 
 async function doSignup() {
@@ -106,14 +137,25 @@ async function doLogin() {
     const r = await DB.auth.signInWithPassword({ email: email, password: pass });
     if (r.error) throw r.error;
     
+    currentUser = r.data.user;
     show('✅ مبروك! دخلت.', true);
+    
     const p = await DB.from('profiles').select('*').eq('id', r.data.user.id).single();
     
     document.getElementById('signup-box').classList.add('hidden');
     document.getElementById('login-box').classList.add('hidden');
     document.getElementById('dash-box').classList.remove('hidden');
+    document.getElementById('stores-box').classList.remove('hidden');
+    
     document.getElementById('welcome').textContent = 'أهلاً ' + (p.data && p.data.full_name ? p.data.full_name : email);
     document.getElementById('role').textContent = p.data && p.data.role ? p.data.role : '-';
+    
+    // إلا كان تاجر، وري ليه زر إضافة متجر
+    if (p.data && p.data.role === 'merchant') {
+      document.getElementById('add-store-box').classList.remove('hidden');
+    }
+    
+    loadStores();
   } catch (e) { 
     show('❌ ' + e.message, false); 
   }
@@ -121,10 +163,81 @@ async function doLogin() {
 
 async function doLogout() {
   await DB.auth.signOut();
+  currentUser = null;
   document.getElementById('dash-box').classList.add('hidden');
   document.getElementById('signup-box').classList.remove('hidden');
   document.getElementById('login-box').classList.remove('hidden');
+  document.getElementById('add-store-box').classList.add('hidden');
+  document.getElementById('store-form-box').classList.add('hidden');
+  document.getElementById('stores-box').classList.add('hidden');
   show('✅ تم الخروج', true);
+}
+
+function showStoreForm() {
+  document.getElementById('store-form-box').classList.remove('hidden');
+  document.getElementById('add-store-box').classList.add('hidden');
+}
+
+function hideStoreForm() {
+  document.getElementById('store-form-box').classList.add('hidden');
+  document.getElementById('add-store-box').classList.remove('hidden');
+}
+
+async function doAddStore() {
+  const name = document.getElementById('st-name').value;
+  const desc = document.getElementById('st-desc').value;
+  const address = document.getElementById('st-address').value;
+  
+  if (!name) { show('اكتب اسم المتجر', false); return; }
+  
+  show('⏳ جاري حفظ المتجر...', true);
+  try {
+    const { error } = await DB.from('stores').insert([{
+      owner_id: currentUser.id,
+      name: name,
+      description: desc,
+      address: address
+    }]);
+    if (error) throw error;
+    
+    show('✅ تم إضافة المتجر بنجاح!', true);
+    document.getElementById('st-name').value = '';
+    document.getElementById('st-desc').value = '';
+    document.getElementById('st-address').value = '';
+    hideStoreForm();
+    loadStores();
+  } catch (e) { 
+    show('❌ ' + e.message, false); 
+  }
+}
+
+async function loadStores() {
+  const list = document.getElementById('stores-list');
+  list.innerHTML = '<p style="text-align:center;color:#888;">⏳ جاري التحميل...</p>';
+  
+  const { data: stores, error } = await DB.from('stores').select('*');
+  
+  if (error) {
+    list.innerHTML = '<p style="text-align:center;color:red;">خطأ فتحميل المتاجر</p>';
+    return;
+  }
+  
+  if (!stores || stores.length === 0) {
+    list.innerHTML = '<p style="text-align:center;color:#888;">لا توجد متاجر حالياً</p>';
+    return;
+  }
+  
+  list.innerHTML = '';
+  stores.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'store-item';
+    div.innerHTML = `
+      <h3>🏪 ${s.name}</h3>
+      <p>${s.description || 'لا يوجد وصف'}</p>
+      <p>📍 ${s.address || 'العنوان غير محدد'}</p>
+    `;
+    list.appendChild(div);
+  });
 }
 </script>
 </body>
