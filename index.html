@@ -90,6 +90,13 @@ button:active { transform: scale(0.98); }
 
 #map { height: 250px; border-radius: 10px; margin-top: 10px; }
 
+/* ===== CHAT ===== */
+.chat-msg { padding: 10px 14px; border-radius: 12px; margin: 6px 0; max-width: 75%; word-wrap: break-word; font-size: 14px; }
+.chat-mine { background: #dcf8c6; margin-right: auto; margin-left: 0; border-bottom-right-radius: 4px; }
+.chat-theirs { background: #ffffff; margin-left: auto; margin-right: 0; border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.chat-meta { font-size: 11px; color: #888; margin-top: 4px; }
+.chat-name { font-weight: bold; font-size: 12px; color: #ff6b35; margin-bottom: 3px; }
+
 /* ============ DARK MODE ============ */
 [data-theme="dark"] body { background: #121212; color: #e0e0e0; }
 [data-theme="dark"] .box { background: #1e1e1e; color: #e0e0e0; }
@@ -115,6 +122,11 @@ button:active { transform: scale(0.98); }
 [data-theme="dark"] .stat-label { color: #ccc; }
 [data-theme="dark"] #pf-email { background: #2a2a2a !important; color: #888 !important; }
 [data-theme="dark"] #order-filter { background: #2a2a2a !important; color: #e0e0e0; }
+[data-theme="dark"] #chat-messages { background: #1a1a1a; border-color: #333; }
+[data-theme="dark"] .chat-mine { background: #2a5a3a; color: #fff; }
+[data-theme="dark"] .chat-theirs { background: #2a2a2a; color: #e0e0e0; }
+[data-theme="dark"] .chat-meta { color: #aaa; }
+[data-theme="dark"] .chat-name { color: #ff9966; }
 </style>
 </head>
 <body>
@@ -207,7 +219,7 @@ button:active { transform: scale(0.98); }
 <ul style="line-height:1.9; font-size:13px; padding-right:20px;">
 <li>🛍️ تسوق من المتاجر المحلية</li>
 <li>⭐ نظام تقييم المتاجر</li>
-<li>📱 تواصل مباشر مع التجار والموصلين</li>
+<li>💬 شات مباشر مع التجار والموصلين</li>
 <li>🚗 تتبع الطلبات فـ الوقت الحقيقي</li>
 <li>🗺️ خريطة لتحديد مكان التوصيل</li>
 <li>🌙 وضع ليلي مريح للعين</li>
@@ -262,6 +274,16 @@ button:active { transform: scale(0.98); }
 <button class="red" onclick="clearCart()">🗑️ تفريغ السلة</button>
 </div>
 
+<div class="box hidden" id="chat-box">
+<h2 id="chat-title">💬 المحادثة</h2>
+<div id="chat-messages" style="height:400px; overflow-y:auto; background:#f9f9f9; border-radius:10px; padding:10px; margin-bottom:10px; border:1px solid #e0e0e0;"></div>
+<div style="display:flex; gap:8px;">
+<input type="text" id="chat-input" placeholder="✍️ اكتب رسالة..." onkeypress="if(event.key==='Enter')sendChatMessage()" style="flex:1; margin:0;">
+<button class="green" onclick="sendChatMessage()" style="width:auto; padding:13px 20px; margin:0;">📤</button>
+</div>
+<button class="red" onclick="closeChat()" style="margin-top:10px;">🔙 رجوع</button>
+</div>
+
 <div class="box hidden" id="orders-box">
 <div class="section-title">📋 الطلبات <span id="orders-count" style="color:#ff6b35;font-weight:bold;"></span></div>
 <input type="text" id="orders-search" class="search-input" placeholder="🔍 ابحث بالاسم، الهاتف، أو العنوان..." oninput="filterOrders()" style="margin-bottom:8px;">
@@ -297,6 +319,8 @@ let map = null;
 let marker = null;
 let selectedLat = null;
 let selectedLng = null;
+let currentChatOrderId = null;
+let chatInterval = null;
 
 const roleAr = {customer: '🛒 زبون', merchant: '🏪 تاجر', driver: '🚚 موصل'};
 
@@ -467,6 +491,80 @@ function getMyLocation() {
   );
 }
 
+/* ===== CHAT ===== */
+async function openChat(orderId, orderTitle) {
+  currentChatOrderId = orderId;
+  document.getElementById('chat-box').classList.remove('hidden');
+  document.getElementById('add-store-box').classList.add('hidden');
+  document.getElementById('chat-title').textContent = '💬 ' + orderTitle;
+  document.getElementById('chat-input').value = '';
+  await loadChatMessages();
+  if (chatInterval) clearInterval(chatInterval);
+  chatInterval = setInterval(loadChatMessages, 4000);
+  document.getElementById('chat-box').scrollIntoView({behavior: 'smooth'});
+}
+
+async function loadChatMessages() {
+  if (!currentChatOrderId) return;
+  const container = document.getElementById('chat-messages');
+  const { data: msgs, error } = await DB.from('messages')
+    .select('*')
+    .eq('order_id', currentChatOrderId)
+    .order('created_at', {ascending: true});
+  
+  if (error) { 
+    container.innerHTML = '<p style="color:red;text-align:center;">❌ خطأ فتحميل الرسائل</p>'; 
+    return; 
+  }
+  
+  if (!msgs || msgs.length === 0) {
+    container.innerHTML = '<p style="text-align:center; color:#888; font-size:13px;">💬 لا توجد رسائل بعد. ابدأ المحادثة!</p>';
+    return;
+  }
+  
+  container.innerHTML = msgs.map(m => {
+    const isMine = m.sender_id === currentUser.id;
+    const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('ar-MA', {hour:'2-digit', minute:'2-digit'}) : '';
+    const cls = isMine ? 'chat-mine' : 'chat-theirs';
+    const role = roleAr[m.sender_role] || '';
+    return `<div class="chat-msg ${cls}">
+      ${!isMine ? '<div class="chat-name">' + (m.sender_name || 'مستخدم') + ' ' + role + '</div>' : ''}
+      <div>${(m.message || '').replace(/</g, '&lt;')}</div>
+      <div class="chat-meta">${time}</div>
+    </div>`;
+  }).join('');
+  
+  container.scrollTop = container.scrollHeight;
+}
+
+async function sendChatMessage() {
+  if (!currentChatOrderId) return;
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  
+  try {
+    const { error } = await DB.from('messages').insert([{
+      order_id: currentChatOrderId,
+      sender_id: currentUser.id,
+      sender_name: (currentProfile && currentProfile.full_name) ? currentProfile.full_name : 'مستخدم',
+      sender_role: currentRole,
+      message: text
+    }]);
+    if (error) throw error;
+    input.value = '';
+    await loadChatMessages();
+  } catch (e) { show('❌ ' + e.message, false); }
+}
+
+function closeChat() {
+  document.getElementById('chat-box').classList.add('hidden');
+  document.getElementById('add-store-box').classList.remove('hidden');
+  currentChatOrderId = null;
+  if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+}
+
+/* ===== OTHER FUNCTIONS ===== */
 async function updatePendingBadge() {
   const badge = document.getElementById('pending-badge');
   if (!badge || currentRole !== 'merchant') { if (badge) badge.style.display = 'none'; return 0; }
@@ -599,7 +697,9 @@ async function doLogout() {
   selectedLat = null;
   selectedLng = null;
   if (marker && map) { map.removeLayer(marker); marker = null; }
-  ['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box','profile-box','stats-box','about-box'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+  currentChatOrderId = null;
+  ['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box','profile-box','stats-box','about-box','chat-box'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.getElementById('signup-box').classList.remove('hidden');
   document.getElementById('login-box').classList.remove('hidden');
   document.getElementById('search-input').value = '';
@@ -1144,6 +1244,14 @@ async function loadOrders() {
       الحالة: ${statusAr[o.status] || o.status}
       ${productsHtml}
     `;
+    
+    // زر الشات للجميع
+    const chatBtn = document.createElement('button');
+    chatBtn.className = 'green small-btn';
+    chatBtn.textContent = '💬 شات';
+    chatBtn.onclick = () => openChat(o.id, 'طلب #' + o.id.substring(0, 6));
+    div.appendChild(chatBtn);
+    
     if ((currentRole === 'merchant' || currentRole === 'driver') && o.customer_phone) {
       let phone = o.customer_phone.replace(/\D/g, '');
       if (phone.startsWith('0')) phone = '212' + phone.substring(1);
