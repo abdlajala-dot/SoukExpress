@@ -223,6 +223,7 @@ let currentStoreId = null;
 let currentProfile = null;
 let cart = [];
 let editingProductId = null;
+let lastPendingCount = 0;
 
 function show(txt, ok) {
   const m = document.getElementById('msg');
@@ -230,6 +231,20 @@ function show(txt, ok) {
   m.className = ok ? 'ok' : 'err';
   m.classList.remove('hidden');
   setTimeout(() => m.classList.add('hidden'), 5000);
+}
+
+function playBeep() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.value = 800;
+    gain.gain.value = 0.2;
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.2);
+  } catch (e) { console.error(e); }
 }
 
 function shareApp() {
@@ -248,10 +263,10 @@ function shareApp() {
 
 async function updatePendingBadge() {
   const badge = document.getElementById('pending-badge');
-  if (!badge || currentRole !== 'merchant') { if (badge) badge.style.display = 'none'; return; }
+  if (!badge || currentRole !== 'merchant') { if (badge) badge.style.display = 'none'; return 0; }
   try {
     const { data: myStores } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
-    if (!myStores || myStores.length === 0) { badge.style.display = 'none'; return; }
+    if (!myStores || myStores.length === 0) { badge.style.display = 'none'; return 0; }
     const { data: pending } = await DB.from('orders').select('id').in('store_id', myStores.map(s => s.id)).eq('status', 'pending');
     const count = pending ? pending.length : 0;
     if (count > 0) {
@@ -260,7 +275,8 @@ async function updatePendingBadge() {
     } else {
       badge.style.display = 'none';
     }
-  } catch (e) { console.error(e); }
+    return count;
+  } catch (e) { console.error(e); return 0; }
 }
 
 async function toggleAllStores() {
@@ -348,12 +364,21 @@ async function doLogin() {
     loadCart();
     loadOrders();
     if (currentRole === 'merchant') {
-      setTimeout(updatePendingBadge, 1500);
+      setTimeout(async () => {
+        lastPendingCount = await updatePendingBadge();
+      }, 1500);
     }
     if (window.autoRefreshInterval) clearInterval(window.autoRefreshInterval);
-    window.autoRefreshInterval = setInterval(() => {
+    window.autoRefreshInterval = setInterval(async () => {
       loadOrders();
-      if (currentRole === 'merchant') updatePendingBadge();
+      if (currentRole === 'merchant') {
+        const newCount = await updatePendingBadge();
+        if (newCount > lastPendingCount) {
+          playBeep();
+          show('🔔 عندك طلب جديد!', true);
+        }
+        lastPendingCount = newCount;
+      }
     }, 30000);
     show('✅ مبروك! دخلت.', true);
   } catch (e) { show('❌ ' + e.message, false); }
@@ -364,6 +389,7 @@ async function doLogout() {
   currentUser = null; currentRole = null; currentStoreId = null; currentProfile = null;
   cart = [];
   editingProductId = null;
+  lastPendingCount = 0;
   ['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box','profile-box','stats-box'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.getElementById('signup-box').classList.remove('hidden');
   document.getElementById('login-box').classList.remove('hidden');
@@ -989,7 +1015,10 @@ async function updateOrderStatus(orderId, newStatus) {
     if (error) throw error;
     show('✅ تم تحديث حالة الطلب', true);
     loadOrders();
-    if (currentRole === 'merchant') updatePendingBadge();
+    if (currentRole === 'merchant') {
+      const cnt = await updatePendingBadge();
+      lastPendingCount = cnt;
+    }
   } catch (e) {
     show('❌ ' + e.message, false);
   }
