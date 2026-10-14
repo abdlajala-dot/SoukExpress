@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoukExpress Maroc</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 400px; margin: 0 auto 20px auto; }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; font-size: 20px; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .btn-blue { background-color: #007bff; }
+        .btn-green { background-color: #28a745; }
+        .btn-red { background-color: #dc3545; }
+        #message { margin-top: 15px; text-align: center; font-weight: bold; font-size: 14px; padding: 10px; border-radius: 5px; }
+        .success { color: green; background-color: #d4edda; }
+        .error { color: red; background-color: #f8d7da; }
+        .hidden { display: none; }
+        .role-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; background-color: #e9ecef; color: #495057; margin-top: 10px; font-weight: bold; }
+        .store-item { background: #f8f9fa; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd; text-align: right; }
+        .store-item h3 { margin: 0 0 5px 0; font-size: 16px; }
+        .store-item p { margin: 0; font-size: 14px; color: #666; }
+        .section-title { margin-top: 20px; border-bottom: 2px solid #eee; padding-bottom: 5px; text-align: right; font-weight: bold; }
+        .form-box { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-top: 10px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="signup-container">
+        <h2>🚀 تسجيل حساب جديد</h2>
+        <form id="signup-form">
+            <input type="text" id="signup-name" placeholder="الاسم الكامل" required>
+            <input type="tel" id="signup-phone" placeholder="رقم الهاتف" required>
+            <input type="email" id="signup-email" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="signup-password" placeholder="كلمة السر (6 أحرف على الأقل)" required>
+            <select id="signup-role" required>
+                <option value="">اختر نوع الحساب...</option>
+                <option value="customer">زبون (Customer)</option>
+                <option value="merchant">تاجر (Merchant)</option>
+                <option value="driver">موصل (Driver)</option>
+            </select>
+            <button type="submit" class="btn-green">تسجيل</button>
+        </form>
+    </div>
+
+    <div class="container" id="login-container">
+        <h2>🔐 تسجيل الدخول</h2>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="login-password" placeholder="كلمة السر" required>
+            <button type="submit" class="btn-blue">دخول</button>
+        </form>
+    </div>
+
+    <div id="message" class="container"></div>
+
+    <div class="container hidden" id="dashboard-section">
+        <h2>👋 مرحبا بك!</h2>
+        <div style="text-align: center;">
+            <p id="welcome-message" style="font-size: 18px; font-weight: bold;"></p>
+            <p>نوع الحساب: <span id="user-role" class="role-badge"></span></p>
+            <button id="add-store-btn" class="btn-green hidden">➕ إضافة متجر جديد</button>
+            <button id="logout-btn" class="btn-red">تسجيل الخروج</button>
+        </div>
+
+        <div id="add-store-form" class="form-box hidden">
+            <h3 style="text-align:center;">🏪 إضافة متجر جديد</h3>
+            <form id="store-form">
+                <input type="text" id="store-name" placeholder="اسم المتجر" required>
+                <textarea id="store-desc" placeholder="وصف المتجر" rows="2"></textarea>
+                <input type="text" id="store-address" placeholder="العنوان" required>
+                <button type="submit" class="btn-green">حفظ المتجر</button>
+                <button type="button" id="cancel-store-btn" class="btn-red">إلغاء</button>
+            </form>
+        </div>
+
+        <div class="section-title">🏪 قائمة المتاجر</div>
+        <div id="stores-list">
+            <p style="text-align: center; color: #888;">جاري تحميل المتاجر...</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://hzinjliwqixlsdqdvuma.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6aW5qbGl3cWl4bHNkcWR2dW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4OTE2NjAsImV4cCI6MjEwNzQ2NzY2MH0.575Tnk-RJOjJ7KhQdbxJOOKeDSBVxteBslZSoUDIyNs';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        const messageDiv = document.getElementById('message');
+
+        function translateRole(role) {
+            if (role === 'customer') return 'زبون';
+            if (role === 'merchant') return 'تاجر';
+            if (role === 'driver') return 'موصل';
+            return role;
+        }
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = 'container ' + type;
+        }
+
+        function clearMessage() {
+            messageDiv.textContent = '';
+            messageDiv.className = 'container';
+        }
+
+        async function showDashboard(userId) {
+            document.getElementById('signup-container').classList.add('hidden');
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
+            clearMessage();
+
+            const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('full_name, role')
+                .eq('id', userId)
+                .single();
+
+            if (profileError) {
+                console.error('خطأ:', profileError);
+                document.getElementById('welcome-message').textContent = 'مرحبا بك!';
+                return;
+            }
+
+            document.getElementById('welcome-message').textContent = 'أهلاً ' + (profile.full_name || 'مستخدم');
+            document.getElementById('user-role').textContent = translateRole(profile.role);
+
+            if (profile.role === 'merchant') {
+                document.getElementById('add-store-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('add-store-btn').classList.add('hidden');
+            }
+            loadStores();
+        }
+
+        async function loadStores() {
+            const storesList = document.getElementById('stores-list');
+            storesList.innerHTML = '<p style="text-align: center; color: #888;">جاري تحميل المتاجر...</p>';
+
+            const { data: stores, error } = await supabase.from('stores').select('*');
+
+            if (error) {
+                storesList.innerHTML = '<p style="text-align: center; color: red;">وقع خطأ في تحميل المتاجر.</p>';
+                return;
+            }
+
+            if (stores.length === 0) {
+                storesList.innerHTML = '<p style="text-align: center; color: #888;">لا توجد متاجر حالياً.</p>';
+                return;
+            }
+
+            storesList.innerHTML = '';
+            stores.forEach(store => {
+                const storeDiv = document.createElement('div');
+                storeDiv.className = 'store-item';
+                storeDiv.innerHTML = `
+                    <h3>${store.name}</h3>
+                    <p>${store.description || 'لا يوجد وصف'}</p>
+                    <p>📍 ${store.address || 'العنوان غير محدد'}</p>
+                `;
+                storesList.appendChild(storeDiv);
+            });
+        }
+
+        document.getElementById('add-store-btn').addEventListener('click', () => {
+            document.getElementById('add-store-form').classList.remove('hidden');
+            document.getElementById('add-store-btn').classList.add('hidden');
+        });
+
+        document.getElementById('cancel-store-btn').addEventListener('click', () => {
+            document.getElementById('add-store-form').classList.add('hidden');
+            document.getElementById('add-store-btn').classList.remove('hidden');
+        });
+
+        document.getElementById('store-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('store-name').value;
+            const description = document.getElementById('store-desc').value;
+            const address = document.getElementById('store-address').value;
+
+            showMessage('جاري حفظ المتجر...', '');
+
+            const { data: { user } } = await supabase.auth.getUser();
+
+            try {
+                const { error } = await supabase.from('stores').insert([
+                    { owner_id: user.id, name: name, description: description, address: address }
+                ]);
+                if (error) throw error;
+
+                showMessage('✅ مبروك! تم إضافة المتجر بنجاح.', 'success');
+                document.getElementById('store-form').reset();
+                document.getElementById('add-store-form').classList.add('hidden');
+                document.getElementById('add-store-btn').classList.remove('hidden');
+                loadStores();
+            } catch (error) {
+                showMessage('❌ وقع خطأ: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('signup-name').value;
+            const phone = document.getElementById('signup-phone').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const role = document.getElementById('signup-role').value;
+            showMessage('جاري التسجيل...', '');
+            try {
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email, password,
+                    options: { data: { full_name: fullName, phone: phone, role: role } }
+                });
+                if (authError) throw authError;
+                if (authData.user) {
+                    const { error: profileError } = await supabase
+                        .from('profiles')
+                        .insert([{ id: authData.user.id, full_name: fullName, phone: phone, role: role }]);
+                    if (profileError) throw profileError;
+                }
+                showMessage('✅ مبروك! تم إنشاء الحساب. دابا سير لتحت ودخل.', 'success');
+                document.getElementById('signup-form').reset();
+            } catch (error) {
+                showMessage('❌ وقع خطأ: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            showMessage('جاري تسجيل الدخول...', '');
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                showMessage('✅ مبروك! تم تسجيل الدخول بنجاح.', 'success');
+                showDashboard(data.user.id);
+            } catch (error) {
+                showMessage('❌ وقع خطأ: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('signup-container').classList.remove('hidden');
+            document.getElementById('login-container').classList.remove('hidden');
+            showMessage('✅ تم تسجيل الخروج بنجاح.', 'success');
+        });
+
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                showDashboard(session.user.id);
+            }
+        }
+        checkSession();
+    </script>
+</body>
+</html>
