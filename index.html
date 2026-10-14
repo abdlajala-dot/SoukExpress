@@ -55,6 +55,7 @@ button:active { transform: scale(0.98); }
 .order-item { background: #f8fff9; padding: 15px; margin: 10px 0; border-radius: 12px; border-right: 5px solid #28a745; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
 .order-item b { color: #155724; font-size: 15px; }
 .order-products { background: #fff8e1; padding: 10px; margin: 8px 0; border-radius: 8px; font-size: 13px; color: #555; }
+.order-date { color: #888; font-size: 12px; margin: 4px 0; }
 
 .cart-total { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; margin: 12px 0; font-size: 17px; }
 
@@ -70,7 +71,6 @@ button:active { transform: scale(0.98); }
 .stat-num { font-size: 24px; font-weight: bold; }
 .stat-label { font-size: 13px; color: #666; margin-top: 3px; }
 
-/* Logo */
 .logo-wrap { display:flex; align-items:center; justify-content:center; gap:10px; }
 .logo-circle { width:50px; height:50px; background: rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; border: 2px solid rgba(255,255,255,0.4); }
 </style>
@@ -122,7 +122,7 @@ button:active { transform: scale(0.98); }
 </div>
 
 <div class="box hidden" id="add-store-box">
-<button class="orange" onclick="showStoreForm()">➕ إضافة متجر جديد</button>
+<button class="orange" onclick="showStoreForm()" id="store-btn">➕ إضافة متجر جديد</button>
 <button class="blue" onclick="showProfile()" style="margin-top:8px;">👤 حسابي</button>
 <button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 إحصائيات المتجر</button>
 <button class="red" onclick="doLogout()" style="margin-top:8px;">🚪 تسجيل الخروج</button>
@@ -254,8 +254,10 @@ async function doLogin() {
     document.getElementById('role').textContent = currentRole || '-';
     if (currentRole === 'merchant') {
       document.getElementById('stats-btn').style.display = 'block';
+      document.getElementById('store-btn').style.display = 'block';
     } else {
       document.getElementById('stats-btn').style.display = 'none';
+      document.getElementById('store-btn').style.display = 'none';
     }
     if (p.data) {
       if (p.data.full_name) document.getElementById('co-name').value = p.data.full_name;
@@ -277,6 +279,7 @@ async function doLogout() {
   document.getElementById('login-box').classList.remove('hidden');
   document.getElementById('search-input').value = '';
   document.getElementById('stats-btn').style.display = 'none';
+  document.getElementById('store-btn').style.display = 'none';
   show('✅ تم الخروج', true);
 }
 
@@ -636,8 +639,10 @@ async function loadOrders() {
     if (items && items.length > 0) {
       productsHtml = '<div class="order-products">' + items.map(it => `• ${it.product_name} × ${it.quantity} = ${it.price * it.quantity} درهم`).join('<br>') + '</div>';
     }
+    const orderDate = o.created_at ? new Date(o.created_at).toLocaleString('ar-MA', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '-';
     div.innerHTML = `
       <b>📦 طلب #${o.id.substring(0, 6)}</b><br>
+      <div class="order-date">🕐 ${orderDate}</div>
       👤 ${o.customer_name || 'زبون'}<br>
       📞 ${o.customer_phone || '-'}<br>
       📍 ${o.delivery_address || '-'}<br>
