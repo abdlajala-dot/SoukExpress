@@ -130,6 +130,7 @@ button:active { transform: scale(0.98); }
 <div class="box hidden" id="add-store-box">
 <button class="orange" onclick="showStoreForm()" id="store-btn">➕ إضافة متجر جديد</button>
 <button class="blue" onclick="showProfile()" style="margin-top:8px;">👤 حسابي</button>
+<button class="whatsapp" onclick="shareApp()" style="margin-top:8px;">📤 شارك التطبيق</button>
 <button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 <span id="stats-btn-text">إحصائيات المتجر</span> <span id="pending-badge" class="pending-badge" style="display:none;">0</span></button>
 <button class="purple" onclick="toggleAllStores()" id="toggle-stores-btn" style="margin-top:8px; display:none;">🔒 إغلاق المتاجر</button>
 <button class="red" onclick="doLogout()" style="margin-top:8px;">🚪 تسجيل الخروج</button>
@@ -229,6 +230,20 @@ function show(txt, ok) {
   m.className = ok ? 'ok' : 'err';
   m.classList.remove('hidden');
   setTimeout(() => m.classList.add('hidden'), 5000);
+}
+
+function shareApp() {
+  const url = 'https://abdlajala-dot.github.io/SoukExpress/';
+  const text = '🛒 SoukExpress - منصة التوصيل السريع بأكادير! جربها دابا:';
+  if (navigator.share) {
+    navigator.share({ title: 'SoukExpress Maroc', text: text, url: url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      show('✅ تم نسخ الرابط! شاركو مع صحابك', true);
+    }).catch(() => {
+      show('📋 الرابط: ' + url, true);
+    });
+  }
 }
 
 async function updatePendingBadge() {
