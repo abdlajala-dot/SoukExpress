@@ -48,6 +48,7 @@ button:active { transform: scale(0.98); }
 
 .product-item { background: #fff8e1; padding: 12px; margin: 8px 0; border-radius: 10px; border-right: 4px solid #ffb300; font-size: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .product-item b { color: #333; display: block; margin-bottom: 3px; }
+.product-img { width: 55px; height: 55px; border-radius: 8px; object-fit: cover; border: 2px solid #ffb300; }
 
 .section-title { font-weight: bold; font-size: 16px; margin: 15px 0 12px 0; color: #333; padding-bottom: 8px; border-bottom: 2px solid #ff6b35; display: flex; align-items: center; gap: 8px; }
 
@@ -166,6 +167,7 @@ button:active { transform: scale(0.98); }
 <input type="text" id="pr-name" placeholder="اسم المنتج">
 <textarea id="pr-desc" placeholder="وصف المنتج" rows="2"></textarea>
 <input type="number" id="pr-price" placeholder="السعر (درهم)">
+<input type="url" id="pr-image" placeholder="🔗 رابط الصورة (اختياري)">
 <button class="purple" onclick="doAddProduct()">حفظ المنتج</button>
 <button class="red" onclick="hideProductForm()">إلغاء</button>
 </div>
@@ -501,7 +503,8 @@ async function loadProducts(storeId) {
     if (currentRole === 'customer') {
       btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕ أضف</button>`;
     }
-    pDiv.innerHTML = `<div><b>${pr.name}</b>${pr.price} درهم - ${pr.description || ''}</div>${btn}`;
+    const imgHtml = pr.image_url ? `<img src="${pr.image_url}" class="product-img" onerror="this.style.display='none'">` : '';
+    pDiv.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${imgHtml}<div><b>${pr.name}</b>${pr.price} درهم - ${pr.description || ''}</div></div>${btn}`;
     container.appendChild(pDiv);
   });
 }
@@ -552,15 +555,23 @@ async function doAddProduct() {
   const name = document.getElementById('pr-name').value;
   const desc = document.getElementById('pr-desc').value;
   const price = document.getElementById('pr-price').value;
+  const image = document.getElementById('pr-image').value;
   if (!name || !price) { show('اكتب اسم المنتج والسعر', false); return; }
   show('⏳ جاري حفظ المنتج...', true);
   try {
-    const { error } = await DB.from('products').insert([{ store_id: currentStoreId, name: name, description: desc, price: parseFloat(price) }]);
+    const { error } = await DB.from('products').insert([{
+      store_id: currentStoreId,
+      name: name,
+      description: desc,
+      price: parseFloat(price),
+      image_url: image || null
+    }]);
     if (error) throw error;
     show('✅ تم إضافة المنتج!', true);
     document.getElementById('pr-name').value = '';
     document.getElementById('pr-desc').value = '';
     document.getElementById('pr-price').value = '';
+    document.getElementById('pr-image').value = '';
     hideProductForm();
     loadProducts(currentStoreId);
   } catch (e) { show('❌ ' + e.message, false); }
