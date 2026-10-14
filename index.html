@@ -30,8 +30,10 @@ button { color: white; border: none; cursor: pointer; }
 .cart-item { background: #e7f3ff; padding: 10px; margin: 5px 0; border-radius: 5px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
 .order-item { background: #d4edda; padding: 12px; margin: 8px 0; border-radius: 5px; border-right: 4px solid #28a745; font-size: 14px; }
 .order-item b { color: #155724; }
+.order-products { background: #fff3cd; padding: 8px; margin: 6px 0; border-radius: 5px; font-size: 13px; }
 .cart-total { background: #17a2b8; color: white; padding: 12px; border-radius: 5px; text-align: center; font-weight: bold; margin: 10px 0; }
 .add-cart-btn { background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 13px; }
+.checkout-field { background: #f9f9f9; padding: 12px; border-radius: 5px; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -107,6 +109,14 @@ button { color: white; border: none; cursor: pointer; }
 <div class="section-title">🛒 السلة</div>
 <div id="cart-list"></div>
 <div id="cart-total" class="cart-total hidden"></div>
+
+<div id="checkout-fields" class="checkout-field hidden">
+<b>📍 معلومات التوصيل:</b>
+<input type="text" id="co-name" placeholder="الاسم الكامل">
+<input type="tel" id="co-phone" placeholder="رقم الهاتف">
+<input type="text" id="co-address" placeholder="عنوان التوصيل (الحي، الشارع...)">
+</div>
+
 <button class="teal" id="checkout-btn" onclick="doCheckout()">✅ تأكيد الطلب</button>
 <button class="red" onclick="clearCart()">🗑️ تفريغ السلة</button>
 </div>
@@ -125,6 +135,7 @@ const DB = window.supabase.createClient(supaURL, supaKEY);
 let currentUser = null;
 let currentRole = null;
 let currentStoreId = null;
+let currentProfile = null;
 let cart = [];
 
 function show(txt, ok) {
@@ -163,6 +174,7 @@ async function doLogin() {
     if (r.error) throw r.error;
     currentUser = r.data.user;
     const p = await DB.from('profiles').select('*').eq('id', r.data.user.id).single();
+    currentProfile = p.data;
     currentRole = p.data ? p.data.role : null;
     document.getElementById('signup-box').classList.add('hidden');
     document.getElementById('login-box').classList.add('hidden');
@@ -175,6 +187,11 @@ async function doLogin() {
     if (currentRole === 'merchant') {
       document.getElementById('add-store-box').classList.remove('hidden');
     }
+    // تعمير الاسم والهاتف فـ التوصيل من البروفايل
+    if (p.data) {
+      if (p.data.full_name) document.getElementById('co-name').value = p.data.full_name;
+      if (p.data.phone) document.getElementById('co-phone').value = p.data.phone;
+    }
     loadStores();
     loadCart();
     loadOrders();
@@ -184,7 +201,7 @@ async function doLogin() {
 
 async function doLogout() {
   await DB.auth.signOut();
-  currentUser = null; currentRole = null; currentStoreId = null;
+  currentUser = null; currentRole = null; currentStoreId = null; currentProfile = null;
   cart = [];
   ['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.getElementById('signup-box').classList.remove('hidden');
@@ -295,6 +312,11 @@ async function doAddProduct() {
 }
 
 function addToCart(prodId, name, price, storeId) {
+  // إلا كان فالسلة منتج من متجر آخر، نسألو
+  if (cart.length > 0 && cart[0].storeId !== storeId) {
+    show('⚠️ ماشي ممكن تطلب من متاجر مختلفة فـ نفس الوقت!', false);
+    return;
+  }
   const existing = cart.find(c => c.prodId === prodId);
   if (existing) {
     existing.qty += 1;
@@ -308,9 +330,11 @@ function addToCart(prodId, name, price, storeId) {
 function loadCart() {
   const list = document.getElementById('cart-list');
   const totalDiv = document.getElementById('cart-total');
+  const checkoutFields = document.getElementById('checkout-fields');
   if (cart.length === 0) {
     list.innerHTML = '<p style="text-align:center;color:#888;">السلة خاوية</p>';
     totalDiv.classList.add('hidden');
+    checkoutFields.classList.add('hidden');
     return;
   }
   list.innerHTML = '';
@@ -324,6 +348,7 @@ function loadCart() {
   });
   totalDiv.textContent = 'المجموع: ' + total + ' درهم';
   totalDiv.classList.remove('hidden');
+  checkoutFields.classList.remove('hidden');
 }
 
 function removeFromCart(i) {
@@ -338,17 +363,42 @@ function clearCart() {
 
 async function doCheckout() {
   if (cart.length === 0) { show('السلة خاوية', false); return; }
+  const coName = document.getElementById('co-name').value;
+  const coPhone = document.getElementById('co-phone').value;
+  const coAddress = document.getElementById('co-address').value;
+  if (!coName || !coPhone || !coAddress) {
+    show('املأ الاسم، الهاتف، والعنوان', false);
+    return;
+  }
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const storeId = cart[0].storeId;
   show('⏳ جاري تأكيد الطلب...', true);
   try {
-    const { data, error } = await DB.from('orders').insert([{
+    // 1. إنشاء الطلب
+    const { data: orderData, error: orderErr } = await DB.from('orders').insert([{
       customer_id: currentUser.id,
       store_id: storeId,
       status: 'pending',
-      total_price: total
+      total_price: total,
+      delivery_address: coAddress,
+      customer_phone: coPhone,
+      customer_name: coName
     }]).select();
-    if (error) throw error;
+    if (orderErr) throw orderErr;
+
+    const orderId = orderData[0].id;
+
+    // 2. إضافة المنتجات
+    const items = cart.map(c => ({
+      order_id: orderId,
+      product_id: c.prodId,
+      product_name: c.name,
+      price: c.price,
+      quantity: c.qty
+    }));
+    const { error: itemsErr } = await DB.from('order_items').insert(items);
+    if (itemsErr) throw itemsErr;
+
     show('✅ تم إرسال الطلب بنجاح!', true);
     cart = [];
     loadCart();
@@ -370,18 +420,38 @@ async function loadOrders() {
       list.innerHTML = '<p style="text-align:center;color:#888;">لا توجد طلبات</p>';
       return;
     }
+  } else if (currentRole === 'driver') {
+    query = query.eq('status', 'delivering');
   }
   const { data: orders, error } = await query;
   if (error) { list.innerHTML = '<p style="text-align:center;color:red;">خطأ فتحميل الطلبات</p>'; return; }
   if (!orders || orders.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;">لا توجد طلبات</p>'; return; }
   list.innerHTML = '';
-  orders.forEach(o => {
+
+  const statusAr = {pending: '⏳ قيد الانتظار', accepted: '✅ مقبول', preparing: '👨‍🍳 قيد التحضير', delivering: '🚗 في الطريق', delivered: '🎉 تم التوصيل', cancelled: '❌ ملغى'};
+
+  for (const o of orders) {
     const div = document.createElement('div');
     div.className = 'order-item';
-    const statusAr = {pending: '⏳ قيد الانتظار', accepted: '✅ مقبول', preparing: '👨‍🍳 قيد التحضير', delivering: '🚗 في الطريق', delivered: '🎉 تم التوصيل', cancelled: '❌ ملغى'};
-    div.innerHTML = `<b>طلب #${o.id.substring(0, 6)}</b><br>المجموع: ${o.total_price} درهم<br>الحالة: ${statusAr[o.status] || o.status}`;
 
-    // أزرار التاجر (قبول / رفض) - للطلبات الجديدة
+    // جلب المنتجات
+    const { data: items } = await DB.from('order_items').select('*').eq('order_id', o.id);
+    let productsHtml = '';
+    if (items && items.length > 0) {
+      productsHtml = '<div class="order-products">' + items.map(it => `• ${it.product_name} × ${it.quantity} = ${it.price * it.quantity} درهم`).join('<br>') + '</div>';
+    }
+
+    div.innerHTML = `
+      <b>طلب #${o.id.substring(0, 6)}</b><br>
+      👤 ${o.customer_name || 'زبون'}<br>
+      📞 ${o.customer_phone || '-'}<br>
+      📍 ${o.delivery_address || '-'}<br>
+      <b>المجموع: ${o.total_price} درهم</b><br>
+      الحالة: ${statusAr[o.status] || o.status}
+      ${productsHtml}
+    `;
+
+    // أزرار التاجر
     if (currentRole === 'merchant' && o.status === 'pending') {
       const btnDiv = document.createElement('div');
       btnDiv.style.marginTop = '8px';
@@ -391,8 +461,6 @@ async function loadOrders() {
       `;
       div.appendChild(btnDiv);
     }
-
-    // زر التاجر (إرسال للموصل) - للطلبات المقبولة
     if (currentRole === 'merchant' && o.status === 'accepted') {
       const btnDiv = document.createElement('div');
       btnDiv.style.marginTop = '8px';
@@ -400,7 +468,7 @@ async function loadOrders() {
       div.appendChild(btnDiv);
     }
 
-    // زر الموصل (تأكيد التوصيل) - للطلبات في الطريق
+    // أزرار الموصل
     if (currentRole === 'driver' && o.status === 'delivering') {
       const btnDiv = document.createElement('div');
       btnDiv.style.marginTop = '8px';
@@ -409,7 +477,7 @@ async function loadOrders() {
     }
 
     list.appendChild(div);
-  });
+  }
 }
 
 async function updateOrderStatus(orderId, newStatus) {
