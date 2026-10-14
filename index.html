@@ -502,11 +502,23 @@ async function loadProducts(storeId) {
     let btn = '';
     if (currentRole === 'customer') {
       btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕ أضف</button>`;
+    } else if (currentRole === 'merchant') {
+      btn = `<button class="red small-btn" onclick="deleteProduct('${pr.id}', '${storeId}')">🗑️</button>`;
     }
     const imgHtml = pr.image_url ? `<img src="${pr.image_url}" class="product-img" onerror="this.style.display='none'">` : '';
     pDiv.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${imgHtml}<div><b>${pr.name}</b>${pr.price} درهم - ${pr.description || ''}</div></div>${btn}`;
     container.appendChild(pDiv);
   });
+}
+
+async function deleteProduct(prodId, storeId) {
+  if (!confirm('واش متأكد من حذف هاد المنتج؟')) return;
+  try {
+    const { error } = await DB.from('products').delete().eq('id', prodId);
+    if (error) throw error;
+    show('✅ تم حذف المنتج', true);
+    loadProducts(storeId);
+  } catch (e) { show('❌ ' + e.message, false); }
 }
 
 function filterProducts() {
