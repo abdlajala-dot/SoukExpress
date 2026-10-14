@@ -162,13 +162,13 @@ button:active { transform: scale(0.98); }
 </div>
 
 <div class="box hidden" id="product-form-box">
-<h2>📦 إضافة منتج جديد</h2>
+<h2 id="product-form-title">📦 إضافة منتج جديد</h2>
 <p id="product-store-name" style="text-align:center; color:#666; font-size:14px;"></p>
 <input type="text" id="pr-name" placeholder="اسم المنتج">
 <textarea id="pr-desc" placeholder="وصف المنتج" rows="2"></textarea>
 <input type="number" id="pr-price" placeholder="السعر (درهم)">
 <input type="url" id="pr-image" placeholder="🔗 رابط الصورة (اختياري)">
-<button class="purple" onclick="doAddProduct()">حفظ المنتج</button>
+<button class="purple" onclick="doAddProduct()" id="pr-submit-btn">حفظ المنتج</button>
 <button class="red" onclick="hideProductForm()">إلغاء</button>
 </div>
 
@@ -215,6 +215,7 @@ let currentRole = null;
 let currentStoreId = null;
 let currentProfile = null;
 let cart = [];
+let editingProductId = null;
 
 function show(txt, ok) {
   const m = document.getElementById('msg');
@@ -285,6 +286,7 @@ async function doLogout() {
   await DB.auth.signOut();
   currentUser = null; currentRole = null; currentStoreId = null; currentProfile = null;
   cart = [];
+  editingProductId = null;
   ['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box','profile-box','stats-box'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.getElementById('signup-box').classList.remove('hidden');
   document.getElementById('login-box').classList.remove('hidden');
@@ -503,10 +505,11 @@ async function loadProducts(storeId) {
     if (currentRole === 'customer') {
       btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕ أضف</button>`;
     } else if (currentRole === 'merchant') {
-      btn = `<button class="red small-btn" onclick="deleteProduct('${pr.id}', '${storeId}')">🗑️</button>`;
+      btn = `<button class="blue small-btn" onclick="editProduct('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${(pr.description || '').replace(/'/g, "\\'")}', '${pr.image_url || ''}', '${storeId}')">✏️</button>
+             <button class="red small-btn" onclick="deleteProduct('${pr.id}', '${storeId}')">🗑️</button>`;
     }
     const imgHtml = pr.image_url ? `<img src="${pr.image_url}" class="product-img" onerror="this.style.display='none'">` : '';
-    pDiv.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${imgHtml}<div><b>${pr.name}</b>${pr.price} درهم - ${pr.description || ''}</div></div>${btn}`;
+    pDiv.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${imgHtml}<div><b>${pr.name}</b>${pr.price} درهم - ${pr.description || ''}</div></div><div>${btn}</div>`;
     container.appendChild(pDiv);
   });
 }
@@ -519,6 +522,20 @@ async function deleteProduct(prodId, storeId) {
     show('✅ تم حذف المنتج', true);
     loadProducts(storeId);
   } catch (e) { show('❌ ' + e.message, false); }
+}
+
+function editProduct(id, name, price, desc, image, storeId) {
+  editingProductId = id;
+  currentStoreId = storeId;
+  document.getElementById('pr-name').value = name;
+  document.getElementById('pr-price').value = price;
+  document.getElementById('pr-desc').value = desc;
+  document.getElementById('pr-image').value = image;
+  document.getElementById('product-form-title').textContent = '✏️ تعديل المنتج';
+  document.getElementById('pr-submit-btn').textContent = '💾 حفظ التعديلات';
+  document.getElementById('product-store-name').textContent = 'تعديل منتج موجود';
+  document.getElementById('product-form-box').classList.remove('hidden');
+  document.getElementById('product-form-box').scrollIntoView({behavior: 'smooth'});
 }
 
 function filterProducts() {
@@ -552,8 +569,15 @@ function filterProducts() {
 }
 
 function showProductForm(storeId, storeName) {
+  editingProductId = null;
   currentStoreId = storeId;
+  document.getElementById('product-form-title').textContent = '📦 إضافة منتج جديد';
+  document.getElementById('pr-submit-btn').textContent = 'حفظ المنتج';
   document.getElementById('product-store-name').textContent = 'المتجر: ' + storeName;
+  document.getElementById('pr-name').value = '';
+  document.getElementById('pr-desc').value = '';
+  document.getElementById('pr-price').value = '';
+  document.getElementById('pr-image').value = '';
   document.getElementById('product-form-box').classList.remove('hidden');
   document.getElementById('product-form-box').scrollIntoView({behavior: 'smooth'});
 }
@@ -561,6 +585,7 @@ function showProductForm(storeId, storeName) {
 function hideProductForm() {
   document.getElementById('product-form-box').classList.add('hidden');
   currentStoreId = null;
+  editingProductId = null;
 }
 
 async function doAddProduct() {
@@ -569,23 +594,30 @@ async function doAddProduct() {
   const price = document.getElementById('pr-price').value;
   const image = document.getElementById('pr-image').value;
   if (!name || !price) { show('اكتب اسم المنتج والسعر', false); return; }
-  show('⏳ جاري حفظ المنتج...', true);
+  show('⏳ جاري الحفظ...', true);
   try {
-    const { error } = await DB.from('products').insert([{
-      store_id: currentStoreId,
+    const data = {
       name: name,
       description: desc,
       price: parseFloat(price),
       image_url: image || null
-    }]);
+    };
+    
+    let error;
+    if (editingProductId) {
+      const res = await DB.from('products').update(data).eq('id', editingProductId);
+      error = res.error;
+    } else {
+      data.store_id = currentStoreId;
+      const res = await DB.from('products').insert([data]);
+      error = res.error;
+    }
     if (error) throw error;
-    show('✅ تم إضافة المنتج!', true);
-    document.getElementById('pr-name').value = '';
-    document.getElementById('pr-desc').value = '';
-    document.getElementById('pr-price').value = '';
-    document.getElementById('pr-image').value = '';
+    
+    show(editingProductId ? '✅ تم تعديل المنتج!' : '✅ تم إضافة المنتج!', true);
+    const sid = currentStoreId;
     hideProductForm();
-    loadProducts(currentStoreId);
+    loadProducts(sid);
   } catch (e) { show('❌ ' + e.message, false); }
 }
 
