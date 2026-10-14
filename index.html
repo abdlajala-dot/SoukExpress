@@ -14,6 +14,7 @@ button { color: white; border: none; cursor: pointer; }
 .blue { background: #007bff; }
 .red { background: #dc3545; }
 .orange { background: #fd7e14; }
+.purple { background: #6f42c1; }
 #msg { padding: 15px; border-radius: 5px; text-align: center; font-weight: bold; margin: 10px 0; }
 .ok { background: #d4edda; color: green; }
 .err { background: #f8d7da; color: red; }
@@ -21,7 +22,10 @@ button { color: white; border: none; cursor: pointer; }
 .store-item { background: #f8f9fa; padding: 12px; margin-bottom: 10px; border-radius: 8px; border-right: 4px solid #28a745; }
 .store-item h3 { margin: 0 0 5px 0; color: #333; }
 .store-item p { margin: 3px 0; font-size: 14px; color: #666; }
+.product-item { background: #fff3cd; padding: 10px; margin: 5px 0; border-radius: 5px; border-right: 3px solid #fd7e14; font-size: 14px; }
+.product-item b { color: #333; }
 .section-title { font-weight: bold; margin: 15px 0 10px 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+.small-btn { padding: 8px; font-size: 14px; margin-top: 5px; }
 </style>
 </head>
 <body>
@@ -60,7 +64,7 @@ button { color: white; border: none; cursor: pointer; }
 <button class="red" onclick="doLogout()">تسجيل الخروج</button>
 </div>
 
-<!-- زر إضافة متجر (للتاجر فقط) -->
+<!-- زر إضافة متجر -->
 <div class="box hidden" id="add-store-box">
 <button class="orange" onclick="showStoreForm()">➕ إضافة متجر جديد</button>
 </div>
@@ -81,12 +85,26 @@ button { color: white; border: none; cursor: pointer; }
 <div id="stores-list"></div>
 </div>
 
+<!-- فورم إضافة منتج -->
+<div class="box hidden" id="product-form-box">
+<h2>📦 إضافة منتج جديد</h2>
+<p id="product-store-name" style="text-align:center; color:#666; font-size:14px;"></p>
+<input type="text" id="pr-name" placeholder="اسم المنتج">
+<textarea id="pr-desc" placeholder="وصف المنتج" rows="2"></textarea>
+<input type="number" id="pr-price" placeholder="السعر (درهم)">
+<input type="text" id="pr-image" placeholder="رابط الصورة (اختياري)">
+<button class="purple" onclick="doAddProduct()">حفظ المنتج</button>
+<button class="red" onclick="hideProductForm()">إلغاء</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const supaURL = 'https://hzinjliwqixlsdqdvuma.supabase.co';
 const supaKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6aW5qbGl3cWl4bHNkcWR2dW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4OTE2NjAsImV4cCI6MjEwNzQ2NzY2MH0.575Tnk-RJOjJ7KhQdbxJOOKeDSBVxteBslZSoUDIyNs';
 const DB = window.supabase.createClient(supaURL, supaKEY);
 let currentUser = null;
+let currentRole = null;
+let currentStoreId = null;
 
 function show(txt, ok) {
   const m = document.getElementById('msg');
@@ -141,6 +159,7 @@ async function doLogin() {
     show('✅ مبروك! دخلت.', true);
     
     const p = await DB.from('profiles').select('*').eq('id', r.data.user.id).single();
+    currentRole = p.data ? p.data.role : null;
     
     document.getElementById('signup-box').classList.add('hidden');
     document.getElementById('login-box').classList.add('hidden');
@@ -148,10 +167,9 @@ async function doLogin() {
     document.getElementById('stores-box').classList.remove('hidden');
     
     document.getElementById('welcome').textContent = 'أهلاً ' + (p.data && p.data.full_name ? p.data.full_name : email);
-    document.getElementById('role').textContent = p.data && p.data.role ? p.data.role : '-';
+    document.getElementById('role').textContent = currentRole || '-';
     
-    // إلا كان تاجر، وري ليه زر إضافة متجر
-    if (p.data && p.data.role === 'merchant') {
+    if (currentRole === 'merchant') {
       document.getElementById('add-store-box').classList.remove('hidden');
     }
     
@@ -164,12 +182,13 @@ async function doLogin() {
 async function doLogout() {
   await DB.auth.signOut();
   currentUser = null;
-  document.getElementById('dash-box').classList.add('hidden');
+  currentRole = null;
+  currentStoreId = null;
+  ['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
   document.getElementById('signup-box').classList.remove('hidden');
   document.getElementById('login-box').classList.remove('hidden');
-  document.getElementById('add-store-box').classList.add('hidden');
-  document.getElementById('store-form-box').classList.add('hidden');
-  document.getElementById('stores-box').classList.add('hidden');
   show('✅ تم الخروج', true);
 }
 
@@ -228,16 +247,92 @@ async function loadStores() {
   }
   
   list.innerHTML = '';
-  stores.forEach(s => {
+  
+  for (const s of stores) {
     const div = document.createElement('div');
     div.className = 'store-item';
     div.innerHTML = `
       <h3>🏪 ${s.name}</h3>
       <p>${s.description || 'لا يوجد وصف'}</p>
       <p>📍 ${s.address || 'العنوان غير محدد'}</p>
+      <div id="prod-${s.id}">⏳ جاري تحميل المنتجات...</div>
     `;
     list.appendChild(div);
+    
+    // زر إضافة منتج (للتاجر فقط، للمتجر ديالو)
+    if (currentRole === 'merchant' && s.owner_id === currentUser.id) {
+      const addBtn = document.createElement('button');
+      addBtn.className = 'purple small-btn';
+      addBtn.textContent = '📦 إضافة منتج';
+      addBtn.onclick = () => showProductForm(s.id, s.name);
+      div.appendChild(addBtn);
+    }
+    
+    loadProducts(s.id);
+  }
+}
+
+async function loadProducts(storeId) {
+  const container = document.getElementById('prod-' + storeId);
+  if (!container) return;
+  
+  const { data: products, error } = await DB.from('products').select('*').eq('store_id', storeId);
+  
+  if (error || !products || products.length === 0) {
+    container.innerHTML = '<p style="font-size:13px;color:#888;">لا توجد منتجات</p>';
+    return;
+  }
+  
+  container.innerHTML = '<b style="font-size:13px;">📦 المنتجات:</b>';
+  products.forEach(pr => {
+    const pDiv = document.createElement('div');
+    pDiv.className = 'product-item';
+    pDiv.innerHTML = `<b>${pr.name}</b> - ${pr.price} درهم<br><small>${pr.description || ''}</small>`;
+    container.appendChild(pDiv);
   });
+}
+
+function showProductForm(storeId, storeName) {
+  currentStoreId = storeId;
+  document.getElementById('product-store-name').textContent = 'المتجر: ' + storeName;
+  document.getElementById('product-form-box').classList.remove('hidden');
+  document.getElementById('product-form-box').scrollIntoView({behavior: 'smooth'});
+}
+
+function hideProductForm() {
+  document.getElementById('product-form-box').classList.add('hidden');
+  currentStoreId = null;
+}
+
+async function doAddProduct() {
+  const name = document.getElementById('pr-name').value;
+  const desc = document.getElementById('pr-desc').value;
+  const price = document.getElementById('pr-price').value;
+  const image = document.getElementById('pr-image').value;
+  
+  if (!name || !price) { show('اكتب اسم المنتج والسعر', false); return; }
+  
+  show('⏳ جاري حفظ المنتج...', true);
+  try {
+    const { error } = await DB.from('products').insert([{
+      store_id: currentStoreId,
+      name: name,
+      description: desc,
+      price: parseFloat(price),
+      image_url: image || null
+    }]);
+    if (error) throw error;
+    
+    show('✅ تم إضافة المنتج بنجاح!', true);
+    document.getElementById('pr-name').value = '';
+    document.getElementById('pr-desc').value = '';
+    document.getElementById('pr-price').value = '';
+    document.getElementById('pr-image').value = '';
+    hideProductForm();
+    loadProducts(currentStoreId);
+  } catch (e) { 
+    show('❌ ' + e.message, false); 
+  }
 }
 </script>
 </body>
