@@ -65,6 +65,10 @@ button:active { transform: scale(0.98); }
 .search-input { background: #f0f2f5 !important; border: 2px solid #ffb300 !important; font-weight: 600; }
 
 .footer { text-align: center; color: #999; font-size: 12px; margin-top: 20px; padding: 15px; }
+
+.stat-card { padding: 15px; border-radius: 10px; text-align: center; }
+.stat-num { font-size: 24px; font-weight: bold; }
+.stat-label { font-size: 13px; color: #666; margin-top: 3px; }
 </style>
 </head>
 <body>
@@ -78,7 +82,6 @@ button:active { transform: scale(0.98); }
 
 <div id="msg" class="hidden"></div>
 
-<!-- التسجيل -->
 <div class="box" id="signup-box">
 <h2>🚀 تسجيل حساب جديد</h2>
 <input type="text" id="s-name" placeholder="الاسم الكامل">
@@ -94,7 +97,6 @@ button:active { transform: scale(0.98); }
 <button class="green" onclick="doSignup()">تسجيل</button>
 </div>
 
-<!-- الدخول -->
 <div class="box" id="login-box">
 <h2>🔐 تسجيل الدخول</h2>
 <input type="email" id="l-email" placeholder="البريد الإلكتروني">
@@ -102,21 +104,19 @@ button:active { transform: scale(0.98); }
 <button class="blue" onclick="doLogin()">دخول</button>
 </div>
 
-<!-- لوحة التحكم -->
 <div class="welcome-banner hidden" id="dash-box">
 <h2>👋 مرحبا!</h2>
 <p id="welcome" style="font-size: 16px; margin: 5px 0;"></p>
 <span class="role-badge" id="role"></span>
 </div>
 
-<!-- أزرار الحساب -->
 <div class="box hidden" id="add-store-box">
 <button class="orange" onclick="showStoreForm()">➕ إضافة متجر جديد</button>
 <button class="blue" onclick="showProfile()" style="margin-top:8px;">👤 حسابي</button>
-<button class="red" onclick="doLogout()">🚪 تسجيل الخروج</button>
+<button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 إحصائيات المتجر</button>
+<button class="red" onclick="doLogout()" style="margin-top:8px;">🚪 تسجيل الخروج</button>
 </div>
 
-<!-- فورم إضافة متجر -->
 <div class="box hidden" id="store-form-box">
 <h2>🏪 إضافة متجر جديد</h2>
 <input type="text" id="st-name" placeholder="اسم المتجر">
@@ -126,7 +126,6 @@ button:active { transform: scale(0.98); }
 <button class="red" onclick="hideStoreForm()">إلغاء</button>
 </div>
 
-<!-- صفحة حسابي -->
 <div class="box hidden" id="profile-box">
 <h2>👤 معلومات حسابي</h2>
 <input type="text" id="pf-name" placeholder="الاسم الكامل">
@@ -137,14 +136,18 @@ button:active { transform: scale(0.98); }
 <button class="red" onclick="hideProfile()">إلغاء</button>
 </div>
 
-<!-- قائمة المتاجر -->
+<div class="box hidden" id="stats-box">
+<h2>📊 إحصائيات المتجر</h2>
+<div id="stats-content"></div>
+<button class="red" onclick="hideStats()">إغلاق</button>
+</div>
+
 <div class="box hidden" id="stores-box">
 <div class="section-title">🏪 قائمة المتاجر</div>
 <input type="text" id="search-input" class="search-input" placeholder="🔍 ابحث عن منتج أو متجر..." oninput="filterProducts()">
 <div id="stores-list"></div>
 </div>
 
-<!-- فورم إضافة منتج -->
 <div class="box hidden" id="product-form-box">
 <h2>📦 إضافة منتج جديد</h2>
 <p id="product-store-name" style="text-align:center; color:#666; font-size:14px;"></p>
@@ -155,7 +158,6 @@ button:active { transform: scale(0.98); }
 <button class="red" onclick="hideProductForm()">إلغاء</button>
 </div>
 
-<!-- السلة -->
 <div class="box hidden" id="cart-box">
 <div class="section-title">🛒 السلة</div>
 <div id="cart-list"></div>
@@ -172,7 +174,6 @@ button:active { transform: scale(0.98); }
 <button class="red" onclick="clearCart()">🗑️ تفريغ السلة</button>
 </div>
 
-<!-- الطلبات -->
 <div class="box hidden" id="orders-box">
 <div class="section-title">📋 الطلبات</div>
 <div id="orders-list"></div>
@@ -240,6 +241,11 @@ async function doLogin() {
     document.getElementById('add-store-box').classList.remove('hidden');
     document.getElementById('welcome').textContent = 'أهلاً ' + (p.data && p.data.full_name ? p.data.full_name : email);
     document.getElementById('role').textContent = currentRole || '-';
+    if (currentRole === 'merchant') {
+      document.getElementById('stats-btn').style.display = 'block';
+    } else {
+      document.getElementById('stats-btn').style.display = 'none';
+    }
     if (p.data) {
       if (p.data.full_name) document.getElementById('co-name').value = p.data.full_name;
       if (p.data.phone) document.getElementById('co-phone').value = p.data.phone;
@@ -255,10 +261,11 @@ async function doLogout() {
   await DB.auth.signOut();
   currentUser = null; currentRole = null; currentStoreId = null; currentProfile = null;
   cart = [];
-  ['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box','profile-box'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  ['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box','profile-box','stats-box'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.getElementById('signup-box').classList.remove('hidden');
   document.getElementById('login-box').classList.remove('hidden');
   document.getElementById('search-input').value = '';
+  document.getElementById('stats-btn').style.display = 'none';
   show('✅ تم الخروج', true);
 }
 
@@ -305,6 +312,76 @@ async function doUpdateProfile() {
     show('✅ تم حفظ التعديلات!', true);
     setTimeout(hideProfile, 1000);
   } catch (e) { show('❌ ' + e.message, false); }
+}
+
+async function showStats() {
+  document.getElementById('stats-box').classList.remove('hidden');
+  document.getElementById('add-store-box').classList.add('hidden');
+  const content = document.getElementById('stats-content');
+  content.innerHTML = '<p style="text-align:center;color:#888;">⏳ جاري الحساب...</p>';
+
+  try {
+    const { data: myStores } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
+    if (!myStores || myStores.length === 0) {
+      content.innerHTML = '<p style="text-align:center;color:#888;">ما عندكش متاجر</p>';
+      return;
+    }
+    const storeIds = myStores.map(s => s.id);
+    const { data: orders } = await DB.from('orders').select('*').in('store_id', storeIds);
+
+    if (!orders || orders.length === 0) {
+      content.innerHTML = '<p style="text-align:center;color:#888;">لا توجد طلبات بعد</p>';
+      return;
+    }
+
+    const total = orders.length;
+    const pending = orders.filter(o => o.status === 'pending').length;
+    const accepted = orders.filter(o => o.status === 'accepted').length;
+    const delivering = orders.filter(o => o.status === 'delivering').length;
+    const delivered = orders.filter(o => o.status === 'delivered').length;
+    const cancelled = orders.filter(o => o.status === 'cancelled').length;
+    const revenue = orders.filter(o => o.status === 'delivered').reduce((s, o) => s + parseFloat(o.total_price), 0);
+
+    content.innerHTML = `
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="stat-card" style="background:#e7f3ff;">
+          <div class="stat-num" style="color:#007bff;">${total}</div>
+          <div class="stat-label">📋 مجموع الطلبات</div>
+        </div>
+        <div class="stat-card" style="background:#d4edda;">
+          <div class="stat-num" style="color:#28a745;">${revenue}</div>
+          <div class="stat-label">💰 الأرباح (درهم)</div>
+        </div>
+        <div class="stat-card" style="background:#fff3cd;">
+          <div class="stat-num" style="color:#ff9800;">${pending}</div>
+          <div class="stat-label">⏳ قيد الانتظار</div>
+        </div>
+        <div class="stat-card" style="background:#d1ecf1;">
+          <div class="stat-num" style="color:#17a2b8;">${accepted}</div>
+          <div class="stat-label">✅ مقبولة</div>
+        </div>
+        <div class="stat-card" style="background:#cce5ff;">
+          <div class="stat-num" style="color:#007bff;">${delivering}</div>
+          <div class="stat-label">🚗 في الطريق</div>
+        </div>
+        <div class="stat-card" style="background:#d4edda;">
+          <div class="stat-num" style="color:#28a745;">${delivered}</div>
+          <div class="stat-label">🎉 تم التوصيل</div>
+        </div>
+        <div class="stat-card" style="background:#f8d7da; grid-column: span 2;">
+          <div class="stat-num" style="color:#dc3545;">${cancelled}</div>
+          <div class="stat-label">❌ ملغاة</div>
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    content.innerHTML = '<p style="color:red;text-align:center;">❌ ' + e.message + '</p>';
+  }
+}
+
+function hideStats() {
+  document.getElementById('stats-box').classList.add('hidden');
+  document.getElementById('add-store-box').classList.remove('hidden');
 }
 
 async function doAddStore() {
