@@ -187,7 +187,7 @@ button:active { transform: scale(0.98); }
 </div>
 
 <div class="box hidden" id="orders-box">
-<div class="section-title">📋 الطلبات</div>
+<div class="section-title">📋 الطلبات <span id="orders-count" style="color:#ff6b35;font-weight:bold;"></span></div>
 <select id="order-filter" onchange="loadOrders()" style="margin-bottom:10px; background:#f0f2f5; font-weight:600;">
 <option value="">📋 كل الطلبات</option>
 <option value="pending">⏳ قيد الانتظار</option>
@@ -288,6 +288,8 @@ async function doLogout() {
   document.getElementById('login-box').classList.remove('hidden');
   document.getElementById('search-input').value = '';
   document.getElementById('order-filter').value = '';
+  const cntEl = document.getElementById('orders-count');
+  if (cntEl) cntEl.textContent = '';
   document.getElementById('stats-btn').style.display = 'none';
   document.getElementById('store-btn').style.display = 'none';
   show('✅ تم الخروج', true);
@@ -676,6 +678,8 @@ async function loadOrders() {
   }
   const { data: orders, error } = await query;
   if (error) { list.innerHTML = '<p style="text-align:center;color:red;">خطأ فتحميل الطلبات</p>'; return; }
+  const countEl = document.getElementById('orders-count');
+  if (countEl) countEl.textContent = '(' + (orders ? orders.length : 0) + ')';
   if (!orders || orders.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;">لا توجد طلبات</p>'; return; }
   list.innerHTML = '';
   const statusAr = {pending: '⏳ قيد الانتظار', accepted: '✅ مقبول', preparing: '👨‍🍳 قيد التحضير', delivering: '🚗 في الطريق', delivered: '🎉 تم التوصيل', cancelled: '❌ ملغى'};
