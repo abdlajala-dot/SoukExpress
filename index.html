@@ -195,6 +195,7 @@ button:active { transform: scale(0.98); }
 
 <div class="box hidden" id="orders-box">
 <div class="section-title">📋 الطلبات <span id="orders-count" style="color:#ff6b35;font-weight:bold;"></span></div>
+<input type="text" id="orders-search" class="search-input" placeholder="🔍 ابحث بالاسم، الهاتف، أو العنوان..." oninput="filterOrders()" style="margin-bottom:8px;">
 <select id="order-filter" onchange="loadOrders()" style="margin-bottom:10px; background:#f0f2f5; font-weight:600;">
 <option value="">📋 كل الطلبات</option>
 <option value="pending">⏳ قيد الانتظار</option>
@@ -350,6 +351,8 @@ async function doLogout() {
   document.getElementById('order-filter').value = '';
   const cntEl = document.getElementById('orders-count');
   if (cntEl) cntEl.textContent = '';
+  const srchEl = document.getElementById('orders-search');
+  if (srchEl) srchEl.value = '';
   const badge = document.getElementById('pending-badge');
   if (badge) badge.style.display = 'none';
   document.getElementById('stats-btn').style.display = 'none';
@@ -910,6 +913,19 @@ async function loadOrders() {
     }
     list.appendChild(div);
   }
+}
+
+function filterOrders() {
+  const search = document.getElementById('orders-search').value.toLowerCase().trim();
+  const orders = document.querySelectorAll('.order-item');
+  orders.forEach(o => {
+    const text = o.textContent.toLowerCase();
+    if (search === '' || text.includes(search)) {
+      o.style.display = 'block';
+    } else {
+      o.style.display = 'none';
+    }
+  });
 }
 
 async function cancelOrder(orderId) {
