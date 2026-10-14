@@ -1,0 +1,20 @@
+{
+  "name": "SoukExpress - منصة التوصيل السريع",
+  "short_name": "SoukExpress",
+  "description": "منصة توصيل أكادير - تسوق من المتاجر المحلية",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff6b35",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23ff6b35'/%3E%3Cpath d='M150 380c-22 0-40 18-40 40s18 40 40 40 40-18 40-40-18-40-40-40zm-130-320v40h40l72 152-27 49c-3 6-5 12-5 19 0 22 18 40 40 40h240v-40H150c-3 0-5-2-5-5l2-3 18-32h148c15 0 28-8 35-20l72-131c2-3 3-7 3-10 0-11-9-20-20-20H102l-18-40H20zm340 320c-22 0-40 18-40 40s18 40 40 40 40-18 40-40-18-40-40-40z' fill='white'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
