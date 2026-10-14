@@ -131,6 +131,7 @@ button:active { transform: scale(0.98); }
 <button class="orange" onclick="showStoreForm()" id="store-btn">➕ إضافة متجر جديد</button>
 <button class="blue" onclick="showProfile()" style="margin-top:8px;">👤 حسابي</button>
 <button class="whatsapp" onclick="shareApp()" style="margin-top:8px;">📤 شارك التطبيق</button>
+<button class="green" onclick="supportWhatsApp()" style="margin-top:8px;">💬 الدعم الفني</button>
 <button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 <span id="stats-btn-text">إحصائيات المتجر</span> <span id="pending-badge" class="pending-badge" style="display:none;">0</span></button>
 <button class="purple" onclick="toggleAllStores()" id="toggle-stores-btn" style="margin-top:8px; display:none;">🔒 إغلاق المتاجر</button>
 <button class="red" onclick="doLogout()" style="margin-top:8px;">🚪 تسجيل الخروج</button>
@@ -259,6 +260,12 @@ function shareApp() {
       show('📋 الرابط: ' + url, true);
     });
   }
+}
+
+function supportWhatsApp() {
+  const myNumber = '212671634521';
+  const msg = 'السلام عليكم، بغيت مساعدة فـ تطبيق SoukExpress.';
+  window.open('https://wa.me/' + myNumber + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
 async function updatePendingBadge() {
