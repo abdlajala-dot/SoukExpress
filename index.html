@@ -335,6 +335,11 @@ async function doLogin() {
     if (currentRole === 'merchant') {
       setTimeout(updatePendingBadge, 1500);
     }
+    if (window.autoRefreshInterval) clearInterval(window.autoRefreshInterval);
+    window.autoRefreshInterval = setInterval(() => {
+      loadOrders();
+      if (currentRole === 'merchant') updatePendingBadge();
+    }, 30000);
     show('✅ مبروك! دخلت.', true);
   } catch (e) { show('❌ ' + e.message, false); }
 }
@@ -359,6 +364,10 @@ async function doLogout() {
   document.getElementById('store-btn').style.display = 'none';
   const tglBtn = document.getElementById('toggle-stores-btn');
   if (tglBtn) tglBtn.style.display = 'none';
+  if (window.autoRefreshInterval) {
+    clearInterval(window.autoRefreshInterval);
+    window.autoRefreshInterval = null;
+  }
   show('✅ تم الخروج', true);
 }
 
