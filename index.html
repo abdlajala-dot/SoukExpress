@@ -130,7 +130,7 @@ button:active { transform: scale(0.98); }
 <div class="box hidden" id="add-store-box">
 <button class="orange" onclick="showStoreForm()" id="store-btn">➕ إضافة متجر جديد</button>
 <button class="blue" onclick="showProfile()" style="margin-top:8px;">👤 حسابي</button>
-<button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 إحصائيات المتجر <span id="pending-badge" class="pending-badge" style="display:none;">0</span></button>
+<button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 <span id="stats-btn-text">إحصائيات المتجر</span> <span id="pending-badge" class="pending-badge" style="display:none;">0</span></button>
 <button class="purple" onclick="toggleAllStores()" id="toggle-stores-btn" style="margin-top:8px; display:none;">🔒 إغلاق المتاجر</button>
 <button class="red" onclick="doLogout()" style="margin-top:8px;">🚪 تسجيل الخروج</button>
 </div>
@@ -155,7 +155,7 @@ button:active { transform: scale(0.98); }
 </div>
 
 <div class="box hidden" id="stats-box">
-<h2>📊 إحصائيات المتجر</h2>
+<h2 id="stats-title">📊 إحصائيات المتجر</h2>
 <div id="stats-content"></div>
 <button class="red" onclick="hideStats()">إغلاق</button>
 </div>
@@ -302,8 +302,16 @@ async function doLogin() {
     document.getElementById('role').textContent = currentRole || '-';
     if (currentRole === 'merchant') {
       document.getElementById('stats-btn').style.display = 'block';
+      document.getElementById('stats-btn-text').textContent = 'إحصائيات المتجر';
+      document.getElementById('stats-title').textContent = '📊 إحصائيات المتجر';
       document.getElementById('store-btn').style.display = 'block';
       document.getElementById('toggle-stores-btn').style.display = 'block';
+    } else if (currentRole === 'driver') {
+      document.getElementById('stats-btn').style.display = 'block';
+      document.getElementById('stats-btn-text').textContent = 'إحصائياتي';
+      document.getElementById('stats-title').textContent = '📊 إحصائياتي';
+      document.getElementById('store-btn').style.display = 'none';
+      document.getElementById('toggle-stores-btn').style.display = 'none';
     } else {
       document.getElementById('stats-btn').style.display = 'none';
       document.getElementById('store-btn').style.display = 'none';
@@ -396,59 +404,87 @@ async function showStats() {
   content.innerHTML = '<p style="text-align:center;color:#888;">⏳ جاري الحساب...</p>';
 
   try {
-    const { data: myStores } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
-    if (!myStores || myStores.length === 0) {
-      content.innerHTML = '<p style="text-align:center;color:#888;">ما عندكش متاجر</p>';
-      return;
+    if (currentRole === 'merchant') {
+      const { data: myStores } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
+      if (!myStores || myStores.length === 0) {
+        content.innerHTML = '<p style="text-align:center;color:#888;">ما عندكش متاجر</p>';
+        return;
+      }
+      const { data: orders } = await DB.from('orders').select('*').in('store_id', myStores.map(s => s.id));
+      if (!orders || orders.length === 0) {
+        content.innerHTML = '<p style="text-align:center;color:#888;">لا توجد طلبات بعد</p>';
+        return;
+      }
+      const total = orders.length;
+      const pending = orders.filter(o => o.status === 'pending').length;
+      const accepted = orders.filter(o => o.status === 'accepted').length;
+      const delivering = orders.filter(o => o.status === 'delivering').length;
+      const delivered = orders.filter(o => o.status === 'delivered').length;
+      const cancelled = orders.filter(o => o.status === 'cancelled').length;
+      const revenue = orders.filter(o => o.status === 'delivered').reduce((s, o) => s + parseFloat(o.total_price), 0);
+
+      content.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="stat-card" style="background:#e7f3ff;">
+            <div class="stat-num" style="color:#007bff;">${total}</div>
+            <div class="stat-label">📋 مجموع الطلبات</div>
+          </div>
+          <div class="stat-card" style="background:#d4edda;">
+            <div class="stat-num" style="color:#28a745;">${revenue}</div>
+            <div class="stat-label">💰 الأرباح (درهم)</div>
+          </div>
+          <div class="stat-card" style="background:#fff3cd;">
+            <div class="stat-num" style="color:#ff9800;">${pending}</div>
+            <div class="stat-label">⏳ قيد الانتظار</div>
+          </div>
+          <div class="stat-card" style="background:#d1ecf1;">
+            <div class="stat-num" style="color:#17a2b8;">${accepted}</div>
+            <div class="stat-label">✅ مقبولة</div>
+          </div>
+          <div class="stat-card" style="background:#cce5ff;">
+            <div class="stat-num" style="color:#007bff;">${delivering}</div>
+            <div class="stat-label">🚗 في الطريق</div>
+          </div>
+          <div class="stat-card" style="background:#d4edda;">
+            <div class="stat-num" style="color:#28a745;">${delivered}</div>
+            <div class="stat-label">🎉 تم التوصيل</div>
+          </div>
+          <div class="stat-card" style="background:#f8d7da; grid-column: span 2;">
+            <div class="stat-num" style="color:#dc3545;">${cancelled}</div>
+            <div class="stat-label">❌ ملغاة</div>
+          </div>
+        </div>
+      `;
+    } else if (currentRole === 'driver') {
+      const { data: deliveredOrders } = await DB.from('orders').select('*').eq('status', 'delivered');
+      const { data: deliveringOrders } = await DB.from('orders').select('id').eq('status', 'delivering');
+      const totalDelivered = deliveredOrders ? deliveredOrders.length : 0;
+      const totalRevenue = deliveredOrders ? deliveredOrders.reduce((s, o) => s + parseFloat(o.total_price), 0) : 0;
+      const commission = totalRevenue * 0.1;
+      const inProgress = deliveringOrders ? deliveringOrders.length : 0;
+
+      content.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="stat-card" style="background:#d4edda; grid-column: span 2;">
+            <div class="stat-num" style="color:#28a745; font-size:36px;">${totalDelivered}</div>
+            <div class="stat-label">🎉 مجموع التوصيلات</div>
+          </div>
+          <div class="stat-card" style="background:#fff3cd;">
+            <div class="stat-num" style="color:#ff9800;">${totalRevenue}</div>
+            <div class="stat-label">💰 قيمة الطلبات (درهم)</div>
+          </div>
+          <div class="stat-card" style="background:#e7f3ff;">
+            <div class="stat-num" style="color:#007bff;">${commission.toFixed(2)}</div>
+            <div class="stat-label">💵 العمولة (10%)</div>
+          </div>
+          <div class="stat-card" style="background:#cce5ff; grid-column: span 2;">
+            <div class="stat-num" style="color:#007bff;">${inProgress}</div>
+            <div class="stat-label">🚗 طلبات في الطريق حالياً</div>
+          </div>
+        </div>
+        <p style="text-align:center; color:#888; font-size:12px; margin-top:15px;">💡 العمولة = 10% من قيمة كل طلب موصل</p>
+      `;
     }
-    const storeIds = myStores.map(s => s.id);
-    const { data: orders } = await DB.from('orders').select('*').in('store_id', storeIds);
-
-    if (!orders || orders.length === 0) {
-      content.innerHTML = '<p style="text-align:center;color:#888;">لا توجد طلبات بعد</p>';
-      return;
-    }
-
-    const total = orders.length;
-    const pending = orders.filter(o => o.status === 'pending').length;
-    const accepted = orders.filter(o => o.status === 'accepted').length;
-    const delivering = orders.filter(o => o.status === 'delivering').length;
-    const delivered = orders.filter(o => o.status === 'delivered').length;
-    const cancelled = orders.filter(o => o.status === 'cancelled').length;
-    const revenue = orders.filter(o => o.status === 'delivered').reduce((s, o) => s + parseFloat(o.total_price), 0);
-
-    content.innerHTML = `
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div class="stat-card" style="background:#e7f3ff;">
-          <div class="stat-num" style="color:#007bff;">${total}</div>
-          <div class="stat-label">📋 مجموع الطلبات</div>
-        </div>
-        <div class="stat-card" style="background:#d4edda;">
-          <div class="stat-num" style="color:#28a745;">${revenue}</div>
-          <div class="stat-label">💰 الأرباح (درهم)</div>
-        </div>
-        <div class="stat-card" style="background:#fff3cd;">
-          <div class="stat-num" style="color:#ff9800;">${pending}</div>
-          <div class="stat-label">⏳ قيد الانتظار</div>
-        </div>
-        <div class="stat-card" style="background:#d1ecf1;">
-          <div class="stat-num" style="color:#17a2b8;">${accepted}</div>
-          <div class="stat-label">✅ مقبولة</div>
-        </div>
-        <div class="stat-card" style="background:#cce5ff;">
-          <div class="stat-num" style="color:#007bff;">${delivering}</div>
-          <div class="stat-label">🚗 في الطريق</div>
-        </div>
-        <div class="stat-card" style="background:#d4edda;">
-          <div class="stat-num" style="color:#28a745;">${delivered}</div>
-          <div class="stat-label">🎉 تم التوصيل</div>
-        </div>
-        <div class="stat-card" style="background:#f8d7da; grid-column: span 2;">
-          <div class="stat-num" style="color:#dc3545;">${cancelled}</div>
-          <div class="stat-label">❌ ملغاة</div>
-        </div>
-      </div>
-    `;
   } catch (e) {
     content.innerHTML = '<p style="color:red;text-align:center;">❌ ' + e.message + '</p>';
   }
