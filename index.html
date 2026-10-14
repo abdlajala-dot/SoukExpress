@@ -73,6 +73,8 @@ button:active { transform: scale(0.98); }
 .stat-num { font-size: 24px; font-weight: bold; }
 .stat-label { font-size: 13px; color: #666; margin-top: 3px; }
 
+.pending-badge { background: #dc3545; color: white; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-right: 5px; }
+
 .logo-wrap { display:flex; align-items:center; justify-content:center; gap:10px; }
 .logo-circle { width:50px; height:50px; background: rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; border: 2px solid rgba(255,255,255,0.4); }
 </style>
@@ -126,7 +128,7 @@ button:active { transform: scale(0.98); }
 <div class="box hidden" id="add-store-box">
 <button class="orange" onclick="showStoreForm()" id="store-btn">➕ إضافة متجر جديد</button>
 <button class="blue" onclick="showProfile()" style="margin-top:8px;">👤 حسابي</button>
-<button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 إحصائيات المتجر</button>
+<button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 إحصائيات المتجر <span id="pending-badge" class="pending-badge" style="display:none;">0</span></button>
 <button class="red" onclick="doLogout()" style="margin-top:8px;">🚪 تسجيل الخروج</button>
 </div>
 
@@ -225,6 +227,23 @@ function show(txt, ok) {
   setTimeout(() => m.classList.add('hidden'), 5000);
 }
 
+async function updatePendingBadge() {
+  const badge = document.getElementById('pending-badge');
+  if (!badge || currentRole !== 'merchant') { if (badge) badge.style.display = 'none'; return; }
+  try {
+    const { data: myStores } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
+    if (!myStores || myStores.length === 0) { badge.style.display = 'none'; return; }
+    const { data: pending } = await DB.from('orders').select('id').in('store_id', myStores.map(s => s.id)).eq('status', 'pending');
+    const count = pending ? pending.length : 0;
+    if (count > 0) {
+      badge.textContent = count;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch (e) { console.error(e); }
+}
+
 async function doSignup() {
   const email = document.getElementById('s-email').value;
   const pass = document.getElementById('s-pass').value;
@@ -278,6 +297,9 @@ async function doLogin() {
     loadStores();
     loadCart();
     loadOrders();
+    if (currentRole === 'merchant') {
+      setTimeout(updatePendingBadge, 1500);
+    }
     show('✅ مبروك! دخلت.', true);
   } catch (e) { show('❌ ' + e.message, false); }
 }
@@ -294,6 +316,8 @@ async function doLogout() {
   document.getElementById('order-filter').value = '';
   const cntEl = document.getElementById('orders-count');
   if (cntEl) cntEl.textContent = '';
+  const badge = document.getElementById('pending-badge');
+  if (badge) badge.style.display = 'none';
   document.getElementById('stats-btn').style.display = 'none';
   document.getElementById('store-btn').style.display = 'none';
   show('✅ تم الخروج', true);
@@ -804,6 +828,7 @@ async function updateOrderStatus(orderId, newStatus) {
     if (error) throw error;
     show('✅ تم تحديث حالة الطلب', true);
     loadOrders();
+    if (currentRole === 'merchant') updatePendingBadge();
   } catch (e) {
     show('❌ ' + e.message, false);
   }
