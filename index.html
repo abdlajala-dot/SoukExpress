@@ -894,6 +894,18 @@ async function loadOrders() {
       callBtn.textContent = '📞 اتصال';
       callBtn.onclick = () => window.location.href = 'tel:' + phone;
       div.appendChild(callBtn);
+
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'teal small-btn';
+      copyBtn.textContent = '📋 نسخ';
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(o.customer_phone).then(() => {
+          show('✅ تم نسخ الرقم: ' + o.customer_phone, true);
+        }).catch(() => {
+          show('📋 الرقم: ' + o.customer_phone, true);
+        });
+      };
+      div.appendChild(copyBtn);
     }
     if ((currentRole === 'merchant' || currentRole === 'driver') && o.delivery_address) {
       const mapBtn = document.createElement('button');
