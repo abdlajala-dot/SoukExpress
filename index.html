@@ -821,6 +821,13 @@ async function loadOrders() {
       callBtn.onclick = () => window.location.href = 'tel:' + phone;
       div.appendChild(callBtn);
     }
+    if ((currentRole === 'merchant' || currentRole === 'driver') && o.delivery_address) {
+      const mapBtn = document.createElement('button');
+      mapBtn.className = 'purple small-btn';
+      mapBtn.textContent = '📍 فتح في الخريطة';
+      mapBtn.onclick = () => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.delivery_address), '_blank');
+      div.appendChild(mapBtn);
+    }
     if (currentRole === 'merchant' && o.status === 'pending') {
       const btnDiv = document.createElement('div');
       btnDiv.style.marginTop = '10px';
