@@ -182,7 +182,7 @@ button:active { transform: scale(0.98); }
 <div style="text-align:center; padding:10px 0;">
 <div style="font-size:60px; margin-bottom:10px;">🛒</div>
 <h3 style="color:#ff6b35; margin:5px 0;">SoukExpress</h3>
-<p style="color:#888; font-size:13px;">v1.6.0</p>
+<p style="color:#888; font-size:13px;">v1.6.1</p>
 </div>
 <p style="line-height:1.8; font-size:14px;" data-i18n="about_desc">🚚 منصة توصيل سريع بأكادير.</p>
 <ul style="line-height:1.9; font-size:13px; padding-right:20px;">
@@ -351,12 +351,17 @@ function setLanguage(lang) {
   });
   if (currentRole === 'merchant') document.getElementById('stats-btn-text').textContent = t('store_stats');
   else if (currentRole === 'driver') document.getElementById('stats-btn-text').textContent = t('my_stats');
+  const tglBtn = document.getElementById('toggle-stores-btn');
+  if (tglBtn && tglBtn.style.display !== 'none') {
+    const isOpen = tglBtn.textContent.includes('🔒') || tglBtn.textContent.includes('Close') || tglBtn.textContent.includes('Fermer');
+    tglBtn.textContent = isOpen ? '🔒 ' + t('close_stores') : '🔓 ' + t('open_stores');
+  }
 }
 function cycleLang() {
   const langs = ['ar', 'fr', 'en'];
   const next = langs[(langs.indexOf(currentLang) + 1) % langs.length];
   setLanguage(next);
-  show(next === 'ar' ? '🇲🇦' : next === 'fr' ? '🇫🇷' : '🇬🇧', true);
+  show(next === 'ar' ? '🇲🇦 العربية' : next === 'fr' ? '🇫🇷 Français' : '🇬🇧 English', true);
 }
 
 function show(txt, ok) {
@@ -366,13 +371,7 @@ function show(txt, ok) {
   setTimeout(() => m.classList.add('hidden'), 5000);
 }
 function playBeep() {
-  try {
-    const c = new (window.AudioContext || window.webkitAudioContext)();
-    const o = c.createOscillator(), g = c.createGain();
-    o.connect(g); g.connect(c.destination);
-    o.frequency.value = 800; g.gain.value = 0.2;
-    o.start(); o.stop(c.currentTime + 0.2);
-  } catch (e) {}
+  try { const c = new (window.AudioContext || window.webkitAudioContext)(); const o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.frequency.value = 800; g.gain.value = 0.2; o.start(); o.stop(c.currentTime + 0.2); } catch (e) {}
 }
 function toggleDarkMode() {
   const cur = document.documentElement.getAttribute('data-theme');
@@ -389,7 +388,6 @@ window.addEventListener('DOMContentLoaded', () => {
   selectPay('cash');
 });
 
-/* PAYMENT */
 function selectPay(method) {
   selectedPayment = method;
   document.getElementById('pay-cash').classList.toggle('selected', method === 'cash');
@@ -397,7 +395,6 @@ function selectPay(method) {
   document.querySelectorAll('input[name="pay"]').forEach(r => r.checked = r.value === method);
 }
 
-/* NOTIFICATIONS */
 async function requestNotifPermission() {
   if (!('Notification' in window)) { show('❌', false); return; }
   if (Notification.permission === 'granted') { show('✅', true); document.getElementById('notif-btn').style.display = 'none'; return; }
@@ -405,9 +402,7 @@ async function requestNotifPermission() {
   if (p === 'granted') { show('✅', true); document.getElementById('notif-btn').style.display = 'none'; }
 }
 function sendNotification(title, body) {
-  if ('Notification' in window && Notification.permission === 'granted') {
-    try { new Notification(title, { body, tag: 'sk-' + Date.now() }); } catch (e) {}
-  }
+  if ('Notification' in window && Notification.permission === 'granted') { try { new Notification(title, { body, tag: 'sk-' + Date.now() }); } catch (e) {} }
 }
 function startNotificationPolling() {
   if (notifInterval) clearInterval(notifInterval);
@@ -417,23 +412,12 @@ function startNotificationPolling() {
       if (currentRole === 'customer') {
         const { data: o } = await DB.from('orders').select('id, status').eq('customer_id', currentUser.id);
         const saved = JSON.parse(localStorage.getItem('notif_o') || '{}');
-        o?.forEach(x => {
-          if (saved[x.id] && saved[x.id] !== x.status) {
-            const m = {accepted: '✅ تم قبول طلبك', delivering: '🚗 في الطريق', delivered: '🎉 تم التوصيل', cancelled: '❌ ملغى'};
-            if (m[x.status]) sendNotification('📦 SoukExpress', m[x.status]);
-          }
-          saved[x.id] = x.status;
-        });
+        o?.forEach(x => { if (saved[x.id] && saved[x.id] !== x.status) { const m = {accepted: '✅ تم قبول طلبك', delivering: '🚗 في الطريق', delivered: '🎉 تم التوصيل', cancelled: '❌ ملغى'}; if (m[x.status]) sendNotification('📦 SoukExpress', m[x.status]); } saved[x.id] = x.status; });
         localStorage.setItem('notif_o', JSON.stringify(saved));
       }
       if (currentRole === 'merchant') {
         const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
-        if (ms && ms.length > 0) {
-          const { data: p } = await DB.from('orders').select('id').in('store_id', ms.map(s => s.id)).eq('status', 'pending');
-          const last = parseInt(localStorage.getItem('notif_p') || '0');
-          if (p && p.length > last) { sendNotification('🔔 طلب جديد!', p.length + ' طلب'); playBeep(); }
-          localStorage.setItem('notif_p', String(p?.length || 0));
-        }
+        if (ms && ms.length > 0) { const { data: p } = await DB.from('orders').select('id').in('store_id', ms.map(s => s.id)).eq('status', 'pending'); const last = parseInt(localStorage.getItem('notif_p') || '0'); if (p && p.length > last) { sendNotification('🔔 طلب جديد!', p.length + ' طلب'); playBeep(); } localStorage.setItem('notif_p', String(p?.length || 0)); }
       }
     } catch (e) {}
   }, 30000);
@@ -456,7 +440,6 @@ function shareApp() {
 }
 function supportWhatsApp() { window.open('https://wa.me/212671634521?text=' + encodeURIComponent('مساعدة SoukExpress'), '_blank'); }
 
-/* MAP */
 function initMap() {
   if (map) return;
   document.getElementById('map').style.display = 'block';
@@ -478,21 +461,17 @@ function getMyLocation() {
   navigator.geolocation.getCurrentPosition(p => { map.setView([p.coords.latitude, p.coords.longitude], 16); setMarker(p.coords.latitude, p.coords.longitude); }, () => { s.textContent = '⚠️'; s.style.color = '#dc3545'; }, { enableHighAccuracy: true, timeout: 10000 });
 }
 
-/* CSV EXPORT */
 async function exportOrdersCSV() {
   try {
     const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
     if (!ms || ms.length === 0) { show('⚠️', false); return; }
     const { data: orders } = await DB.from('orders').select('*').in('store_id', ms.map(s => s.id)).order('created_at', {ascending: false});
     if (!orders || orders.length === 0) { show('⚠️ لا طلبات', false); return; }
-    let csv = '\uFEFF'; // BOM for Excel
+    let csv = '\uFEFF';
     csv += 'رقم الطلب,التاريخ,الزبون,الهاتف,العنوان,المجموع,طريقة الدفع,الحالة\n';
     const payAr = {cash: 'نقداً', card: 'بطاقة'};
     const stAr = {pending: 'انتظار', accepted: 'مقبول', delivering: 'في الطريق', delivered: 'موصل', cancelled: 'ملغى'};
-    orders.forEach(o => {
-      const dt = o.created_at ? new Date(o.created_at).toLocaleString('ar-MA') : '';
-      csv += `"${o.id.substring(0,6)}","${dt}","${(o.customer_name||'').replace(/"/g,'""')}","${o.customer_phone||''}","${(o.delivery_address||'').replace(/"/g,'""')}","${o.total_price}","${payAr[o.payment_method]||''}","${stAr[o.status]||o.status}"\n`;
-    });
+    orders.forEach(o => { const dt = o.created_at ? new Date(o.created_at).toLocaleString('ar-MA') : ''; csv += `"${o.id.substring(0,6)}","${dt}","${(o.customer_name||'').replace(/"/g,'""')}","${o.customer_phone||''}","${(o.delivery_address||'').replace(/"/g,'""')}","${o.total_price}","${payAr[o.payment_method]||''}","${stAr[o.status]||o.status}"\n`; });
     const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -502,7 +481,6 @@ async function exportOrdersCSV() {
   } catch (e) { show('❌ ' + e.message, false); }
 }
 
-/* COUPONS */
 async function showMyCoupons() { document.getElementById('coupons-box').classList.remove('hidden'); document.getElementById('add-store-box').classList.add('hidden'); await loadCoupons(); }
 function hideCoupons() { document.getElementById('coupons-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
 async function loadCoupons() {
@@ -547,7 +525,6 @@ function updateCouponResult() {
   loadCart();
 }
 
-/* CHAT */
 async function openChat(orderId, title) {
   currentChatOrderId = orderId;
   document.getElementById('chat-box').classList.remove('hidden');
@@ -565,11 +542,7 @@ async function loadChatMessages() {
   const { data: msgs, error } = await DB.from('messages').select('*').eq('order_id', currentChatOrderId).order('created_at', {ascending: true});
   if (error) { c.innerHTML = '<p style="color:red;text-align:center;font-size:12px;">❌</p>'; return; }
   if (!msgs || msgs.length === 0) { c.innerHTML = '<p style="text-align:center; color:#888; font-size:13px;">💬 ...</p>'; return; }
-  c.innerHTML = msgs.map(m => {
-    const isMine = m.sender_id === currentUser.id;
-    const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('ar-MA', {hour:'2-digit', minute:'2-digit'}) : '';
-    return `<div class="chat-msg ${isMine ? 'chat-mine' : 'chat-theirs'}">${!isMine ? '<div class="chat-name">' + (m.sender_name || '') + ' ' + (roleAr[m.sender_role] || '') + '</div>' : ''}<div>${(m.message || '').replace(/</g, '&lt;')}</div><div class="chat-meta">${time}</div></div>`;
-  }).join('');
+  c.innerHTML = msgs.map(m => { const isMine = m.sender_id === currentUser.id; const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('ar-MA', {hour:'2-digit', minute:'2-digit'}) : ''; return `<div class="chat-msg ${isMine ? 'chat-mine' : 'chat-theirs'}">${!isMine ? '<div class="chat-name">' + (m.sender_name || '') + ' ' + (roleAr[m.sender_role] || '') + '</div>' : ''}<div>${(m.message || '').replace(/</g, '&lt;')}</div><div class="chat-meta">${time}</div></div>`; }).join('');
   c.scrollTop = c.scrollHeight;
 }
 async function sendChatMessage() {
@@ -579,7 +552,6 @@ async function sendChatMessage() {
 }
 function closeChat() { document.getElementById('chat-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); currentChatOrderId = null; if (chatInterval) { clearInterval(chatInterval); chatInterval = null; } }
 
-/* MAIN */
 async function updatePendingBadge() {
   const b = document.getElementById('pending-badge');
   if (!b || currentRole !== 'merchant') { if (b) b.style.display = 'none'; return 0; }
@@ -619,6 +591,7 @@ async function doLogin() {
     window.autoRefreshInterval = setInterval(async () => { loadOrders(); if (currentRole === 'merchant') { const n = await updatePendingBadge(); if (n > lastPendingCount) { playBeep(); show('🔔!', true); } lastPendingCount = n; } }, 30000);
     startNotificationPolling();
     show('✅', true);
+    setLanguage(currentLang);
   } catch (err) { show('❌ ' + err.message, false); }
 }
 async function doLogout() {
