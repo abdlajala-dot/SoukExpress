@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SoukExpress - Livraison Agadir</title>
+<title>SoukExpress</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff6b35">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -55,8 +55,8 @@ button:active { transform: scale(0.98); }
 .store-status { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; margin: 5px 0; }
 .logo-wrap { display:flex; align-items:center; justify-content:center; gap:10px; }
 .logo-circle { width:50px; height:50px; background: rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; border: 2px solid rgba(255,255,255,0.4); }
-#dark-btn { position: absolute; top: 15px; left: 15px; width: 42px; height: 42px; padding: 0; font-size: 20px; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
-#lang-btn { position: absolute; top: 15px; right: 15px; width: 42px; height: 42px; padding: 0; font-size: 20px; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
+#dark-btn, #lang-btn { position: absolute; top: 15px; width: 42px; height: 42px; padding: 0; font-size: 20px; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
+#dark-btn { left: 15px; } #lang-btn { right: 15px; }
 #map { height: 250px; border-radius: 10px; margin-top: 10px; }
 .chat-msg { padding: 10px 14px; border-radius: 12px; margin: 6px 0; max-width: 75%; word-wrap: break-word; font-size: 14px; }
 .chat-mine { background: #dcf8c6; margin-right: auto; border-bottom-right-radius: 4px; }
@@ -73,12 +73,16 @@ button:active { transform: scale(0.98); }
 .profile-stat-label { font-size: 11px; color: #666; margin-top: 3px; }
 .coupon-banner { background: linear-gradient(135deg, #e91e63, #c2185b); color: white; padding: 12px 15px; border-radius: 10px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
 .coupon-code { background: rgba(255,255,255,0.25); padding: 4px 10px; border-radius: 6px; font-weight: bold; letter-spacing: 2px; }
+.promo-banner { background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 10px 14px; border-radius: 10px; margin: 8px 0; font-size: 14px; font-weight: bold; text-align: center; box-shadow: 0 2px 8px rgba(255,152,0,0.3); }
+.pay-option { display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid #e9ecef; border-radius: 10px; margin: 6px 0; cursor: pointer; transition: 0.2s; }
+.pay-option:hover { border-color: #ff6b35; }
+.pay-option input { width: auto; margin: 0; }
+.pay-option.selected { border-color: #ff6b35; background: #fff5f0; }
 [data-theme="dark"] body { background: #121212; color: #e0e0e0; }
 [data-theme="dark"] .box { background: #1e1e1e; color: #e0e0e0; }
 [data-theme="dark"] h2 { color: #e0e0e0; }
 [data-theme="dark"] .section-title { color: #e0e0e0; }
 [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea { background: #2a2a2a; color: #e0e0e0; border-color: #444; }
-[data-theme="dark"] input::placeholder { color: #888; }
 [data-theme="dark"] .store-item { background: #1e1e1e; border-color: #333; }
 [data-theme="dark"] .store-item p { color: #aaa; }
 [data-theme="dark"] .product-item { background: #2a2015; color: #e0e0e0; }
@@ -86,24 +90,22 @@ button:active { transform: scale(0.98); }
 [data-theme="dark"] .order-item { background: #1a2a1a; }
 [data-theme="dark"] .order-item b { color: #90ee90; }
 [data-theme="dark"] .order-products { background: #2a2015; color: #ccc; }
-[data-theme="dark"] .footer { color: #666; }
 [data-theme="dark"] .search-input { background: #2a2a2a !important; color: #e0e0e0; }
 [data-theme="dark"] .checkout-field { background: #1e1e1e; border-color: #444; }
 [data-theme="dark"] .stat-card { color: #fff; }
-[data-theme="dark"] .stat-label { color: #ccc; }
 [data-theme="dark"] .profile-stat { background: #2a2a2a; }
 [data-theme="dark"] .profile-stat-label { color: #aaa; }
+[data-theme="dark"] .pay-option { border-color: #444; }
+[data-theme="dark"] .pay-option.selected { background: #3a2015; border-color: #ff6b35; }
 </style>
 </head>
 <body>
 
 <div class="header">
-<button id="dark-btn" onclick="toggleDarkMode()" title="Dark Mode">🌙</button>
-<button id="lang-btn" onclick="cycleLang()" title="Language">🌐</button>
+<button id="dark-btn" onclick="toggleDarkMode()">🌙</button>
+<button id="lang-btn" onclick="cycleLang()">🌐</button>
 <div class="logo-wrap">
-<div class="logo-circle">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M7 18C5.9 18 5.01 18.9 5.01 20C5.01 21.1 5.9 22 7 22C8.1 22 9 21.1 9 20C9 18.9 8.1 18 7 18ZM1 2V4H3L6.6 11.59L5.24 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.58 17.3 11.97L20.88 5.48C20.96 5.34 21 5.17 21 5C21 4.45 20.55 4 20 4H5.21L4.27 2H1ZM17 18C15.9 18 15.01 18.9 15.01 20C15.01 21.1 15.9 22 17 22C18.1 22 19 21.1 19 20C19 18.9 18.1 18 17 18Z"/></svg>
-</div>
+<div class="logo-circle"><svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M7 18C5.9 18 5.01 18.9 5.01 20C5.01 21.1 5.9 22 7 22C8.1 22 9 21.1 9 20C9 18.9 8.1 18 7 18ZM1 2V4H3L6.6 11.59L5.24 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.58 17.3 11.97L20.88 5.48C20.96 5.34 21 5.17 21 5C21 4.45 20.55 4 20 4H5.21L4.27 2H1ZM17 18C15.9 18 15.01 18.9 15.01 20C15.01 21.1 15.9 22 17 22C18.1 22 19 21.1 19 20C19 18.9 18.1 18 17 18Z"/></svg></div>
 <h1>SoukExpress</h1>
 </div>
 <p data-i18n="tagline">🚚 منصة التوصيل السريع - أكادير</p>
@@ -118,12 +120,7 @@ button:active { transform: scale(0.98); }
 <input type="tel" id="s-phone" data-i18n-ph="phone" placeholder="رقم الهاتف">
 <input type="email" id="s-email" data-i18n-ph="email" placeholder="البريد الإلكتروني">
 <input type="password" id="s-pass" data-i18n-ph="password" placeholder="كلمة السر (6+)">
-<select id="s-role">
-<option value="" data-i18n="choose_role">اختر نوع الحساب...</option>
-<option value="customer" data-i18n="role_customer">🛒 زبون</option>
-<option value="merchant" data-i18n="role_merchant">🏪 تاجر</option>
-<option value="driver" data-i18n="role_driver">🚚 موصل</option>
-</select>
+<select id="s-role"><option value="" data-i18n="choose_role">اختر نوع الحساب...</option><option value="customer" data-i18n="role_customer">🛒 زبون</option><option value="merchant" data-i18n="role_merchant">🏪 تاجر</option><option value="driver" data-i18n="role_driver">🚚 موصل</option></select>
 <button class="green" onclick="doSignup()" data-i18n="signup_btn">تسجيل</button>
 </div>
 
@@ -146,11 +143,12 @@ button:active { transform: scale(0.98); }
 <button class="blue" onclick="showAbout()" style="margin-top:8px;" data-i18n="about">ℹ️ عن التطبيق</button>
 <button class="whatsapp" onclick="shareApp()" style="margin-top:8px;" data-i18n="share">📤 شارك التطبيق</button>
 <button class="green" onclick="supportWhatsApp()" style="margin-top:8px;" data-i18n="support">💬 الدعم الفني</button>
-<button class="orange" onclick="installApp()" id="install-btn" style="margin-top:8px; display:none;" data-i18n="install_app">📲 ثبّت التطبيق على الهاتف</button>
+<button class="orange" onclick="installApp()" id="install-btn" style="margin-top:8px; display:none;" data-i18n="install_app">📲 ثبّت التطبيق</button>
 <button class="pink" onclick="requestNotifPermission()" id="notif-btn" style="margin-top:8px;" data-i18n="enable_notifs">🔔 تفعيل الإشعارات</button>
 <button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 <span id="stats-btn-text" data-i18n="store_stats">إحصائيات المتجر</span> <span id="pending-badge" class="pending-badge" style="display:none;">0</span></button>
 <button class="purple" onclick="toggleAllStores()" id="toggle-stores-btn" style="margin-top:8px; display:none;" data-i18n="close_stores">🔒 إغلاق المتاجر</button>
 <button class="pink" onclick="showMyCoupons()" id="coupons-btn" style="margin-top:8px; display:none;" data-i18n="my_coupons">🎟️ كودات الخصم</button>
+<button class="blue" onclick="exportOrdersCSV()" id="csv-btn" style="margin-top:8px; display:none;" data-i18n="export_csv">📊 تصدير الطلبات (Excel)</button>
 <button class="red" onclick="doLogout()" style="margin-top:8px;" data-i18n="logout">🚪 تسجيل الخروج</button>
 </div>
 
@@ -159,6 +157,7 @@ button:active { transform: scale(0.98); }
 <input type="text" id="st-name" data-i18n-ph="store_name" placeholder="اسم المتجر">
 <textarea id="st-desc" data-i18n-ph="store_desc" placeholder="وصف المتجر" rows="2"></textarea>
 <input type="text" id="st-address" data-i18n-ph="store_address" placeholder="العنوان">
+<input type="text" id="st-promo" placeholder="📢 إعلان/عرض (اختياري - مثلاً: خصم 20%)">
 <button class="green" onclick="doAddStore()" data-i18n="save">حفظ المتجر</button>
 <button class="red" onclick="hideStoreForm()" data-i18n="cancel">إلغاء</button>
 </div>
@@ -170,11 +169,11 @@ button:active { transform: scale(0.98); }
 <p style="text-align:center; color:#888; font-size:13px; margin:0 0 10px 0;" id="profile-email-display"></p>
 <div class="profile-stats" id="profile-stats"></div>
 <hr style="border:none; border-top:1px solid #eee; margin:15px 0;">
-<b data-i18n="edit_info">✏️ تعديل المعلومات:</b>
+<b data-i18n="edit_info">✏️ تعديل:</b>
 <input type="text" id="pf-name" data-i18n-ph="full_name" placeholder="الاسم الكامل">
 <input type="tel" id="pf-phone" data-i18n-ph="phone" placeholder="رقم الهاتف">
 <input type="email" id="pf-email" disabled style="background:#eee; color:#888;">
-<button class="green" onclick="doUpdateProfile()" data-i18n="save_changes">💾 حفظ التعديلات</button>
+<button class="green" onclick="doUpdateProfile()" data-i18n="save_changes">💾 حفظ</button>
 <button class="red" onclick="hideProfile()" data-i18n="close">إغلاق</button>
 </div>
 
@@ -183,24 +182,13 @@ button:active { transform: scale(0.98); }
 <div style="text-align:center; padding:10px 0;">
 <div style="font-size:60px; margin-bottom:10px;">🛒</div>
 <h3 style="color:#ff6b35; margin:5px 0;">SoukExpress</h3>
-<p style="color:#888; font-size:13px;">v1.5.0</p>
+<p style="color:#888; font-size:13px;">v1.6.0</p>
 </div>
-<p style="line-height:1.8; font-size:14px;" data-i18n="about_desc">🚚 منصة توصيل سريع بأكادير كتربط بين الزبون، التاجر، والموصل.</p>
-<p style="line-height:1.8; font-size:14px;"><b data-i18n="features">✨ المميزات:</b></p>
+<p style="line-height:1.8; font-size:14px;" data-i18n="about_desc">🚚 منصة توصيل سريع بأكادير.</p>
 <ul style="line-height:1.9; font-size:13px; padding-right:20px;">
-<li data-i18n="f1">🛍️ تسوق من المتاجر المحلية</li>
-<li data-i18n="f2">⭐ تقييم المتاجر والموصلين</li>
-<li data-i18n="f3">💬 شات مباشر</li>
-<li data-i18n="f4">🗺️ خريطة تفاعلية</li>
-<li data-i18n="f5">📸 رفع صور المنتجات</li>
-<li data-i18n="f6">🎟️ كودات الخصم</li>
-<li data-i18n="f7">🔔 إشعارات الطلبات</li>
-<li data-i18n="f8">🌍 3 لغات (عربية/فرنسية/إنجليزية)</li>
+<li data-i18n="f1">🛍️ تسوق</li><li data-i18n="f2">⭐ تقييمات</li><li data-i18n="f3">💬 شات</li><li data-i18n="f4">🗺️ خريطة</li><li data-i18n="f5">📸 صور</li><li data-i18n="f6">🎟️ كودات خصم</li><li data-i18n="f7">🔔 إشعارات</li><li data-i18n="f8">🌍 3 لغات</li>
 </ul>
-<div style="text-align:center; margin-top:20px; padding-top:15px; border-top:1px solid #eee;">
-<p style="color:#888; font-size:12px;">© 2026 SoukExpress Maroc</p>
-</div>
-<button class="whatsapp" onclick="supportWhatsApp()" data-i18n="contact_us">💬 تواصل معنا</button>
+<button class="whatsapp" onclick="supportWhatsApp()" data-i18n="contact_us">💬 تواصل</button>
 <button class="red" onclick="hideAbout()" data-i18n="close">إغلاق</button>
 </div>
 
@@ -214,58 +202,55 @@ button:active { transform: scale(0.98); }
 <h2 data-i18n="my_coupons">🎟️ كودات الخصم</h2>
 <div id="coupons-list"></div>
 <div style="background:#f9f9f9; padding:15px; border-radius:10px; margin-top:15px; border:2px dashed #ddd;">
-<b data-i18n="create_coupon">➕ إنشاء كود خصم:</b>
-<input type="text" id="cp-code" data-i18n-ph="cp_code" placeholder="الكود (مثلاً: EID2026)" style="text-transform:uppercase;">
-<select id="cp-type">
-<option value="percent" data-i18n="cp_percent">💯 نسبة مئوية (%)</option>
-<option value="fixed" data-i18n="cp_fixed">💰 مبلغ ثابت (درهم)</option>
-</select>
-<input type="number" id="cp-value" data-i18n-ph="cp_value" placeholder="القيمة (مثلاً: 10)">
-<input type="number" id="cp-min" data-i18n-ph="cp_min" placeholder="الحد الأدنى للطلب (اختياري)">
-<input type="number" id="cp-max" data-i18n-ph="cp_max" placeholder="أقصى عدد استعمالات (100)" value="100">
+<b data-i18n="create_coupon">➕ إنشاء كود:</b>
+<input type="text" id="cp-code" data-i18n-ph="cp_code" placeholder="EID2026" style="text-transform:uppercase;">
+<select id="cp-type"><option value="percent" data-i18n="cp_percent">💯 نسبة (%)</option><option value="fixed" data-i18n="cp_fixed">💰 مبلغ ثابت</option></select>
+<input type="number" id="cp-value" data-i18n-ph="cp_value" placeholder="القيمة">
+<input type="number" id="cp-min" data-i18n-ph="cp_min" placeholder="الحد الأدنى (اختياري)">
+<input type="number" id="cp-max" data-i18n-ph="cp_max" placeholder="أقصى استعمالات" value="100">
 <button class="green" onclick="createCoupon()" data-i18n="create_btn">🎟️ إنشاء</button>
 </div>
 <button class="red" onclick="hideCoupons()" style="margin-top:10px;" data-i18n="close">إغلاق</button>
 </div>
 
 <div class="box hidden" id="stores-box">
-<div class="section-title" data-i18n="stores_list">🏪 قائمة المتاجر</div>
-<input type="text" id="search-input" class="search-input" data-i18n-ph="search_placeholder" placeholder="🔍 ابحث عن منتج أو متجر..." oninput="applyFilters()">
+<div class="section-title" data-i18n="stores_list">🏪 المتاجر</div>
+<input type="text" id="search-input" class="search-input" data-i18n-ph="search_placeholder" placeholder="🔍 ابحث..." oninput="applyFilters()">
 <div class="filter-bar">
-<input type="number" id="filter-min-price" data-i18n-ph="price_from" placeholder="💰 سعر من (درهم)" oninput="applyFilters()">
-<input type="number" id="filter-max-price" data-i18n-ph="price_to" placeholder="💰 سعر إلى (درهم)" oninput="applyFilters()">
+<input type="number" id="filter-min-price" data-i18n-ph="price_from" placeholder="💰 من (درهم)" oninput="applyFilters()">
+<input type="number" id="filter-max-price" data-i18n-ph="price_to" placeholder="💰 إلى (درهم)" oninput="applyFilters()">
 <select id="filter-rating" onchange="applyFilters()" class="filter-full">
 <option value="" data-i18n="all_ratings">⭐ جميع التقييمات</option>
-<option value="3" data-i18n="rating_3">⭐ 3 نجوم وأكثر</option>
-<option value="4" data-i18n="rating_4">⭐ 4 نجوم وأكثر</option>
-<option value="4.5" data-i18n="rating_45">⭐ 4.5 نجوم وأكثر</option>
+<option value="3" data-i18n="rating_3">⭐ 3+ نجوم</option>
+<option value="4" data-i18n="rating_4">⭐ 4+ نجوم</option>
+<option value="4.5" data-i18n="rating_45">⭐ 4.5+ نجوم</option>
 </select>
 <select id="filter-sort" onchange="applyFilters()" class="filter-full">
-<option value="" data-i18n="sort_default">🔄 ترتيب افتراضي</option>
-<option value="price-asc" data-i18n="sort_price_asc">💰 السعر: من الأقل للأعلى</option>
-<option value="price-desc" data-i18n="sort_price_desc">💰 السعر: من الأعلى للأقل</option>
-<option value="name-asc" data-i18n="sort_name">🔤 الاسم: أ - ي</option>
+<option value="" data-i18n="sort_default">🔄 ترتيب</option>
+<option value="price-asc" data-i18n="sort_price_asc">💰 الأقل سعراً</option>
+<option value="price-desc" data-i18n="sort_price_desc">💰 الأغلى</option>
+<option value="name-asc" data-i18n="sort_name">🔤 أبجدي</option>
 <option value="rating-desc" data-i18n="sort_rating">⭐ الأعلى تقييماً</option>
 </select>
 </div>
-<button class="orange" onclick="resetFilters()" style="margin-bottom:10px; font-size:13px; padding:8px;" data-i18n="reset_filters">🔄 إعادة تعيين الفلاتر</button>
+<button class="orange" onclick="resetFilters()" style="margin-bottom:10px; font-size:13px; padding:8px;" data-i18n="reset_filters">🔄 إعادة تعيين</button>
 <div id="stores-list"></div>
 </div>
 
 <div class="box hidden" id="product-form-box">
-<h2 id="product-form-title">📦 إضافة منتج جديد</h2>
+<h2 id="product-form-title">📦 إضافة منتج</h2>
 <p id="product-store-name" style="text-align:center; color:#666; font-size:14px;"></p>
 <input type="text" id="pr-name" data-i18n-ph="pr_name" placeholder="اسم المنتج">
-<textarea id="pr-desc" data-i18n-ph="pr_desc" placeholder="وصف المنتج" rows="2"></textarea>
+<textarea id="pr-desc" data-i18n-ph="pr_desc" placeholder="الوصف" rows="2"></textarea>
 <input type="number" id="pr-price" data-i18n-ph="pr_price" placeholder="السعر (درهم)">
-<label style="display:block; margin-top:10px; font-size:14px; color:#666;" data-i18n="pr_image_label">📸 صورة المنتج:</label>
+<label style="display:block; margin-top:10px; font-size:14px; color:#666;" data-i18n="pr_image_label">📸 صورة:</label>
 <div style="display:flex; gap:8px; margin-top:8px;">
 <button class="green" type="button" onclick="document.getElementById('pr-image-file').click()" style="margin:0;" data-i18n="camera">📷 الكاميرا</button>
 <button class="blue" type="button" onclick="document.getElementById('pr-image-gallery').click()" style="margin:0;" data-i18n="gallery">🖼️ المعرض</button>
 </div>
 <input type="file" id="pr-image-file" accept="image/*" capture="environment" style="display:none;">
 <input type="file" id="pr-image-gallery" accept="image/*" style="display:none;">
-<input type="url" id="pr-image" data-i18n-ph="pr_url" placeholder="🔗 ولا الصق رابط صورة" style="margin-top:6px;">
+<input type="url" id="pr-image" data-i18n-ph="pr_url" placeholder="🔗 رابط صورة" style="margin-top:6px;">
 <div id="image-preview" style="text-align:center; margin-top:10px;"></div>
 <button class="purple" onclick="doAddProduct()" id="pr-submit-btn" data-i18n="save_product">حفظ المنتج</button>
 <button class="red" onclick="hideProductForm()" data-i18n="cancel">إلغاء</button>
@@ -284,10 +269,17 @@ button:active { transform: scale(0.98); }
 <b data-i18n="delivery_info">📍 معلومات التوصيل:</b>
 <input type="text" id="co-name" data-i18n-ph="full_name" placeholder="الاسم الكامل">
 <input type="tel" id="co-phone" data-i18n-ph="phone" placeholder="رقم الهاتف">
-<input type="text" id="co-address" data-i18n-ph="address_ph" placeholder="عنوان التوصيل (الحي، الشارع...)">
-<button class="blue" onclick="getMyLocation()" type="button" style="margin-top:8px;" data-i18n="use_my_location">🎯 استعمل موقعي الحالي</button>
+<input type="text" id="co-address" data-i18n-ph="address_ph" placeholder="عنوان التوصيل">
+<button class="blue" onclick="getMyLocation()" type="button" style="margin-top:8px;" data-i18n="use_my_location">🎯 استعمل موقعي</button>
 <div id="map" style="display:none;"></div>
 <p id="location-status" style="text-align:center; color:#888; font-size:12px; margin-top:5px;"></p>
+<b style="display:block; margin-top:12px;" data-i18n="payment_method">💳 طريقة الدفع:</b>
+<div class="pay-option" id="pay-cash" onclick="selectPay('cash')">
+<input type="radio" name="pay" value="cash" checked><span data-i18n="pay_cash">💵 نقداً عند التسليم</span>
+</div>
+<div class="pay-option" id="pay-card" onclick="selectPay('card')">
+<input type="radio" name="pay" value="card"><span data-i18n="pay_card">💳 بطاقة بنكية</span>
+</div>
 </div>
 <button class="teal" id="checkout-btn" onclick="doCheckout()" data-i18n="confirm_order">✅ تأكيد الطلب</button>
 <button class="red" onclick="clearCart()" data-i18n="clear_cart">🗑️ تفريغ السلة</button>
@@ -297,7 +289,7 @@ button:active { transform: scale(0.98); }
 <h2 id="chat-title" data-i18n="chat">💬 المحادثة</h2>
 <div id="chat-messages" style="height:400px; overflow-y:auto; background:#f9f9f9; border-radius:10px; padding:10px; margin-bottom:10px; border:1px solid #e0e0e0;"></div>
 <div style="display:flex; gap:8px;">
-<input type="text" id="chat-input" data-i18n-ph="chat_ph" placeholder="✍️ اكتب رسالة..." onkeypress="if(event.key==='Enter')sendChatMessage()" style="flex:1; margin:0;">
+<input type="text" id="chat-input" data-i18n-ph="chat_ph" placeholder="✍️ رسالة..." onkeypress="if(event.key==='Enter')sendChatMessage()" style="flex:1; margin:0;">
 <button class="green" onclick="sendChatMessage()" style="width:auto; padding:13px 20px; margin:0;">📤</button>
 </div>
 <button class="red" onclick="closeChat()" style="margin-top:10px;" data-i18n="back">🔙 رجوع</button>
@@ -305,13 +297,13 @@ button:active { transform: scale(0.98); }
 
 <div class="box hidden" id="orders-box">
 <div class="section-title">📋 <span data-i18n="orders">الطلبات</span> <span id="orders-count" style="color:#ff6b35;font-weight:bold;"></span></div>
-<input type="text" id="orders-search" class="search-input" data-i18n-ph="search_orders" placeholder="🔍 ابحث بالاسم، الهاتف، أو العنوان..." oninput="filterOrders()" style="margin-bottom:8px;">
+<input type="text" id="orders-search" class="search-input" data-i18n-ph="search_orders" placeholder="🔍 ابحث..." oninput="filterOrders()" style="margin-bottom:8px;">
 <select id="order-filter" onchange="loadOrders()" style="margin-bottom:10px; background:#f0f2f5; font-weight:600;">
 <option value="" data-i18n="all_orders">📋 كل الطلبات</option>
-<option value="pending" data-i18n="status_pending">⏳ قيد الانتظار</option>
+<option value="pending" data-i18n="status_pending">⏳ انتظار</option>
 <option value="accepted" data-i18n="status_accepted">✅ مقبولة</option>
 <option value="delivering" data-i18n="status_delivering">🚗 في الطريق</option>
-<option value="delivered" data-i18n="status_delivered">🎉 تم التوصيل</option>
+<option value="delivered" data-i18n="status_delivered">🎉 موصلة</option>
 <option value="cancelled" data-i18n="status_cancelled">❌ ملغاة</option>
 </select>
 <div id="orders-list"></div>
@@ -330,163 +322,19 @@ let cart = [], editingProductId = null, lastPendingCount = 0, deferredPrompt = n
 let map = null, marker = null, selectedLat = null, selectedLng = null;
 let currentChatOrderId = null, chatInterval = null, notifInterval = null;
 let allStoresCache = {}, allProductsCache = {};
-let appliedCoupon = null, couponsCache = [];
+let appliedCoupon = null, selectedPayment = 'cash';
 
 const roleAr = {customer: '🛒 زبون', merchant: '🏪 تاجر', driver: '🚚 موصل'};
 const roleEmoji = {customer: '🛒', merchant: '🏪', driver: '🚚'};
 
-/* ===== TRANSLATIONS (G) ===== */
 const translations = {
-  ar: {
-    tagline: '🚚 منصة التوصيل السريع - أكادير',
-    signup_title: '🚀 تسجيل حساب جديد', login_title: '🔐 تسجيل الدخول',
-    welcome: '👋 مرحبا!', my_account: '👤 حسابي', about: 'ℹ️ عن التطبيق',
-    share: '📤 شارك التطبيق', support: '💬 الدعم الفني',
-    install_app: '📲 ثبّت التطبيق على الهاتف', enable_notifs: '🔔 تفعيل الإشعارات',
-    my_stats: '📊 إحصائياتي', store_stats: '📊 إحصائيات المتجر',
-    close_stores: '🔒 إغلاق المتاجر', open_stores: '🔓 فتح المتاجر',
-    my_coupons: '🎟️ كودات الخصم', logout: '🚪 تسجيل الخروج',
-    add_store: '➕ إضافة متجر جديد', add_store_title: '🏪 إضافة متجر جديد',
-    stores_list: '🏪 قائمة المتاجر',
-    search_placeholder: '🔍 ابحث عن منتج أو متجر...',
-    price_from: '💰 سعر من (درهم)', price_to: '💰 سعر إلى (درهم)',
-    all_ratings: '⭐ جميع التقييمات', rating_3: '⭐ 3 نجوم وأكثر',
-    rating_4: '⭐ 4 نجوم وأكثر', rating_45: '⭐ 4.5 نجوم وأكثر',
-    sort_default: '🔄 ترتيب افتراضي', sort_price_asc: '💰 السعر: من الأقل للأعلى',
-    sort_price_desc: '💰 السعر: من الأعلى للأقل', sort_name: '🔤 الاسم: أ - ي',
-    sort_rating: '⭐ الأعلى تقييماً', reset_filters: '🔄 إعادة تعيين الفلاتر',
-    cart: '🛒 السلة', cart_empty: 'السلة خاوية',
-    confirm_order: '✅ تأكيد الطلب', clear_cart: '🗑️ تفريغ السلة',
-    delivery_info: '📍 معلومات التوصيل', use_my_location: '🎯 استعمل موقعي الحالي',
-    orders: 'الطلبات', search_orders: '🔍 ابحث بالاسم، الهاتف، أو العنوان...',
-    all_orders: '📋 كل الطلبات', status_pending: '⏳ قيد الانتظار',
-    status_accepted: '✅ مقبولة', status_delivering: '🚗 في الطريق',
-    status_delivered: '🎉 تم التوصيل', status_cancelled: '❌ ملغاة',
-    chat: '💬 المحادثة', back: '🔙 رجوع', chat_ph: '✍️ اكتب رسالة...',
-    save: 'حفظ', cancel: 'إلغاء', close: 'إغلاق',
-    save_changes: '💾 حفظ التعديلات', save_product: 'حفظ المنتج',
-    my_profile: '👤 حسابي', edit_info: '✏️ تعديل المعلومات:',
-    full_name: 'الاسم الكامل', phone: 'رقم الهاتف', email: 'البريد الإلكتروني', password: 'كلمة السر',
-    choose_role: 'اختر نوع الحساب...', role_customer: '🛒 زبون', role_merchant: '🏪 تاجر', role_driver: '🚚 موصل',
-    signup_btn: 'تسجيل', login_btn: 'دخول',
-    store_name: 'اسم المتجر', store_desc: 'وصف المتجر', store_address: 'العنوان',
-    pr_name: 'اسم المنتج', pr_desc: 'وصف المنتج', pr_price: 'السعر (درهم)',
-    pr_image_label: '📸 صورة المنتج:', camera: '📷 الكاميرا', gallery: '🖼️ المعرض',
-    pr_url: '🔗 ولا الصق رابط صورة',
-    coupon_placeholder: '🎟️ كود خصم؟', apply: 'تطبيق',
-    coupon_applied: '✅ تم تطبيق الخصم', coupon_invalid: '❌ الكود غير صحيح',
-    create_coupon: '➕ إنشاء كود خصم:',
-    cp_code: 'الكود (مثلاً: EID2026)', cp_percent: '💯 نسبة مئوية (%)',
-    cp_fixed: '💰 مبلغ ثابت (درهم)', cp_value: 'القيمة (مثلاً: 10)',
-    cp_min: 'الحد الأدنى للطلب (اختياري)', cp_max: 'أقصى عدد استعمالات (100)',
-    create_btn: '🎟️ إنشاء',
-    about_desc: '🚚 منصة توصيل سريع بأكادير كتربط بين الزبون، التاجر، والموصل.',
-    features: '✨ المميزات:',
-    f1: '🛍️ تسوق من المتاجر المحلية', f2: '⭐ تقييم المتاجر والموصلين',
-    f3: '💬 شات مباشر', f4: '🗺️ خريطة تفاعلية',
-    f5: '📸 رفع صور المنتجات', f6: '🎟️ كودات الخصم',
-    f7: '🔔 إشعارات الطلبات', f8: '🌍 3 لغات (عربية/فرنسية/إنجليزية)',
-    contact_us: '💬 تواصل معنا',
-    address_ph: 'عنوان التوصيل (الحي، الشارع...)'
-  },
-  fr: {
-    tagline: '🚚 Plateforme de livraison rapide - Agadir',
-    signup_title: '🚀 Créer un compte', login_title: '🔐 Connexion',
-    welcome: '👋 Bienvenue!', my_account: '👤 Mon compte', about: 'ℹ️ À propos',
-    share: '📤 Partager', support: '💬 Support', install_app: '📲 Installer l\'app',
-    enable_notifs: '🔔 Activer les notifications', my_stats: '📊 Mes stats',
-    store_stats: '📊 Stats boutique', close_stores: '🔒 Fermer boutiques',
-    open_stores: '🔓 Ouvrir boutiques', my_coupons: '🎟️ Mes coupons',
-    logout: '🚪 Déconnexion', add_store: '➕ Ajouter boutique',
-    add_store_title: '🏪 Ajouter une boutique', stores_list: '🏪 Boutiques',
-    search_placeholder: '🔍 Rechercher produit ou boutique...',
-    price_from: '💰 Prix de (DH)', price_to: '💰 Prix à (DH)',
-    all_ratings: '⭐ Toutes notes', rating_3: '⭐ 3+ étoiles',
-    rating_4: '⭐ 4+ étoiles', rating_45: '⭐ 4.5+ étoiles',
-    sort_default: '🔄 Tri par défaut', sort_price_asc: '💰 Prix croissant',
-    sort_price_desc: '💰 Prix décroissant', sort_name: '🔤 Nom A-Z',
-    sort_rating: '⭐ Mieux notés', reset_filters: '🔄 Réinitialiser filtres',
-    cart: '🛒 Panier', cart_empty: 'Panier vide', confirm_order: '✅ Confirmer',
-    clear_cart: '🗑️ Vider', delivery_info: '📍 Livraison',
-    use_my_location: '🎯 Ma position', orders: 'Commandes',
-    search_orders: '🔍 Rechercher...', all_orders: '📋 Toutes',
-    status_pending: '⏳ En attente', status_accepted: '✅ Acceptée',
-    status_delivering: '🚗 En livraison', status_delivered: '🎉 Livrée',
-    status_cancelled: '❌ Annulée', chat: '💬 Chat', back: '🔙 Retour',
-    chat_ph: '✍️ Message...', save: 'Enregistrer', cancel: 'Annuler',
-    close: 'Fermer', save_changes: '💾 Enregistrer', save_product: 'Enregistrer',
-    my_profile: '👤 Mon compte', edit_info: '✏️ Modifier:',
-    full_name: 'Nom complet', phone: 'Téléphone', email: 'Email', password: 'Mot de passe',
-    choose_role: 'Choisir rôle...', role_customer: '🛒 Client',
-    role_merchant: '🏪 Commerçant', role_driver: '🚚 Livreur',
-    signup_btn: 'S\'inscrire', login_btn: 'Connexion',
-    store_name: 'Nom boutique', store_desc: 'Description', store_address: 'Adresse',
-    pr_name: 'Nom produit', pr_desc: 'Description', pr_price: 'Prix (DH)',
-    pr_image_label: '📸 Image:', camera: '📷 Caméra', gallery: '🖼️ Galerie',
-    pr_url: '🔗 URL (optionnel)', coupon_placeholder: '🎟️ Code promo?',
-    apply: 'Appliquer', coupon_applied: '✅ Code appliqué!', coupon_invalid: '❌ Code invalide',
-    create_coupon: '➕ Créer un code:', cp_code: 'Code (ex: EID2026)',
-    cp_percent: '💯 Pourcentage (%)', cp_fixed: '💰 Montant fixe (DH)',
-    cp_value: 'Valeur (ex: 10)', cp_min: 'Commande min (optionnel)',
-    cp_max: 'Utilisations max (100)', create_btn: '🎟️ Créer',
-    about_desc: '🚚 Plateforme de livraison à Agadir.',
-    features: '✨ Fonctionnalités:',
-    f1: '🛍️ Acheter local', f2: '⭐ Évaluations', f3: '💬 Chat direct',
-    f4: '🗺️ Carte', f5: '📸 Photos', f6: '🎟️ Codes promo',
-    f7: '🔔 Notifications', f8: '🌍 3 langues', contact_us: '💬 Contact',
-    address_ph: 'Adresse de livraison...'
-  },
-  en: {
-    tagline: '🚚 Fast Delivery Platform - Agadir',
-    signup_title: '🚀 Sign Up', login_title: '🔐 Login',
-    welcome: '👋 Welcome!', my_account: '👤 My Account', about: 'ℹ️ About',
-    share: '📤 Share', support: '💬 Support', install_app: '📲 Install App',
-    enable_notifs: '🔔 Enable Notifications', my_stats: '📊 My Stats',
-    store_stats: '📊 Store Stats', close_stores: '🔒 Close Stores',
-    open_stores: '🔓 Open Stores', my_coupons: '🎟️ My Coupons',
-    logout: '🚪 Logout', add_store: '➕ Add Store',
-    add_store_title: '🏪 Add Store', stores_list: '🏪 Stores',
-    search_placeholder: '🔍 Search product or store...',
-    price_from: '💰 Price from (MAD)', price_to: '💰 Price to (MAD)',
-    all_ratings: '⭐ All ratings', rating_3: '⭐ 3+ stars',
-    rating_4: '⭐ 4+ stars', rating_45: '⭐ 4.5+ stars',
-    sort_default: '🔄 Default sort', sort_price_asc: '💰 Price: Low to High',
-    sort_price_desc: '💰 Price: High to Low', sort_name: '🔤 Name A-Z',
-    sort_rating: '⭐ Top rated', reset_filters: '🔄 Reset Filters',
-    cart: '🛒 Cart', cart_empty: 'Cart is empty', confirm_order: '✅ Confirm Order',
-    clear_cart: '🗑️ Clear', delivery_info: '📍 Delivery Info',
-    use_my_location: '🎯 My Location', orders: 'Orders',
-    search_orders: '🔍 Search...', all_orders: '📋 All',
-    status_pending: '⏳ Pending', status_accepted: '✅ Accepted',
-    status_delivering: '🚗 Delivering', status_delivered: '🎉 Delivered',
-    status_cancelled: '❌ Cancelled', chat: '💬 Chat', back: '🔙 Back',
-    chat_ph: '✍️ Message...', save: 'Save', cancel: 'Cancel', close: 'Close',
-    save_changes: '💾 Save', save_product: 'Save Product',
-    my_profile: '👤 My Account', edit_info: '✏️ Edit Info:',
-    full_name: 'Full Name', phone: 'Phone', email: 'Email', password: 'Password',
-    choose_role: 'Choose role...', role_customer: '🛒 Customer',
-    role_merchant: '🏪 Merchant', role_driver: '🚚 Driver',
-    signup_btn: 'Sign Up', login_btn: 'Login',
-    store_name: 'Store Name', store_desc: 'Description', store_address: 'Address',
-    pr_name: 'Product Name', pr_desc: 'Description', pr_price: 'Price (MAD)',
-    pr_image_label: '📸 Image:', camera: '📷 Camera', gallery: '🖼️ Gallery',
-    pr_url: '🔗 URL (optional)', coupon_placeholder: '🎟️ Coupon code?',
-    apply: 'Apply', coupon_applied: '✅ Code applied!', coupon_invalid: '❌ Invalid code',
-    create_coupon: '➕ Create Coupon:', cp_code: 'Code (ex: EID2026)',
-    cp_percent: '💯 Percentage (%)', cp_fixed: '💰 Fixed Amount (MAD)',
-    cp_value: 'Value (ex: 10)', cp_min: 'Min Order (optional)',
-    cp_max: 'Max Uses (100)', create_btn: '🎟️ Create',
-    about_desc: '🚚 Fast delivery platform in Agadir.',
-    features: '✨ Features:',
-    f1: '🛍️ Shop local', f2: '⭐ Ratings', f3: '💬 Direct chat',
-    f4: '🗺️ Map', f5: '📸 Photos', f6: '🎟️ Coupons',
-    f7: '🔔 Notifications', f8: '🌍 3 languages', contact_us: '💬 Contact',
-    address_ph: 'Delivery address...'
-  }
+  ar: {tagline:'🚚 منصة التوصيل السريع - أكادير',signup_title:'🚀 تسجيل حساب جديد',login_title:'🔐 تسجيل الدخول',welcome:'👋 مرحبا!',my_account:'👤 حسابي',about:'ℹ️ عن التطبيق',share:'📤 شارك',support:'💬 الدعم',install_app:'📲 ثبّت التطبيق',enable_notifs:'🔔 تفعيل الإشعارات',my_stats:'📊 إحصائياتي',store_stats:'📊 إحصائيات المتجر',close_stores:'🔒 إغلاق المتاجر',open_stores:'🔓 فتح المتاجر',my_coupons:'🎟️ كودات الخصم',export_csv:'📊 تصدير Excel',logout:'🚪 خروج',add_store:'➕ إضافة متجر',add_store_title:'🏪 متجر جديد',stores_list:'🏪 المتاجر',search_placeholder:'🔍 ابحث...',price_from:'💰 من',price_to:'💰 إلى',all_ratings:'⭐ الكل',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 ترتيب',sort_price_asc:'💰 الأقل',sort_price_desc:'💰 الأغلى',sort_name:'🔤 أبجدي',sort_rating:'⭐ الأعلى',reset_filters:'🔄 إعادة',cart:'🛒 السلة',cart_empty:'السلة خاوية',confirm_order:'✅ تأكيد',clear_cart:'🗑️ تفريغ',delivery_info:'📍 التوصيل',use_my_location:'🎯 موقعي',orders:'الطلبات',search_orders:'🔍 ابحث',all_orders:'📋 الكل',status_pending:'⏳ انتظار',status_accepted:'✅ مقبولة',status_delivering:'🚗 طريق',status_delivered:'🎉 موصلة',status_cancelled:'❌ ملغاة',chat:'💬 محادثة',back:'🔙 رجوع',chat_ph:'✍️ رسالة',save:'حفظ',cancel:'إلغاء',close:'إغلاق',save_changes:'💾 حفظ',save_product:'حفظ',my_profile:'👤 حسابي',edit_info:'✏️ تعديل:',full_name:'الاسم',phone:'الهاتف',email:'الإيميل',password:'السر',choose_role:'اختر...',role_customer:'🛒 زبون',role_merchant:'🏪 تاجر',role_driver:'🚚 موصل',signup_btn:'تسجيل',login_btn:'دخول',store_name:'اسم المتجر',store_desc:'الوصف',store_address:'العنوان',pr_name:'المنتج',pr_desc:'الوصف',pr_price:'السعر',pr_image_label:'📸 صورة:',camera:'📷 كاميرا',gallery:'🖼️ معرض',pr_url:'🔗 رابط',coupon_placeholder:'🎟️ كود خصم؟',apply:'تطبيق',create_coupon:'➕ كود جديد:',cp_code:'الكود',cp_percent:'💯 %',cp_fixed:'💰 ثابت',cp_value:'القيمة',cp_min:'الحد الأدنى',cp_max:'أقصى استعمالات',create_btn:'🎟️ إنشاء',about_desc:'🚚 منصة توصيل سريع بأكادير.',f1:'🛍️ تسوق',f2:'⭐ تقييمات',f3:'💬 شات',f4:'🗺️ خريطة',f5:'📸 صور',f6:'🎟️ كودات',f7:'🔔 إشعارات',f8:'🌍 3 لغات',contact_us:'💬 تواصل',address_ph:'العنوان',payment_method:'💳 طريقة الدفع:',pay_cash:'💵 نقداً عند التسليم',pay_card:'💳 بطاقة بنكية',paid_cash:'💵 نقداً',paid_card:'💳 بطاقة'},
+  fr: {tagline:'🚚 Livraison rapide - Agadir',signup_title:'🚀 Inscription',login_title:'🔐 Connexion',welcome:'👋 Bienvenue!',my_account:'👤 Compte',about:'ℹ️ À propos',share:'📤 Partager',support:'💬 Support',install_app:'📲 Installer',enable_notifs:'🔔 Notifications',my_stats:'📊 Mes stats',store_stats:'📊 Stats',close_stores:'🔒 Fermer',open_stores:'🔓 Ouvrir',my_coupons:'🎟️ Coupons',export_csv:'📊 Excel',logout:'🚪 Déconnexion',add_store:'➕ Ajouter',add_store_title:'🏪 Boutique',stores_list:'🏪 Boutiques',search_placeholder:'🔍 Rechercher...',price_from:'💰 De',price_to:'💰 À',all_ratings:'⭐ Toutes',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 Tri',sort_price_asc:'💰 Moins cher',sort_price_desc:'💰 Plus cher',sort_name:'🔤 A-Z',sort_rating:'⭐ Mieux',reset_filters:'🔄 Reset',cart:'🛒 Panier',cart_empty:'Vide',confirm_order:'✅ Confirmer',clear_cart:'🗑️ Vider',delivery_info:'📍 Livraison',use_my_location:'🎯 Ma position',orders:'Commandes',search_orders:'🔍 Chercher',all_orders:'📋 Toutes',status_pending:'⏳ Attente',status_accepted:'✅ Acceptée',status_delivering:'🚗 Livraison',status_delivered:'🎉 Livrée',status_cancelled:'❌ Annulée',chat:'💬 Chat',back:'🔙 Retour',chat_ph:'✍️ Message',save:'Enregistrer',cancel:'Annuler',close:'Fermer',save_changes:'💾 OK',save_product:'OK',my_profile:'👤 Compte',edit_info:'✏️ Modifier:',full_name:'Nom',phone:'Tél',email:'Email',password:'Mot de passe',choose_role:'Choisir...',role_customer:'🛒 Client',role_merchant:'🏪 Commerçant',role_driver:'🚚 Livreur',signup_btn:'Inscrire',login_btn:'Connexion',store_name:'Nom',store_desc:'Description',store_address:'Adresse',pr_name:'Produit',pr_desc:'Description',pr_price:'Prix',pr_image_label:'📸 Image:',camera:'📷 Caméra',gallery:'🖼️ Galerie',pr_url:'🔗 URL',coupon_placeholder:'🎟️ Code?',apply:'OK',create_coupon:'➕ Code:',cp_code:'Code',cp_percent:'💯 %',cp_fixed:'💰 Fixe',cp_value:'Valeur',cp_min:'Min',cp_max:'Max',create_btn:'Créer',about_desc:'🚚 Livraison rapide à Agadir.',f1:'🛍️ Achat',f2:'⭐ Avis',f3:'💬 Chat',f4:'🗺️ Carte',f5:'📸 Photos',f6:'🎟️ Codes',f7:'🔔 Notifs',f8:'🌍 3 langues',contact_us:'💬 Contact',address_ph:'Adresse',payment_method:'💳 Paiement:',pay_cash:'💵 Espèces',pay_card:'💳 Carte',paid_cash:'💵 Espèces',paid_card:'💳 Carte'},
+  en: {tagline:'🚚 Fast Delivery - Agadir',signup_title:'🚀 Sign Up',login_title:'🔐 Login',welcome:'👋 Welcome!',my_account:'👤 Account',about:'ℹ️ About',share:'📤 Share',support:'💬 Support',install_app:'📲 Install',enable_notifs:'🔔 Notifications',my_stats:'📊 My Stats',store_stats:'📊 Stats',close_stores:'🔒 Close',open_stores:'🔓 Open',my_coupons:'🎟️ Coupons',export_csv:'📊 Excel',logout:'🚪 Logout',add_store:'➕ Add Store',add_store_title:'🏪 Store',stores_list:'🏪 Stores',search_placeholder:'🔍 Search...',price_from:'💰 From',price_to:'💰 To',all_ratings:'⭐ All',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 Sort',sort_price_asc:'💰 Cheapest',sort_price_desc:'💰 Expensive',sort_name:'🔤 A-Z',sort_rating:'⭐ Top',reset_filters:'🔄 Reset',cart:'🛒 Cart',cart_empty:'Empty',confirm_order:'✅ Confirm',clear_cart:'🗑️ Clear',delivery_info:'📍 Delivery',use_my_location:'🎯 My location',orders:'Orders',search_orders:'🔍 Search',all_orders:'📋 All',status_pending:'⏳ Pending',status_accepted:'✅ Accepted',status_delivering:'🚗 Delivering',status_delivered:'🎉 Delivered',status_cancelled:'❌ Cancelled',chat:'💬 Chat',back:'🔙 Back',chat_ph:'✍️ Message',save:'Save',cancel:'Cancel',close:'Close',save_changes:'💾 Save',save_product:'Save',my_profile:'👤 Account',edit_info:'✏️ Edit:',full_name:'Name',phone:'Phone',email:'Email',password:'Password',choose_role:'Choose...',role_customer:'🛒 Customer',role_merchant:'🏪 Merchant',role_driver:'🚚 Driver',signup_btn:'Sign Up',login_btn:'Login',store_name:'Store Name',store_desc:'Description',store_address:'Address',pr_name:'Product',pr_desc:'Description',pr_price:'Price',pr_image_label:'📸 Image:',camera:'📷 Camera',gallery:'🖼️ Gallery',pr_url:'🔗 URL',coupon_placeholder:'🎟️ Code?',apply:'Apply',create_coupon:'➕ Code:',cp_code:'Code',cp_percent:'💯 %',cp_fixed:'💰 Fixed',cp_value:'Value',cp_min:'Min',cp_max:'Max',create_btn:'Create',about_desc:'🚚 Fast delivery in Agadir.',f1:'🛍️ Shop',f2:'⭐ Ratings',f3:'💬 Chat',f4:'🗺️ Map',f5:'📸 Photos',f6:'🎟️ Codes',f7:'🔔 Notifs',f8:'🌍 3 languages',contact_us:'💬 Contact',address_ph:'Address',payment_method:'💳 Payment:',pay_cash:'💵 Cash on delivery',pay_card:'💳 Credit card',paid_cash:'💵 Cash',paid_card:'💳 Card'}
 };
 
 let currentLang = localStorage.getItem('lang') || 'ar';
-function t(key) { return (translations[currentLang] && translations[currentLang][key]) || translations.ar[key] || key; }
+function t(k) { return (translations[currentLang] && translations[currentLang][k]) || translations.ar[k] || k; }
 
 function setLanguage(lang) {
   currentLang = lang;
@@ -501,20 +349,16 @@ function setLanguage(lang) {
     const k = el.getAttribute('data-i18n-ph');
     if (translations[lang][k]) el.placeholder = translations[lang][k];
   });
-  // Update stats btn text based on role
   if (currentRole === 'merchant') document.getElementById('stats-btn-text').textContent = t('store_stats');
   else if (currentRole === 'driver') document.getElementById('stats-btn-text').textContent = t('my_stats');
 }
-
 function cycleLang() {
   const langs = ['ar', 'fr', 'en'];
-  const idx = langs.indexOf(currentLang);
-  const next = langs[(idx + 1) % langs.length];
+  const next = langs[(langs.indexOf(currentLang) + 1) % langs.length];
   setLanguage(next);
-  show(next === 'ar' ? '🇲🇦 العربية' : next === 'fr' ? '🇫🇷 Français' : '🇬🇧 English', true);
+  show(next === 'ar' ? '🇲🇦' : next === 'fr' ? '🇫🇷' : '🇬🇧', true);
 }
 
-/* ===== UTILS ===== */
 function show(txt, ok) {
   const m = document.getElementById('msg');
   m.textContent = txt; m.className = ok ? 'ok' : 'err';
@@ -530,7 +374,6 @@ function playBeep() {
     o.start(); o.stop(c.currentTime + 0.2);
   } catch (e) {}
 }
-
 function toggleDarkMode() {
   const cur = document.documentElement.getAttribute('data-theme');
   const nt = cur === 'dark' ? 'light' : 'dark';
@@ -543,110 +386,77 @@ window.addEventListener('DOMContentLoaded', () => {
   const s = localStorage.getItem('theme') || 'light';
   document.getElementById('dark-btn').textContent = s === 'dark' ? '☀️' : '🌙';
   setLanguage(currentLang);
+  selectPay('cash');
 });
 
-/* ===== NOTIFICATIONS (F) ===== */
-async function requestNotifPermission() {
-  if (!('Notification' in window)) { show('❌ المتصفح ما كيدعمش الإشعارات', false); return; }
-  if (Notification.permission === 'granted') {
-    show('✅ الإشعارات مفعّلة من قبل', true);
-    document.getElementById('notif-btn').style.display = 'none';
-    return;
-  }
-  const perm = await Notification.requestPermission();
-  if (perm === 'granted') {
-    show('✅ تم تفعيل الإشعارات!', true);
-    document.getElementById('notif-btn').style.display = 'none';
-    new Notification('SoukExpress', { body: '✅ الإشعارات مفعّلة!', icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">🛒</text></svg>' });
-  } else {
-    show('⚠️ ما قدرناش نفعّلو الإشعارات', false);
-  }
+/* PAYMENT */
+function selectPay(method) {
+  selectedPayment = method;
+  document.getElementById('pay-cash').classList.toggle('selected', method === 'cash');
+  document.getElementById('pay-card').classList.toggle('selected', method === 'card');
+  document.querySelectorAll('input[name="pay"]').forEach(r => r.checked = r.value === method);
 }
 
+/* NOTIFICATIONS */
+async function requestNotifPermission() {
+  if (!('Notification' in window)) { show('❌', false); return; }
+  if (Notification.permission === 'granted') { show('✅', true); document.getElementById('notif-btn').style.display = 'none'; return; }
+  const p = await Notification.requestPermission();
+  if (p === 'granted') { show('✅', true); document.getElementById('notif-btn').style.display = 'none'; }
+}
 function sendNotification(title, body) {
   if ('Notification' in window && Notification.permission === 'granted') {
-    try {
-      new Notification(title, {
-        body,
-        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">🛒</text></svg>',
-        badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">🛒</text></svg>',
-        tag: 'souk-' + Date.now()
-      });
-    } catch (e) { console.error(e); }
+    try { new Notification(title, { body, tag: 'sk-' + Date.now() }); } catch (e) {}
   }
 }
-
 function startNotificationPolling() {
   if (notifInterval) clearInterval(notifInterval);
   notifInterval = setInterval(async () => {
     if (!currentUser || Notification.permission !== 'granted') return;
     try {
-      // زبون: طلبات تغيرت حالتها
       if (currentRole === 'customer') {
-        const { data: orders } = await DB.from('orders').select('id, status').eq('customer_id', currentUser.id);
-        const saved = JSON.parse(localStorage.getItem('notif_orders') || '{}');
-        orders?.forEach(o => {
-          if (saved[o.id] && saved[o.id] !== o.status) {
-            const msgs = {accepted: '✅ تم قبول طلبك!', delivering: '🚗 طلبك في الطريق!', delivered: '🎉 تم توصيل طلبك!', cancelled: '❌ تم إلغاء طلبك'};
-            if (msgs[o.status]) sendNotification('📦 SoukExpress', msgs[o.status]);
+        const { data: o } = await DB.from('orders').select('id, status').eq('customer_id', currentUser.id);
+        const saved = JSON.parse(localStorage.getItem('notif_o') || '{}');
+        o?.forEach(x => {
+          if (saved[x.id] && saved[x.id] !== x.status) {
+            const m = {accepted: '✅ تم قبول طلبك', delivering: '🚗 في الطريق', delivered: '🎉 تم التوصيل', cancelled: '❌ ملغى'};
+            if (m[x.status]) sendNotification('📦 SoukExpress', m[x.status]);
           }
-          saved[o.id] = o.status;
+          saved[x.id] = x.status;
         });
-        localStorage.setItem('notif_orders', JSON.stringify(saved));
+        localStorage.setItem('notif_o', JSON.stringify(saved));
       }
-      // تاجر: طلبات جديدة
       if (currentRole === 'merchant') {
         const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
         if (ms && ms.length > 0) {
-          const { data: pending } = await DB.from('orders').select('id').in('store_id', ms.map(s => s.id)).eq('status', 'pending');
-          const last = parseInt(localStorage.getItem('notif_pending') || '0');
-          if (pending && pending.length > last) {
-            sendNotification('🔔 طلب جديد!', 'عندك ' + pending.length + ' طلب قيد الانتظار');
-            playBeep();
-          }
-          localStorage.setItem('notif_pending', String(pending?.length || 0));
+          const { data: p } = await DB.from('orders').select('id').in('store_id', ms.map(s => s.id)).eq('status', 'pending');
+          const last = parseInt(localStorage.getItem('notif_p') || '0');
+          if (p && p.length > last) { sendNotification('🔔 طلب جديد!', p.length + ' طلب'); playBeep(); }
+          localStorage.setItem('notif_p', String(p?.length || 0));
         }
       }
-    } catch (e) { console.error(e); }
+    } catch (e) {}
   }, 30000);
 }
 
-/* ===== ABOUT ===== */
-function showAbout() {
-  document.getElementById('about-box').classList.remove('hidden');
-  document.getElementById('add-store-box').classList.add('hidden');
-  document.getElementById('about-box').scrollIntoView({behavior: 'smooth'});
-}
-function hideAbout() {
-  document.getElementById('about-box').classList.add('hidden');
-  document.getElementById('add-store-box').classList.remove('hidden');
-}
+function showAbout() { document.getElementById('about-box').classList.remove('hidden'); document.getElementById('add-store-box').classList.add('hidden'); }
+function hideAbout() { document.getElementById('about-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
 
-/* ===== PWA ===== */
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); deferredPrompt = e;
-  document.getElementById('install-btn').style.display = 'block';
-});
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-btn').style.display = 'block'; });
 function installApp() {
-  if (!deferredPrompt) { show('💡 على iPhone: Safari > المشاركة > إضافة للشاشة', true); return; }
+  if (!deferredPrompt) { show('💡 iPhone: Safari > المشاركة', true); return; }
   deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(c => {
-    if (c.outcome === 'accepted') show('✅ تم تثبيت التطبيق!', true);
-    deferredPrompt = null; document.getElementById('install-btn').style.display = 'none';
-  });
+  deferredPrompt.userChoice.then(c => { if (c.outcome === 'accepted') show('✅', true); deferredPrompt = null; document.getElementById('install-btn').style.display = 'none'; });
 }
 if ('serviceWorker' in navigator) navigator.serviceWorker?.register('sw.js').catch(() => {});
-
 function shareApp() {
   const url = 'https://abdlajala-dot.github.io/SoukExpress/';
-  if (navigator.share) navigator.share({ title: 'SoukExpress', text: '🛒 SoukExpress!', url }).catch(() => {});
-  else navigator.clipboard.writeText(url).then(() => show('✅ تم نسخ الرابط!', true));
+  if (navigator.share) navigator.share({ title: 'SoukExpress', text: '🛒', url }).catch(() => {});
+  else navigator.clipboard.writeText(url).then(() => show('✅', true));
 }
-function supportWhatsApp() {
-  window.open('https://wa.me/212671634521?text=' + encodeURIComponent('السلام عليكم، بغيت مساعدة فـ SoukExpress.'), '_blank');
-}
+function supportWhatsApp() { window.open('https://wa.me/212671634521?text=' + encodeURIComponent('مساعدة SoukExpress'), '_blank'); }
 
-/* ===== MAP ===== */
+/* MAP */
 function initMap() {
   if (map) return;
   document.getElementById('map').style.display = 'block';
@@ -658,55 +468,50 @@ function initMap() {
 function setMarker(lat, lng) {
   selectedLat = lat; selectedLng = lng;
   if (marker) marker.setLatLng([lat, lng]);
-  else {
-    marker = L.marker([lat, lng], {draggable: true}).addTo(map);
-    marker.on('dragend', () => { const p = marker.getLatLng(); selectedLat = p.lat; selectedLng = p.lng; updateLocationStatus(); });
-  }
+  else { marker = L.marker([lat, lng], {draggable: true}).addTo(map); marker.on('dragend', () => { const p = marker.getLatLng(); selectedLat = p.lat; selectedLng = p.lng; updateLocationStatus(); }); }
   updateLocationStatus();
 }
-function updateLocationStatus() {
-  const st = document.getElementById('location-status');
-  if (selectedLat && selectedLng) { st.innerHTML = '✅ ' + selectedLat.toFixed(4) + ', ' + selectedLng.toFixed(4); st.style.color = '#28a745'; }
-}
+function updateLocationStatus() { const s = document.getElementById('location-status'); if (selectedLat && selectedLng) { s.innerHTML = '✅ ' + selectedLat.toFixed(4) + ', ' + selectedLng.toFixed(4); s.style.color = '#28a745'; } }
 function getMyLocation() {
-  initMap();
-  const st = document.getElementById('location-status');
-  st.textContent = '⏳ ...'; st.style.color = '#ff9800';
-  if (!navigator.geolocation) { st.textContent = '❌'; return; }
-  navigator.geolocation.getCurrentPosition(
-    p => { map.setView([p.coords.latitude, p.coords.longitude], 16); setMarker(p.coords.latitude, p.coords.longitude); },
-    () => { st.textContent = '⚠️ دوس على الخريطة'; st.style.color = '#dc3545'; },
-    { enableHighAccuracy: true, timeout: 10000 }
-  );
+  initMap(); const s = document.getElementById('location-status'); s.textContent = '⏳'; s.style.color = '#ff9800';
+  if (!navigator.geolocation) { s.textContent = '❌'; return; }
+  navigator.geolocation.getCurrentPosition(p => { map.setView([p.coords.latitude, p.coords.longitude], 16); setMarker(p.coords.latitude, p.coords.longitude); }, () => { s.textContent = '⚠️'; s.style.color = '#dc3545'; }, { enableHighAccuracy: true, timeout: 10000 });
 }
 
-/* ===== COUPONS (D) ===== */
-async function showMyCoupons() {
-  document.getElementById('coupons-box').classList.remove('hidden');
-  document.getElementById('add-store-box').classList.add('hidden');
-  await loadCoupons();
+/* CSV EXPORT */
+async function exportOrdersCSV() {
+  try {
+    const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
+    if (!ms || ms.length === 0) { show('⚠️', false); return; }
+    const { data: orders } = await DB.from('orders').select('*').in('store_id', ms.map(s => s.id)).order('created_at', {ascending: false});
+    if (!orders || orders.length === 0) { show('⚠️ لا طلبات', false); return; }
+    let csv = '\uFEFF'; // BOM for Excel
+    csv += 'رقم الطلب,التاريخ,الزبون,الهاتف,العنوان,المجموع,طريقة الدفع,الحالة\n';
+    const payAr = {cash: 'نقداً', card: 'بطاقة'};
+    const stAr = {pending: 'انتظار', accepted: 'مقبول', delivering: 'في الطريق', delivered: 'موصل', cancelled: 'ملغى'};
+    orders.forEach(o => {
+      const dt = o.created_at ? new Date(o.created_at).toLocaleString('ar-MA') : '';
+      csv += `"${o.id.substring(0,6)}","${dt}","${(o.customer_name||'').replace(/"/g,'""')}","${o.customer_phone||''}","${(o.delivery_address||'').replace(/"/g,'""')}","${o.total_price}","${payAr[o.payment_method]||''}","${stAr[o.status]||o.status}"\n`;
+    });
+    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `soukexpress-orders-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    show('✅ تم التصدير!', true);
+  } catch (e) { show('❌ ' + e.message, false); }
 }
-function hideCoupons() {
-  document.getElementById('coupons-box').classList.add('hidden');
-  document.getElementById('add-store-box').classList.remove('hidden');
-}
+
+/* COUPONS */
+async function showMyCoupons() { document.getElementById('coupons-box').classList.remove('hidden'); document.getElementById('add-store-box').classList.add('hidden'); await loadCoupons(); }
+function hideCoupons() { document.getElementById('coupons-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
 async function loadCoupons() {
-  const list = document.getElementById('coupons-list');
-  list.innerHTML = '<p style="text-align:center;color:#888;">⏳ ...</p>';
-  const { data: ms } = await DB.from('stores').select('id, name').eq('owner_id', currentUser.id);
-  if (!ms || ms.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;">ما عندكش متاجر</p>'; return; }
-  const { data: cps } = await DB.from('coupons').select('*').in('store_id', ms.map(s => s.id));
-  if (!cps || cps.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;">لا توجد كودات</p>'; return; }
-  list.innerHTML = cps.map(c => `
-    <div class="coupon-banner">
-      <div>
-        <div class="coupon-code">${c.code}</div>
-        <div style="font-size:11px; margin-top:4px;">${c.discount_type === 'percent' ? c.discount_value + '%' : c.discount_value + ' درهم'} ${c.min_order ? '• min ' + c.min_order + ' DH' : ''}</div>
-        <div style="font-size:11px; opacity:0.8;">${c.used_count} / ${c.max_uses}</div>
-      </div>
-      <button class="red small-btn" onclick="deleteCoupon('${c.id}')" style="margin:0;">🗑️</button>
-    </div>
-  `).join('');
+  const l = document.getElementById('coupons-list'); l.innerHTML = '<p style="text-align:center;color:#888;">⏳</p>';
+  const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
+  if (!ms || ms.length === 0) { l.innerHTML = '<p style="text-align:center;color:#888;">-</p>'; return; }
+  const { data: cp } = await DB.from('coupons').select('*').in('store_id', ms.map(s => s.id));
+  if (!cp || cp.length === 0) { l.innerHTML = '<p style="text-align:center;color:#888;">-</p>'; return; }
+  l.innerHTML = cp.map(c => `<div class="coupon-banner"><div><div class="coupon-code">${c.code}</div><div style="font-size:11px; margin-top:4px;">${c.discount_type === 'percent' ? c.discount_value + '%' : c.discount_value + ' DH'} ${c.min_order ? '• min ' + c.min_order : ''}</div><div style="font-size:11px; opacity:0.8;">${c.used_count} / ${c.max_uses}</div></div><button class="red small-btn" onclick="deleteCoupon('${c.id}')" style="margin:0;">🗑️</button></div>`).join('');
 }
 async function createCoupon() {
   const code = document.getElementById('cp-code').value.toUpperCase().trim();
@@ -714,54 +519,35 @@ async function createCoupon() {
   const value = parseFloat(document.getElementById('cp-value').value);
   const min = parseFloat(document.getElementById('cp-min').value) || 0;
   const max = parseInt(document.getElementById('cp-max').value) || 100;
-  if (!code || !value) { show('اكتب الكود والقيمة', false); return; }
+  if (!code || !value) { show('⚠️', false); return; }
   const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id).limit(1);
-  if (!ms || ms.length === 0) { show('ما عندكش متاجر', false); return; }
-  try {
-    const { error } = await DB.from('coupons').insert([{ store_id: ms[0].id, owner_id: currentUser.id, code, discount_type: type, discount_value: value, min_order: min, max_uses: max }]);
-    if (error) throw error;
-    show('✅ تم إنشاء الكود!', true);
-    ['cp-code','cp-value','cp-min'].forEach(id => document.getElementById(id).value = '');
-    await loadCoupons();
-  } catch (e) { show('❌ ' + e.message, false); }
+  if (!ms || ms.length === 0) { show('⚠️', false); return; }
+  try { await DB.from('coupons').insert([{ store_id: ms[0].id, owner_id: currentUser.id, code, discount_type: type, discount_value: value, min_order: min, max_uses: max }]); show('✅', true); ['cp-code','cp-value','cp-min'].forEach(id => document.getElementById(id).value = ''); await loadCoupons(); } catch (e) { show('❌', false); }
 }
-async function deleteCoupon(id) {
-  if (!confirm('واش متأكد؟')) return;
-  try {
-    const { error } = await DB.from('coupons').delete().eq('id', id);
-    if (error) throw error;
-    show('✅ تم الحذف', true);
-    await loadCoupons();
-  } catch (e) { show('❌ ' + e.message, false); }
-}
+async function deleteCoupon(id) { if (!confirm('?')) return; try { await DB.from('coupons').delete().eq('id', id); show('✅', true); await loadCoupons(); } catch (e) { show('❌', false); } }
 async function applyCoupon() {
   const code = document.getElementById('coupon-input').value.toUpperCase().trim();
-  if (!code) return;
-  if (cart.length === 0) { show('السلة خاوية', false); return; }
+  if (!code || cart.length === 0) return;
   const storeId = cart[0].storeId;
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   try {
     const { data: c } = await DB.from('coupons').select('*').eq('code', code).eq('store_id', storeId).eq('is_active', true).single();
-    if (!c) { show('❌ كود ماشي صحيح', false); appliedCoupon = null; updateCouponResult(); return; }
-    if (c.used_count >= c.max_uses) { show('❌ الكود انتهى', false); return; }
-    if (c.min_order > 0 && total < c.min_order) { show('⚠️ الحد الأدنى ' + c.min_order + ' درهم', false); return; }
-    appliedCoupon = c;
-    updateCouponResult();
-    show('✅ تم تطبيق الخصم!', true);
-  } catch (e) { show('❌ كود ماشي صحيح', false); appliedCoupon = null; updateCouponResult(); }
+    if (!c) { show('❌', false); appliedCoupon = null; updateCouponResult(); return; }
+    if (c.used_count >= c.max_uses) { show('❌', false); return; }
+    if (c.min_order > 0 && total < c.min_order) { show('⚠️ ' + c.min_order + ' DH', false); return; }
+    appliedCoupon = c; updateCouponResult(); show('✅', true);
+  } catch (e) { show('❌', false); appliedCoupon = null; updateCouponResult(); }
 }
 function updateCouponResult() {
   const el = document.getElementById('coupon-result');
   if (!appliedCoupon) { el.innerHTML = ''; return; }
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const disc = appliedCoupon.discount_type === 'percent' ? (total * appliedCoupon.discount_value / 100) : appliedCoupon.discount_value;
-  el.innerHTML = `<div style="background:#e8f5e9; color:#2e7d32; padding:10px; border-radius:8px; margin-top:8px; font-size:13px; text-align:center;">
-    🎟️ ${appliedCoupon.code}: -${disc.toFixed(0)} درهم
-  </div>`;
+  const d = appliedCoupon.discount_type === 'percent' ? (total * appliedCoupon.discount_value / 100) : appliedCoupon.discount_value;
+  el.innerHTML = `<div style="background:#e8f5e9; color:#2e7d32; padding:10px; border-radius:8px; margin-top:8px; font-size:13px; text-align:center;">🎟️ ${appliedCoupon.code}: -${d.toFixed(0)} DH</div>`;
   loadCart();
 }
 
-/* ===== CHAT ===== */
+/* CHAT */
 async function openChat(orderId, title) {
   currentChatOrderId = orderId;
   document.getElementById('chat-box').classList.remove('hidden');
@@ -782,120 +568,63 @@ async function loadChatMessages() {
   c.innerHTML = msgs.map(m => {
     const isMine = m.sender_id === currentUser.id;
     const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('ar-MA', {hour:'2-digit', minute:'2-digit'}) : '';
-    return `<div class="chat-msg ${isMine ? 'chat-mine' : 'chat-theirs'}">
-      ${!isMine ? '<div class="chat-name">' + (m.sender_name || '') + ' ' + (roleAr[m.sender_role] || '') + '</div>' : ''}
-      <div>${(m.message || '').replace(/</g, '&lt;')}</div>
-      <div class="chat-meta">${time}</div>
-    </div>`;
+    return `<div class="chat-msg ${isMine ? 'chat-mine' : 'chat-theirs'}">${!isMine ? '<div class="chat-name">' + (m.sender_name || '') + ' ' + (roleAr[m.sender_role] || '') + '</div>' : ''}<div>${(m.message || '').replace(/</g, '&lt;')}</div><div class="chat-meta">${time}</div></div>`;
   }).join('');
   c.scrollTop = c.scrollHeight;
 }
 async function sendChatMessage() {
   if (!currentChatOrderId) return;
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim(); if (!text) return;
-  try {
-    await DB.from('messages').insert([{ order_id: currentChatOrderId, sender_id: currentUser.id, sender_name: currentProfile?.full_name || 'User', sender_role: currentRole, message: text }]);
-    input.value = ''; await loadChatMessages();
-  } catch (e) { show('❌', false); }
+  const inp = document.getElementById('chat-input'); const text = inp.value.trim(); if (!text) return;
+  try { await DB.from('messages').insert([{ order_id: currentChatOrderId, sender_id: currentUser.id, sender_name: currentProfile?.full_name || 'User', sender_role: currentRole, message: text }]); inp.value = ''; await loadChatMessages(); } catch (e) { show('❌', false); }
 }
-function closeChat() {
-  document.getElementById('chat-box').classList.add('hidden');
-  document.getElementById('add-store-box').classList.remove('hidden');
-  currentChatOrderId = null;
-  if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
-}
+function closeChat() { document.getElementById('chat-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); currentChatOrderId = null; if (chatInterval) { clearInterval(chatInterval); chatInterval = null; } }
 
-/* ===== MAIN FUNCTIONS ===== */
+/* MAIN */
 async function updatePendingBadge() {
   const b = document.getElementById('pending-badge');
   if (!b || currentRole !== 'merchant') { if (b) b.style.display = 'none'; return 0; }
-  try {
-    const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
-    if (!ms || ms.length === 0) { b.style.display = 'none'; return 0; }
-    const { data: p } = await DB.from('orders').select('id').in('store_id', ms.map(s => s.id)).eq('status', 'pending');
-    const n = p?.length || 0;
-    if (n > 0) { b.textContent = n; b.style.display = 'inline-block'; } else b.style.display = 'none';
-    return n;
-  } catch (e) { return 0; }
+  try { const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id); if (!ms || ms.length === 0) { b.style.display = 'none'; return 0; } const { data: p } = await DB.from('orders').select('id').in('store_id', ms.map(s => s.id)).eq('status', 'pending'); const n = p?.length || 0; if (n > 0) { b.textContent = n; b.style.display = 'inline-block'; } else b.style.display = 'none'; return n; } catch (e) { return 0; }
 }
 async function toggleAllStores() {
-  try {
-    const { data: ms } = await DB.from('stores').select('id, is_open').eq('owner_id', currentUser.id);
-    if (!ms || ms.length === 0) { show('⚠️', false); return; }
-    const n = !(ms[0].is_open !== false);
-    for (const s of ms) await DB.from('stores').update({ is_open: n }).eq('id', s.id);
-    document.getElementById('toggle-stores-btn').textContent = n ? '🔒 ' + t('close_stores') : '🔓 ' + t('open_stores');
-    show(n ? '✅' : '🔒', true); loadStores();
-  } catch (e) { show('❌', false); }
+  try { const { data: ms } = await DB.from('stores').select('id, is_open').eq('owner_id', currentUser.id); if (!ms || ms.length === 0) { show('⚠️', false); return; } const n = !(ms[0].is_open !== false); for (const s of ms) await DB.from('stores').update({ is_open: n }).eq('id', s.id); document.getElementById('toggle-stores-btn').textContent = n ? '🔒 ' + t('close_stores') : '🔓 ' + t('open_stores'); show(n ? '✅' : '🔒', true); loadStores(); } catch (e) { show('❌', false); }
 }
 async function doSignup() {
-  const email = document.getElementById('s-email').value, pass = document.getElementById('s-pass').value;
-  const name = document.getElementById('s-name').value, phone = document.getElementById('s-phone').value, role = document.getElementById('s-role').value;
-  if (!email || !pass || !role) { show('املأ الخانات', false); return; }
+  const e = document.getElementById('s-email').value, p = document.getElementById('s-pass').value, n = document.getElementById('s-name').value, ph = document.getElementById('s-phone').value, r = document.getElementById('s-role').value;
+  if (!e || !p || !r) { show('⚠️', false); return; }
   show('⏳', true);
-  try {
-    const r = await DB.auth.signUp({ email, password: pass });
-    if (r.error) throw r.error;
-    if (r.data.user) await DB.from('profiles').upsert([{ id: r.data.user.id, full_name: name, phone, role }]);
-    show('✅ تم التسجيل!', true);
-  } catch (e) { show('❌ ' + e.message, false); }
+  try { const res = await DB.auth.signUp({ email: e, password: p }); if (res.error) throw res.error; if (res.data.user) await DB.from('profiles').upsert([{ id: res.data.user.id, full_name: n, phone: ph, role: r }]); show('✅', true); } catch (err) { show('❌ ' + err.message, false); }
 }
 async function doLogin() {
-  const email = document.getElementById('l-email').value, pass = document.getElementById('l-pass').value;
-  if (!email || !pass) { show('املأ', false); return; }
+  const e = document.getElementById('l-email').value, p = document.getElementById('l-pass').value;
+  if (!e || !p) { show('⚠️', false); return; }
   show('⏳', true);
   try {
-    const r = await DB.auth.signInWithPassword({ email, password: pass });
+    const r = await DB.auth.signInWithPassword({ email: e, password: p });
     if (r.error) throw r.error;
     currentUser = r.data.user;
-    const p = await DB.from('profiles').select('*').eq('id', r.data.user.id).single();
-    currentProfile = p.data; currentRole = p.data?.role;
+    const pp = await DB.from('profiles').select('*').eq('id', r.data.user.id).single();
+    currentProfile = pp.data; currentRole = pp.data?.role;
     ['signup-box','login-box'].forEach(id => document.getElementById(id).classList.add('hidden'));
     ['dash-box','stores-box','cart-box','orders-box','add-store-box'].forEach(id => document.getElementById(id).classList.remove('hidden'));
-    document.getElementById('welcome').textContent = 'أهلاً ' + (p.data?.full_name || email);
+    document.getElementById('welcome').textContent = 'أهلاً ' + (pp.data?.full_name || e);
     document.getElementById('role').textContent = roleAr[currentRole] || '-';
-    if (currentRole === 'merchant') {
-      document.getElementById('stats-btn').style.display = 'block';
-      document.getElementById('stats-btn-text').textContent = t('store_stats');
-      document.getElementById('store-btn').style.display = 'block';
-      document.getElementById('toggle-stores-btn').style.display = 'block';
-      document.getElementById('coupons-btn').style.display = 'block';
-    } else if (currentRole === 'driver') {
-      document.getElementById('stats-btn').style.display = 'block';
-      document.getElementById('stats-btn-text').textContent = t('my_stats');
-      ['store-btn','toggle-stores-btn','coupons-btn'].forEach(id => document.getElementById(id).style.display = 'none');
-    } else if (currentRole === 'customer') {
-      const { data: mo } = await DB.from('orders').select('id').eq('customer_id', currentUser.id);
-      document.getElementById('role').textContent = '🛒 ' + (mo?.length || 0) + ' طلب';
-      ['stats-btn','store-btn','toggle-stores-btn','coupons-btn'].forEach(id => document.getElementById(id).style.display = 'none');
-    } else {
-      ['stats-btn','store-btn','toggle-stores-btn','coupons-btn'].forEach(id => document.getElementById(id).style.display = 'none');
-    }
-    if (p.data) {
-      if (p.data.full_name) document.getElementById('co-name').value = p.data.full_name;
-      if (p.data.phone) document.getElementById('co-phone').value = p.data.phone;
-    }
+    if (currentRole === 'merchant') { document.getElementById('stats-btn').style.display = 'block'; document.getElementById('stats-btn-text').textContent = t('store_stats'); document.getElementById('store-btn').style.display = 'block'; document.getElementById('toggle-stores-btn').style.display = 'block'; document.getElementById('coupons-btn').style.display = 'block'; document.getElementById('csv-btn').style.display = 'block'; }
+    else if (currentRole === 'driver') { document.getElementById('stats-btn').style.display = 'block'; document.getElementById('stats-btn-text').textContent = t('my_stats'); ['store-btn','toggle-stores-btn','coupons-btn','csv-btn'].forEach(id => document.getElementById(id).style.display = 'none'); }
+    else if (currentRole === 'customer') { const { data: mo } = await DB.from('orders').select('id').eq('customer_id', currentUser.id); document.getElementById('role').textContent = '🛒 ' + (mo?.length || 0); ['stats-btn','store-btn','toggle-stores-btn','coupons-btn','csv-btn'].forEach(id => document.getElementById(id).style.display = 'none'); }
+    else { ['stats-btn','store-btn','toggle-stores-btn','coupons-btn','csv-btn'].forEach(id => document.getElementById(id).style.display = 'none'); }
+    if (pp.data) { if (pp.data.full_name) document.getElementById('co-name').value = pp.data.full_name; if (pp.data.phone) document.getElementById('co-phone').value = pp.data.phone; }
     loadStores(); loadCart(); loadOrders();
     if (currentRole === 'merchant') setTimeout(async () => { lastPendingCount = await updatePendingBadge(); }, 1500);
     if (window.autoRefreshInterval) clearInterval(window.autoRefreshInterval);
-    window.autoRefreshInterval = setInterval(async () => {
-      loadOrders();
-      if (currentRole === 'merchant') {
-        const n = await updatePendingBadge();
-        if (n > lastPendingCount) { playBeep(); show('🔔 طلب جديد!', true); }
-        lastPendingCount = n;
-      }
-    }, 30000);
+    window.autoRefreshInterval = setInterval(async () => { loadOrders(); if (currentRole === 'merchant') { const n = await updatePendingBadge(); if (n > lastPendingCount) { playBeep(); show('🔔!', true); } lastPendingCount = n; } }, 30000);
     startNotificationPolling();
-    show('✅ مرحبا!', true);
-  } catch (e) { show('❌ ' + e.message, false); }
+    show('✅', true);
+  } catch (err) { show('❌ ' + err.message, false); }
 }
 async function doLogout() {
   await DB.auth.signOut();
   currentUser = null; currentRole = null; currentStoreId = null; currentProfile = null;
-  cart = []; appliedCoupon = null; editingProductId = null; lastPendingCount = 0;
-  selectedLat = null; selectedLng = null;
+  cart = []; appliedCoupon = null; editingProductId = null; lastPendingCount = 0; selectedLat = null; selectedLng = null; selectedPayment = 'cash';
   if (marker && map) { map.removeLayer(marker); marker = null; }
   if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
   if (notifInterval) { clearInterval(notifInterval); notifInterval = null; }
@@ -909,7 +638,6 @@ async function doLogout() {
 function showStoreForm() { document.getElementById('store-form-box').classList.remove('hidden'); document.getElementById('add-store-box').classList.add('hidden'); }
 function hideStoreForm() { document.getElementById('store-form-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
 
-/* ===== PROFILE ===== */
 async function showProfile() {
   document.getElementById('profile-box').classList.remove('hidden');
   document.getElementById('add-store-box').classList.add('hidden');
@@ -922,157 +650,57 @@ async function showProfile() {
   document.getElementById('pf-email').value = currentUser.email || '';
   let h = '';
   try {
-    if (currentRole === 'customer') {
-      const { data: o } = await DB.from('orders').select('id, status, total_price').eq('customer_id', currentUser.id);
-      const total = o?.length || 0, deliv = o?.filter(x => x.status === 'delivered').length || 0;
-      const spent = o?.filter(x => x.status === 'delivered').reduce((s, x) => s + parseFloat(x.total_price || 0), 0) || 0;
-      h = `<div class="profile-stat"><div class="profile-stat-num">${total}</div><div class="profile-stat-label">📋</div></div>
-        <div class="profile-stat"><div class="profile-stat-num">${deliv}</div><div class="profile-stat-label">🎉</div></div>
-        <div class="profile-stat"><div class="profile-stat-num">${spent}</div><div class="profile-stat-label">💰</div></div>`;
-    } else if (currentRole === 'merchant') {
-      const { data: s } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
-      const sids = s?.map(x => x.id) || [];
-      let oc = 0, rev = 0;
-      if (sids.length > 0) {
-        const { data: o } = await DB.from('orders').select('status, total_price').in('store_id', sids);
-        oc = o?.length || 0;
-        rev = o?.filter(x => x.status === 'delivered').reduce((a, x) => a + parseFloat(x.total_price || 0), 0) || 0;
-      }
-      h = `<div class="profile-stat"><div class="profile-stat-num">${s?.length || 0}</div><div class="profile-stat-label">🏪</div></div>
-        <div class="profile-stat"><div class="profile-stat-num">${oc}</div><div class="profile-stat-label">📋</div></div>
-        <div class="profile-stat"><div class="profile-stat-num">${rev}</div><div class="profile-stat-label">💰</div></div>`;
-    } else if (currentRole === 'driver') {
-      const { data: d } = await DB.from('orders').select('id, total_price').eq('status', 'delivered');
-      const { data: r } = await DB.from('driver_ratings').select('stars').eq('driver_id', currentUser.id);
-      const avg = r && r.length > 0 ? (r.reduce((a, x) => a + x.stars, 0) / r.length).toFixed(1) : '-';
-      const comm = d ? d.reduce((a, x) => a + parseFloat(x.total_price || 0) * 0.1, 0) : 0;
-      h = `<div class="profile-stat"><div class="profile-stat-num">${d?.length || 0}</div><div class="profile-stat-label">🚗</div></div>
-        <div class="profile-stat"><div class="profile-stat-num">${avg}</div><div class="profile-stat-label">⭐ (${r?.length || 0})</div></div>
-        <div class="profile-stat"><div class="profile-stat-num">${comm.toFixed(0)}</div><div class="profile-stat-label">💰</div></div>`;
-    }
+    if (currentRole === 'customer') { const { data: o } = await DB.from('orders').select('id, status, total_price').eq('customer_id', currentUser.id); const tt = o?.length || 0, dd = o?.filter(x => x.status === 'delivered').length || 0; const sp = o?.filter(x => x.status === 'delivered').reduce((s, x) => s + parseFloat(x.total_price || 0), 0) || 0; h = `<div class="profile-stat"><div class="profile-stat-num">${tt}</div><div class="profile-stat-label">📋</div></div><div class="profile-stat"><div class="profile-stat-num">${dd}</div><div class="profile-stat-label">🎉</div></div><div class="profile-stat"><div class="profile-stat-num">${sp}</div><div class="profile-stat-label">💰</div></div>`; }
+    else if (currentRole === 'merchant') { const { data: s } = await DB.from('stores').select('id').eq('owner_id', currentUser.id); const ids = s?.map(x => x.id) || []; let oc = 0, rev = 0; if (ids.length > 0) { const { data: o } = await DB.from('orders').select('status, total_price').in('store_id', ids); oc = o?.length || 0; rev = o?.filter(x => x.status === 'delivered').reduce((a, x) => a + parseFloat(x.total_price || 0), 0) || 0; } h = `<div class="profile-stat"><div class="profile-stat-num">${s?.length || 0}</div><div class="profile-stat-label">🏪</div></div><div class="profile-stat"><div class="profile-stat-num">${oc}</div><div class="profile-stat-label">📋</div></div><div class="profile-stat"><div class="profile-stat-num">${rev}</div><div class="profile-stat-label">💰</div></div>`; }
+    else if (currentRole === 'driver') { const { data: d } = await DB.from('orders').select('id, total_price').eq('status', 'delivered'); const { data: r } = await DB.from('driver_ratings').select('stars').eq('driver_id', currentUser.id); const avg = r && r.length > 0 ? (r.reduce((a, x) => a + x.stars, 0) / r.length).toFixed(1) : '-'; const c = d ? d.reduce((a, x) => a + parseFloat(x.total_price || 0) * 0.1, 0) : 0; h = `<div class="profile-stat"><div class="profile-stat-num">${d?.length || 0}</div><div class="profile-stat-label">🚗</div></div><div class="profile-stat"><div class="profile-stat-num">${avg}</div><div class="profile-stat-label">⭐ (${r?.length || 0})</div></div><div class="profile-stat"><div class="profile-stat-num">${c.toFixed(0)}</div><div class="profile-stat-label">💰</div></div>`; }
   } catch (e) {}
   document.getElementById('profile-stats').innerHTML = h;
   document.getElementById('profile-box').scrollIntoView({behavior: 'smooth'});
 }
 function hideProfile() { document.getElementById('profile-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
-async function doUpdateProfile() {
-  const name = document.getElementById('pf-name').value, phone = document.getElementById('pf-phone').value;
-  if (!name) { show('⚠️', false); return; }
-  try {
-    await DB.from('profiles').update({ full_name: name, phone }).eq('id', currentUser.id);
-    currentProfile.full_name = name; currentProfile.phone = phone;
-    document.getElementById('welcome').textContent = 'أهلاً ' + name;
-    document.getElementById('co-name').value = name; document.getElementById('co-phone').value = phone;
-    show('✅', true); setTimeout(hideProfile, 1000);
-  } catch (e) { show('❌', false); }
-}
+async function doUpdateProfile() { const n = document.getElementById('pf-name').value, p = document.getElementById('pf-phone').value; if (!n) { show('⚠️', false); return; } try { await DB.from('profiles').update({ full_name: n, phone: p }).eq('id', currentUser.id); currentProfile.full_name = n; currentProfile.phone = p; document.getElementById('welcome').textContent = 'أهلاً ' + n; document.getElementById('co-name').value = n; document.getElementById('co-phone').value = p; show('✅', true); setTimeout(hideProfile, 1000); } catch (e) { show('❌', false); } }
 
-/* ===== STATS ===== */
 async function showStats() {
   document.getElementById('stats-box').classList.remove('hidden');
   document.getElementById('add-store-box').classList.add('hidden');
   const c = document.getElementById('stats-content');
   c.innerHTML = '<p style="text-align:center;color:#888;">⏳</p>';
   try {
-    if (currentRole === 'merchant') {
-      const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
-      if (!ms || ms.length === 0) { c.innerHTML = '<p style="text-align:center;color:#888;">-</p>'; return; }
-      const { data: orders } = await DB.from('orders').select('*').in('store_id', ms.map(s => s.id));
-      if (!orders || orders.length === 0) { c.innerHTML = '<p style="text-align:center;color:#888;">-</p>'; return; }
-      const rev = orders.filter(o => o.status === 'delivered').reduce((s, o) => s + parseFloat(o.total_price), 0);
-      const today = new Date().toDateString();
-      const to = orders.filter(o => new Date(o.created_at).toDateString() === today).length;
-      const tr = orders.filter(o => o.status === 'delivered' && new Date(o.created_at).toDateString() === today).reduce((s, o) => s + parseFloat(o.total_price), 0);
-      c.innerHTML = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div class="stat-card" style="background:#d1ecf1; grid-column: span 2;"><div class="stat-num" style="color:#17a2b8;">${to} / ${tr} DH</div><div class="stat-label">📅 اليوم</div></div>
-        <div class="stat-card" style="background:#e7f3ff;"><div class="stat-num" style="color:#007bff;">${orders.length}</div><div class="stat-label">📋</div></div>
-        <div class="stat-card" style="background:#d4edda;"><div class="stat-num" style="color:#28a745;">${rev}</div><div class="stat-label">💰</div></div>
-        <div class="stat-card" style="background:#fff3cd;"><div class="stat-num" style="color:#ff9800;">${orders.filter(o => o.status === 'pending').length}</div><div class="stat-label">⏳</div></div>
-        <div class="stat-card" style="background:#cce5ff;"><div class="stat-num" style="color:#007bff;">${orders.filter(o => o.status === 'delivering').length}</div><div class="stat-label">🚗</div></div>
-        <div class="stat-card" style="background:#d4edda;"><div class="stat-num" style="color:#28a745;">${orders.filter(o => o.status === 'delivered').length}</div><div class="stat-label">🎉</div></div>
-        <div class="stat-card" style="background:#f8d7da; grid-column: span 2;"><div class="stat-num" style="color:#dc3545;">${orders.filter(o => o.status === 'cancelled').length}</div><div class="stat-label">❌</div></div></div>`;
-    } else if (currentRole === 'driver') {
-      const { data: d } = await DB.from('orders').select('*').eq('status', 'delivered');
-      const { data: di } = await DB.from('orders').select('id').eq('status', 'delivering');
-      const rev = d ? d.reduce((s, o) => s + parseFloat(o.total_price), 0) : 0;
-      const { data: r } = await DB.from('driver_ratings').select('stars').eq('driver_id', currentUser.id);
-      const avg = r && r.length > 0 ? (r.reduce((a, x) => a + x.stars, 0) / r.length).toFixed(1) : '-';
-      c.innerHTML = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div class="stat-card" style="background:#fff3cd; grid-column: span 2;"><div class="stat-num" style="color:#ff9800; font-size:30px;">⭐ ${avg} / 5</div><div class="stat-label">تقييمك (${r?.length || 0})</div></div>
-        <div class="stat-card" style="background:#d4edda; grid-column: span 2;"><div class="stat-num" style="color:#28a745; font-size:36px;">${d?.length || 0}</div><div class="stat-label">🎉 توصيلات</div></div>
-        <div class="stat-card" style="background:#fff3cd;"><div class="stat-num" style="color:#ff9800;">${rev}</div><div class="stat-label">💰</div></div>
-        <div class="stat-card" style="background:#e7f3ff;"><div class="stat-num" style="color:#007bff;">${(rev * 0.1).toFixed(0)}</div><div class="stat-label">💵 10%</div></div>
-        <div class="stat-card" style="background:#cce5ff; grid-column: span 2;"><div class="stat-num" style="color:#007bff;">${di?.length || 0}</div><div class="stat-label">🚗 في الطريق</div></div></div>`;
-    }
-  } catch (e) { c.innerHTML = '<p style="color:red;">❌</p>'; }
+    if (currentRole === 'merchant') { const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id); if (!ms || ms.length === 0) { c.innerHTML = '-'; return; } const { data: o } = await DB.from('orders').select('*').in('store_id', ms.map(s => s.id)); if (!o || o.length === 0) { c.innerHTML = '-'; return; } const rev = o.filter(x => x.status === 'delivered').reduce((s, x) => s + parseFloat(x.total_price), 0); const tod = new Date().toDateString(); const to = o.filter(x => new Date(x.created_at).toDateString() === tod).length; const tr = o.filter(x => x.status === 'delivered' && new Date(x.created_at).toDateString() === tod).reduce((s, x) => s + parseFloat(x.total_price), 0); c.innerHTML = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="stat-card" style="background:#d1ecf1; grid-column: span 2;"><div class="stat-num" style="color:#17a2b8;">${to} / ${tr} DH</div><div class="stat-label">📅</div></div><div class="stat-card" style="background:#e7f3ff;"><div class="stat-num" style="color:#007bff;">${o.length}</div><div class="stat-label">📋</div></div><div class="stat-card" style="background:#d4edda;"><div class="stat-num" style="color:#28a745;">${rev}</div><div class="stat-label">💰</div></div><div class="stat-card" style="background:#fff3cd;"><div class="stat-num" style="color:#ff9800;">${o.filter(x => x.status === 'pending').length}</div><div class="stat-label">⏳</div></div><div class="stat-card" style="background:#cce5ff;"><div class="stat-num" style="color:#007bff;">${o.filter(x => x.status === 'delivering').length}</div><div class="stat-label">🚗</div></div><div class="stat-card" style="background:#d4edda;"><div class="stat-num" style="color:#28a745;">${o.filter(x => x.status === 'delivered').length}</div><div class="stat-label">🎉</div></div><div class="stat-card" style="background:#f8d7da; grid-column: span 2;"><div class="stat-num" style="color:#dc3545;">${o.filter(x => x.status === 'cancelled').length}</div><div class="stat-label">❌</div></div></div>`; }
+    else if (currentRole === 'driver') { const { data: d } = await DB.from('orders').select('*').eq('status', 'delivered'); const { data: di } = await DB.from('orders').select('id').eq('status', 'delivering'); const rev = d ? d.reduce((s, x) => s + parseFloat(x.total_price), 0) : 0; const { data: r } = await DB.from('driver_ratings').select('stars').eq('driver_id', currentUser.id); const avg = r && r.length > 0 ? (r.reduce((a, x) => a + x.stars, 0) / r.length).toFixed(1) : '-'; c.innerHTML = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="stat-card" style="background:#fff3cd; grid-column: span 2;"><div class="stat-num" style="color:#ff9800; font-size:30px;">⭐ ${avg} / 5</div><div class="stat-label">(${r?.length || 0})</div></div><div class="stat-card" style="background:#d4edda; grid-column: span 2;"><div class="stat-num" style="color:#28a745; font-size:36px;">${d?.length || 0}</div><div class="stat-label">🎉</div></div><div class="stat-card" style="background:#fff3cd;"><div class="stat-num" style="color:#ff9800;">${rev}</div><div class="stat-label">💰</div></div><div class="stat-card" style="background:#e7f3ff;"><div class="stat-num" style="color:#007bff;">${(rev * 0.1).toFixed(0)}</div><div class="stat-label">💵</div></div><div class="stat-card" style="background:#cce5ff; grid-column: span 2;"><div class="stat-num" style="color:#007bff;">${di?.length || 0}</div><div class="stat-label">🚗</div></div></div>`; }
+  } catch (e) { c.innerHTML = '❌'; }
 }
 function hideStats() { document.getElementById('stats-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
 
-/* ===== STORES ===== */
 async function doAddStore() {
-  const name = document.getElementById('st-name').value, desc = document.getElementById('st-desc').value, address = document.getElementById('st-address').value;
-  if (!name) { show('⚠️', false); return; }
-  try {
-    await DB.from('stores').insert([{ owner_id: currentUser.id, name, description: desc, address, is_open: true }]);
-    show('✅', true);
-    document.getElementById('st-name').value = ''; document.getElementById('st-desc').value = ''; document.getElementById('st-address').value = '';
-    hideStoreForm(); loadStores();
-  } catch (e) { show('❌', false); }
+  const n = document.getElementById('st-name').value, d = document.getElementById('st-desc').value, a = document.getElementById('st-address').value, p = document.getElementById('st-promo').value;
+  if (!n) { show('⚠️', false); return; }
+  try { await DB.from('stores').insert([{ owner_id: currentUser.id, name: n, description: d, address: a, is_open: true, promo_text: p || null, promo_active: p ? true : false }]); show('✅', true); ['st-name','st-desc','st-address','st-promo'].forEach(id => document.getElementById(id).value = ''); hideStoreForm(); loadStores(); } catch (e) { show('❌', false); }
 }
 
 async function loadStores() {
-  const list = document.getElementById('stores-list');
-  list.innerHTML = '<p style="text-align:center;color:#888;">⏳</p>';
+  const l = document.getElementById('stores-list'); l.innerHTML = '<p style="text-align:center;color:#888;">⏳</p>';
   const { data: stores, error } = await DB.from('stores').select('*');
-  if (error || !stores || stores.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;">-</p>'; return; }
+  if (error || !stores || stores.length === 0) { l.innerHTML = '-'; return; }
   allStoresCache = {}; allProductsCache = {};
-  for (const s of stores) {
-    allStoresCache[s.id] = s;
-    const { data: p } = await DB.from('products').select('*').eq('store_id', s.id);
-    allProductsCache[s.id] = p || [];
-    const { data: r } = await DB.from('ratings').select('stars').eq('store_id', s.id);
-    allStoresCache[s.id]._rating = r && r.length > 0 ? r.reduce((a, x) => a + x.stars, 0) / r.length : 0;
-    allStoresCache[s.id]._ratingCount = r?.length || 0;
-  }
+  for (const s of stores) { allStoresCache[s.id] = s; const { data: p } = await DB.from('products').select('*').eq('store_id', s.id); allProductsCache[s.id] = p || []; const { data: r } = await DB.from('ratings').select('stars').eq('store_id', s.id); allStoresCache[s.id]._rating = r && r.length > 0 ? r.reduce((a, x) => a + x.stars, 0) / r.length : 0; allStoresCache[s.id]._ratingCount = r?.length || 0; }
   renderStores(stores);
 }
 
 function renderStores(stores) {
-  const list = document.getElementById('stores-list');
-  list.innerHTML = '';
+  const l = document.getElementById('stores-list'); l.innerHTML = '';
   stores.forEach(s => {
-    const div = document.createElement('div'); div.className = 'store-item';
+    const d = document.createElement('div'); d.className = 'store-item';
     const st = s.is_open === false ? '<span class="store-status" style="background:#dc3545;color:white;">🔒</span>' : '<span class="store-status" style="background:#28a745;color:white;">✅</span>';
-    const rating = s._ratingCount > 0 ? `⭐ ${s._rating.toFixed(1)} / 5 (${s._ratingCount})` : '⭐ -';
-    div.innerHTML = `<h3>🏪 ${s.name}</h3>${st}<p>${s.description || ''}</p><p>📍 ${s.address || ''}</p><div class="rating-line">${rating}</div><div id="prod-${s.id}"></div>`;
-    list.appendChild(div);
-    if (currentRole === 'merchant' && s.owner_id === currentUser.id) {
-      const b = document.createElement('button'); b.className = 'purple small-btn'; b.textContent = '📦 ' + t('add_product');
-      b.onclick = () => showProductForm(s.id, s.name); div.appendChild(b);
-    }
-    if (currentRole === 'customer') {
-      const b = document.createElement('button'); b.className = 'orange small-btn';
-      DB.from('ratings').select('stars').eq('store_id', s.id).eq('customer_id', currentUser.id).single().then(r => {
-        b.textContent = r.data ? `⭐ ${r.data.stars}/5` : '⭐ ' + (currentLang === 'ar' ? 'قيّم' : currentLang === 'fr' ? 'Noter' : 'Rate');
-        b.onclick = () => rateStore(s.id);
-      });
-      div.appendChild(b);
-    }
-    const pc = document.getElementById('prod-' + s.id);
-    const prods = allProductsCache[s.id] || [];
-    if (prods.length === 0) pc.innerHTML = '<p style="font-size:13px;color:#888;">-</p>';
-    else {
-      pc.innerHTML = '<b style="font-size:13px;color:#666;">📦</b>';
-      prods.forEach(pr => {
-        const pd = document.createElement('div'); pd.className = 'product-item';
-        let btn = '';
-        if (currentRole === 'customer') btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕</button>`;
-        else if (currentRole === 'merchant') btn = `<button class="blue small-btn" onclick="editProduct('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${(pr.description || '').replace(/'/g, "\\'")}', '${pr.image_url || ''}', '${s.id}')">✏️</button><button class="red small-btn" onclick="deleteProduct('${pr.id}', '${s.id}')">🗑️</button>`;
-        const img = pr.image_url ? `<img src="${pr.image_url}" class="product-img" onerror="this.style.display='none'">` : '';
-        pd.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${img}<div><b>${pr.name}</b>${pr.price} DH - ${pr.description || ''}</div></div><div>${btn}</div>`;
-        pc.appendChild(pd);
-      });
-    }
+    const r = s._ratingCount > 0 ? `⭐ ${s._rating.toFixed(1)} / 5 (${s._ratingCount})` : '⭐ -';
+    const promo = (s.promo_active && s.promo_text) ? `<div class="promo-banner">📢 ${s.promo_text}</div>` : '';
+    d.innerHTML = `<h3>🏪 ${s.name}</h3>${promo}${st}<p>${s.description || ''}</p><p>📍 ${s.address || ''}</p><div class="rating-line">${r}</div><div id="prod-${s.id}"></div>`;
+    l.appendChild(d);
+    if (currentRole === 'merchant' && s.owner_id === currentUser.id) { const b = document.createElement('button'); b.className = 'purple small-btn'; b.textContent = '📦'; b.onclick = () => showProductForm(s.id, s.name); d.appendChild(b); }
+    if (currentRole === 'customer') { const b = document.createElement('button'); b.className = 'orange small-btn'; DB.from('ratings').select('stars').eq('store_id', s.id).eq('customer_id', currentUser.id).single().then(r => { b.textContent = r.data ? `⭐ ${r.data.stars}/5` : '⭐'; b.onclick = () => rateStore(s.id); }); d.appendChild(b); }
+    const pc = document.getElementById('prod-' + s.id); const p = allProductsCache[s.id] || [];
+    if (p.length === 0) pc.innerHTML = '-';
+    else { pc.innerHTML = '<b style="font-size:13px;color:#666;">📦</b>'; p.forEach(pr => { const pd = document.createElement('div'); pd.className = 'product-item'; let btn = ''; if (currentRole === 'customer') btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕</button>`; else if (currentRole === 'merchant') btn = `<button class="blue small-btn" onclick="editProduct('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${(pr.description || '').replace(/'/g, "\\'")}', '${pr.image_url || ''}', '${s.id}')">✏️</button><button class="red small-btn" onclick="deleteProduct('${pr.id}', '${s.id}')">🗑️</button>`; const img = pr.image_url ? `<img src="${pr.image_url}" class="product-img" onerror="this.style.display='none'">` : ''; pd.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${img}<div><b>${pr.name}</b>${pr.price} DH - ${pr.description || ''}</div></div><div>${btn}</div>`; pc.appendChild(pd); }); }
   });
 }
 
@@ -1082,307 +710,108 @@ function applyFilters() {
   const maxP = parseFloat(document.getElementById('filter-max-price').value);
   const minR = parseFloat(document.getElementById('filter-rating').value);
   const sort = document.getElementById('filter-sort').value;
-  const all = Object.values(allStoresCache);
-  const filtered = [];
-  all.forEach(store => {
-    const prods = allProductsCache[store.id] || [];
-    const sTextOk = s === '' || store.name.toLowerCase().includes(s) || (store.description || '').toLowerCase().includes(s);
-    const sRateOk = !minR || (store._rating || 0) >= minR;
-    const matched = prods.filter(p => {
-      const txt = (p.name + ' ' + (p.description || '')).toLowerCase();
-      const txtOk = s === '' || txt.includes(s) || sTextOk;
-      const priceOk = (isNaN(minP) || p.price >= minP) && (isNaN(maxP) || p.price <= maxP);
-      return txtOk && priceOk;
-    });
-    if (matched.length > 0 && sRateOk) filtered.push({ ...store, _products: matched });
-    else if (matched.length === 0 && sTextOk && sRateOk && s !== '' && isNaN(minP) && isNaN(maxP)) filtered.push({ ...store, _products: prods });
-  });
+  const all = Object.values(allStoresCache); const filtered = [];
+  all.forEach(store => { const p = allProductsCache[store.id] || []; const sTextOk = s === '' || store.name.toLowerCase().includes(s) || (store.description || '').toLowerCase().includes(s); const sRateOk = !minR || (store._rating || 0) >= minR; const matched = p.filter(x => { const txt = (x.name + ' ' + (x.description || '')).toLowerCase(); const txtOk = s === '' || txt.includes(s) || sTextOk; const priceOk = (isNaN(minP) || x.price >= minP) && (isNaN(maxP) || x.price <= maxP); return txtOk && priceOk; }); if (matched.length > 0 && sRateOk) filtered.push({ ...store, _products: matched }); else if (matched.length === 0 && sTextOk && sRateOk && s !== '' && isNaN(minP) && isNaN(maxP)) filtered.push({ ...store, _products: p }); });
   if (sort === 'price-asc' || sort === 'price-desc') filtered.forEach(x => x._products.sort((a, b) => sort === 'price-asc' ? a.price - b.price : b.price - a.price));
   else if (sort === 'name-asc') filtered.forEach(x => x._products.sort((a, b) => a.name.localeCompare(b.name, 'ar')));
   else if (sort === 'rating-desc') filtered.sort((a, b) => (b._rating || 0) - (a._rating || 0));
-  if (filtered.length === 0) { document.getElementById('stores-list').innerHTML = '<p style="text-align:center;color:#888;">-</p>'; return; }
+  if (filtered.length === 0) { document.getElementById('stores-list').innerHTML = '-'; return; }
   renderStores(filtered.map(s => ({...s})));
-  filtered.forEach(x => {
-    const pc = document.getElementById('prod-' + x.id);
-    if (!pc) return;
-    pc.innerHTML = '<b style="font-size:13px;color:#666;">📦</b>';
-    x._products.forEach(pr => {
-      const pd = document.createElement('div'); pd.className = 'product-item';
-      let btn = '';
-      if (currentRole === 'customer') btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕</button>`;
-      const img = pr.image_url ? `<img src="${pr.image_url}" class="product-img" onerror="this.style.display='none'">` : '';
-      pd.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${img}<div><b>${pr.name}</b>${pr.price} DH - ${pr.description || ''}</div></div><div>${btn}</div>`;
-      pc.appendChild(pd);
-    });
-  });
+  filtered.forEach(x => { const pc = document.getElementById('prod-' + x.id); if (!pc) return; pc.innerHTML = '<b style="font-size:13px;color:#666;">📦</b>'; x._products.forEach(pr => { const pd = document.createElement('div'); pd.className = 'product-item'; let btn = ''; if (currentRole === 'customer') btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕</button>`; const img = pr.image_url ? `<img src="${pr.image_url}" class="product-img" onerror="this.style.display='none'">` : ''; pd.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${img}<div><b>${pr.name}</b>${pr.price} DH - ${pr.description || ''}</div></div><div>${btn}</div>`; pc.appendChild(pd); }); });
 }
-function resetFilters() {
-  ['search-input','filter-min-price','filter-max-price','filter-rating','filter-sort'].forEach(id => document.getElementById(id).value = '');
-  loadStores();
-}
+function resetFilters() { ['search-input','filter-min-price','filter-max-price','filter-rating','filter-sort'].forEach(id => document.getElementById(id).value = ''); loadStores(); }
 function filterProducts() { applyFilters(); }
-
-async function rateStore(storeId) {
-  const stars = prompt(currentLang === 'ar' ? 'كم نجمة؟ (1-5)' : currentLang === 'fr' ? 'Note? (1-5)' : 'Stars? (1-5)', '5');
-  if (!stars) return;
-  const n = parseInt(stars);
-  if (n < 1 || n > 5) { show('⚠️', false); return; }
-  try { await DB.from('ratings').insert([{ store_id: storeId, customer_id: currentUser.id, stars: n }]); show('✅', true); loadStores(); }
-  catch (e) { show('❌', false); }
-}
-async function deleteProduct(id, storeId) {
-  if (!confirm('?')) return;
-  try { await DB.from('products').delete().eq('id', id); show('✅', true); loadStores(); }
-  catch (e) { show('❌', false); }
-}
-function editProduct(id, name, price, desc, image, storeId) {
-  editingProductId = id; currentStoreId = storeId;
-  document.getElementById('pr-name').value = name; document.getElementById('pr-price').value = price;
-  document.getElementById('pr-desc').value = desc; document.getElementById('pr-image').value = image;
-  document.getElementById('pr-image-file').value = ''; document.getElementById('pr-image-gallery').value = '';
-  const p = document.getElementById('image-preview');
-  p.innerHTML = image ? '<img src="' + image + '" style="max-width:150px; max-height:150px; border-radius:10px; border:2px solid #ff6b35; object-fit:cover;">' : '';
-  document.getElementById('product-form-title').textContent = '✏️';
-  document.getElementById('product-form-box').classList.remove('hidden');
-  document.getElementById('product-form-box').scrollIntoView({behavior: 'smooth'});
-}
-function showProductForm(storeId, storeName) {
-  editingProductId = null; currentStoreId = storeId;
-  document.getElementById('product-form-title').textContent = '📦 ' + t('add_product');
-  document.getElementById('product-store-name').textContent = storeName;
-  ['pr-name','pr-desc','pr-price','pr-image','pr-image-file','pr-image-gallery'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('image-preview').innerHTML = '';
-  document.getElementById('product-form-box').classList.remove('hidden');
-  document.getElementById('product-form-box').scrollIntoView({behavior: 'smooth'});
-}
-function hideProductForm() {
-  document.getElementById('product-form-box').classList.add('hidden');
-  currentStoreId = null; editingProductId = null;
-  document.getElementById('image-preview').innerHTML = '';
-  document.getElementById('pr-image-file').value = ''; document.getElementById('pr-image-gallery').value = '';
-}
-document.addEventListener('change', e => {
-  if (e.target && (e.target.id === 'pr-image-file' || e.target.id === 'pr-image-gallery')) {
-    const f = e.target.files[0]; const p = document.getElementById('image-preview');
-    if (!f) { p.innerHTML = ''; return; }
-    const r = new FileReader();
-    r.onload = ev => p.innerHTML = '<img src="' + ev.target.result + '" style="max-width:150px; max-height:150px; border-radius:10px; border:2px solid #ff6b35; object-fit:cover;">';
-    r.readAsDataURL(f);
-  }
-});
+async function rateStore(id) { const s = prompt('⭐ 1-5', '5'); if (!s) return; const n = parseInt(s); if (n < 1 || n > 5) return; try { await DB.from('ratings').insert([{ store_id: id, customer_id: currentUser.id, stars: n }]); show('✅', true); loadStores(); } catch (e) { show('❌', false); } }
+async function deleteProduct(id, s) { if (!confirm('?')) return; try { await DB.from('products').delete().eq('id', id); show('✅', true); loadStores(); } catch (e) { show('❌', false); } }
+function editProduct(id, n, p, d, i, s) { editingProductId = id; currentStoreId = s; document.getElementById('pr-name').value = n; document.getElementById('pr-price').value = p; document.getElementById('pr-desc').value = d; document.getElementById('pr-image').value = i; document.getElementById('pr-image-file').value = ''; document.getElementById('pr-image-gallery').value = ''; const pv = document.getElementById('image-preview'); pv.innerHTML = i ? '<img src="' + i + '" style="max-width:150px; max-height:150px; border-radius:10px; border:2px solid #ff6b35; object-fit:cover;">' : ''; document.getElementById('product-form-box').classList.remove('hidden'); document.getElementById('product-form-box').scrollIntoView({behavior: 'smooth'}); }
+function showProductForm(sid, sn) { editingProductId = null; currentStoreId = sid; document.getElementById('product-store-name').textContent = sn; ['pr-name','pr-desc','pr-price','pr-image','pr-image-file','pr-image-gallery'].forEach(id => document.getElementById(id).value = ''); document.getElementById('image-preview').innerHTML = ''; document.getElementById('product-form-box').classList.remove('hidden'); document.getElementById('product-form-box').scrollIntoView({behavior: 'smooth'}); }
+function hideProductForm() { document.getElementById('product-form-box').classList.add('hidden'); currentStoreId = null; editingProductId = null; document.getElementById('image-preview').innerHTML = ''; document.getElementById('pr-image-file').value = ''; document.getElementById('pr-image-gallery').value = ''; }
+document.addEventListener('change', e => { if (e.target && (e.target.id === 'pr-image-file' || e.target.id === 'pr-image-gallery')) { const f = e.target.files[0]; const p = document.getElementById('image-preview'); if (!f) { p.innerHTML = ''; return; } const r = new FileReader(); r.onload = ev => p.innerHTML = '<img src="' + ev.target.result + '" style="max-width:150px; max-height:150px; border-radius:10px; border:2px solid #ff6b35; object-fit:cover;">'; r.readAsDataURL(f); } });
 async function doAddProduct() {
-  const name = document.getElementById('pr-name').value, desc = document.getElementById('pr-desc').value, price = document.getElementById('pr-price').value;
-  const url = document.getElementById('pr-image').value;
-  const file = document.getElementById('pr-image-file').files[0] || document.getElementById('pr-image-gallery').files[0];
-  if (!name || !price) { show('⚠️', false); return; }
+  const n = document.getElementById('pr-name').value, d = document.getElementById('pr-desc').value, p = document.getElementById('pr-price').value, u = document.getElementById('pr-image').value;
+  const f = document.getElementById('pr-image-file').files[0] || document.getElementById('pr-image-gallery').files[0];
+  if (!n || !p) { show('⚠️', false); return; }
   show('⏳', true);
-  try {
-    let fu = url || null;
-    if (file) {
-      const ext = file.name.split('.').pop();
-      const fn = `p-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${ext}`;
-      const { error: ue } = await DB.storage.from('product-images').upload(fn, file, { cacheControl: '3600', upsert: false });
-      if (ue) throw ue;
-      const { data: u } = DB.storage.from('product-images').getPublicUrl(fn);
-      fu = u.publicUrl;
-    }
-    const d = { name, description: desc, price: parseFloat(price), image_url: fu };
-    if (editingProductId) await DB.from('products').update(d).eq('id', editingProductId);
-    else { d.store_id = currentStoreId; await DB.from('products').insert([d]); }
-    show('✅', true); hideProductForm(); loadStores();
-  } catch (e) { show('❌ ' + (e.message || ''), false); }
+  try { let fu = u || null; if (f) { const ext = f.name.split('.').pop(); const fn = `p-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${ext}`; const { error: ue } = await DB.storage.from('product-images').upload(fn, f, { cacheControl: '3600', upsert: false }); if (ue) throw ue; const { data: ud } = DB.storage.from('product-images').getPublicUrl(fn); fu = ud.publicUrl; } const data = { name: n, description: d, price: parseFloat(p), image_url: fu }; if (editingProductId) await DB.from('products').update(data).eq('id', editingProductId); else { data.store_id = currentStoreId; await DB.from('products').insert([data]); } show('✅', true); hideProductForm(); loadStores(); } catch (e) { show('❌ ' + (e.message || ''), false); }
 }
 
-/* ===== CART ===== */
-function addToCart(prodId, name, price, storeId) {
-  if (cart.length > 0 && cart[0].storeId !== storeId) { show('⚠️', false); return; }
-  const ex = cart.find(c => c.prodId === prodId);
-  if (ex) ex.qty += 1; else cart.push({ prodId, name, price, storeId, qty: 1 });
-  show('✅', true); loadCart();
-}
+function addToCart(pid, n, p, sid) { if (cart.length > 0 && cart[0].storeId !== sid) { show('⚠️', false); return; } const ex = cart.find(c => c.prodId === pid); if (ex) ex.qty += 1; else cart.push({ prodId: pid, name: n, price: p, storeId: sid, qty: 1 }); show('✅', true); loadCart(); }
 function loadCart() {
-  const list = document.getElementById('cart-list');
-  const tDiv = document.getElementById('cart-total');
-  const cf = document.getElementById('checkout-fields');
-  if (cart.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;">' + t('cart_empty') + '</p>'; tDiv.classList.add('hidden'); cf.classList.add('hidden'); appliedCoupon = null; document.getElementById('coupon-result').innerHTML = ''; return; }
-  list.innerHTML = ''; let total = 0;
-  cart.forEach((c, i) => {
-    total += c.price * c.qty;
-    const d = document.createElement('div'); d.className = 'cart-item';
-    d.innerHTML = `<div><b>${c.name}</b> - ${c.price} × ${c.qty}</div><button class="red small-btn" onclick="removeFromCart(${i})">❌</button>`;
-    list.appendChild(d);
-  });
-  let finalTotal = total;
-  if (appliedCoupon) {
-    const disc = appliedCoupon.discount_type === 'percent' ? (total * appliedCoupon.discount_value / 100) : appliedCoupon.discount_value;
-    finalTotal = Math.max(0, total - disc);
-    tDiv.innerHTML = `<div style="font-size:13px; opacity:0.9;">💰 ${total} DH → <b>${finalTotal.toFixed(0)} DH</b></div><div style="font-size:12px; opacity:0.85; margin-top:4px;">🎟️ -${disc.toFixed(0)} DH</div>`;
-  } else {
-    tDiv.textContent = '💰 ' + total + ' DH';
-  }
-  tDiv.classList.remove('hidden'); cf.classList.remove('hidden');
+  const l = document.getElementById('cart-list'), t = document.getElementById('cart-total'), cf = document.getElementById('checkout-fields');
+  if (cart.length === 0) { l.innerHTML = '<p style="text-align:center;color:#888;">' + t('cart_empty') + '</p>'; t.classList.add('hidden'); cf.classList.add('hidden'); appliedCoupon = null; document.getElementById('coupon-result').innerHTML = ''; return; }
+  l.innerHTML = ''; let total = 0;
+  cart.forEach((c, i) => { total += c.price * c.qty; const d = document.createElement('div'); d.className = 'cart-item'; d.innerHTML = `<div><b>${c.name}</b> - ${c.price} × ${c.qty}</div><button class="red small-btn" onclick="removeFromCart(${i})">❌</button>`; l.appendChild(d); });
+  let ft = total;
+  if (appliedCoupon) { const d = appliedCoupon.discount_type === 'percent' ? (total * appliedCoupon.discount_value / 100) : appliedCoupon.discount_value; ft = Math.max(0, total - d); t.innerHTML = `<div style="font-size:13px; opacity:0.9;">💰 ${total} → <b>${ft.toFixed(0)} DH</b></div><div style="font-size:12px; opacity:0.85; margin-top:4px;">🎟️ -${d.toFixed(0)} DH</div>`; } else { t.textContent = '💰 ' + total + ' DH'; }
+  t.classList.remove('hidden'); cf.classList.remove('hidden');
 }
 function removeFromCart(i) { cart.splice(i, 1); if (cart.length === 0) appliedCoupon = null; loadCart(); }
-function clearCart() {
-  cart = []; appliedCoupon = null; selectedLat = null; selectedLng = null;
-  if (marker && map) { map.removeLayer(marker); marker = null; }
-  document.getElementById('location-status').textContent = '';
-  document.getElementById('coupon-result').innerHTML = '';
-  loadCart();
-}
+function clearCart() { cart = []; appliedCoupon = null; selectedLat = null; selectedLng = null; if (marker && map) { map.removeLayer(marker); marker = null; } document.getElementById('location-status').textContent = ''; document.getElementById('coupon-result').innerHTML = ''; loadCart(); }
 
 async function doCheckout() {
   if (cart.length === 0) { show('⚠️', false); return; }
-  const coName = document.getElementById('co-name').value, coPhone = document.getElementById('co-phone').value, coAddr = document.getElementById('co-address').value;
-  if (!coName || !coPhone || !coAddr) { show('⚠️', false); return; }
+  const cn = document.getElementById('co-name').value, cp = document.getElementById('co-phone').value, ca = document.getElementById('co-address').value;
+  if (!cn || !cp || !ca) { show('⚠️', false); return; }
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  let finalTotal = total;
-  if (appliedCoupon) {
-    const disc = appliedCoupon.discount_type === 'percent' ? (total * appliedCoupon.discount_value / 100) : appliedCoupon.discount_value;
-    finalTotal = Math.max(0, total - disc);
-  }
-  const storeId = cart[0].storeId;
+  let ft = total;
+  if (appliedCoupon) { const d = appliedCoupon.discount_type === 'percent' ? (total * appliedCoupon.discount_value / 100) : appliedCoupon.discount_value; ft = Math.max(0, total - d); }
+  const sid = cart[0].storeId;
   show('⏳', true);
   try {
-    const { data: od, error: oe } = await DB.from('orders').insert([{
-      customer_id: currentUser.id, store_id: storeId, status: 'pending', total_price: finalTotal,
-      delivery_address: coAddr, customer_phone: coPhone, customer_name: coName,
-      latitude: selectedLat, longitude: selectedLng
-    }]).select();
+    const { data: od, error: oe } = await DB.from('orders').insert([{ customer_id: currentUser.id, store_id: sid, status: 'pending', total_price: ft, delivery_address: ca, customer_phone: cp, customer_name: cn, latitude: selectedLat, longitude: selectedLng, payment_method: selectedPayment }]).select();
     if (oe) throw oe;
     const oid = od[0].id;
     const items = cart.map(c => ({ order_id: oid, product_id: c.prodId, product_name: c.name, price: c.price, quantity: c.qty }));
     await DB.from('order_items').insert(items);
     if (appliedCoupon) await DB.from('coupons').update({ used_count: appliedCoupon.used_count + 1 }).eq('id', appliedCoupon.id);
     show('✅', true);
-    cart = []; appliedCoupon = null; selectedLat = null; selectedLng = null;
+    cart = []; appliedCoupon = null; selectedLat = null; selectedLng = null; selectedPayment = 'cash';
     if (marker && map) { map.removeLayer(marker); marker = null; }
-    document.getElementById('location-status').textContent = '';
-    document.getElementById('coupon-result').innerHTML = '';
-    document.getElementById('coupon-input').value = '';
+    document.getElementById('location-status').textContent = ''; document.getElementById('coupon-result').innerHTML = ''; document.getElementById('coupon-input').value = '';
+    selectPay('cash');
     loadCart(); loadOrders();
   } catch (e) { show('❌ ' + e.message, false); }
 }
 
-/* ===== ORDERS ===== */
 async function loadOrders() {
-  const list = document.getElementById('orders-list');
-  list.innerHTML = '<p style="text-align:center;color:#888;">⏳</p>';
+  const l = document.getElementById('orders-list'); l.innerHTML = '<p style="text-align:center;color:#888;">⏳</p>';
   let q = DB.from('orders').select('*').order('created_at', {ascending: false});
   if (currentRole === 'customer') q = q.eq('customer_id', currentUser.id);
-  else if (currentRole === 'merchant') {
-    const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
-    if (ms && ms.length > 0) q = q.in('store_id', ms.map(s => s.id));
-    else { list.innerHTML = '<p style="text-align:center;color:#888;">-</p>'; return; }
-  } else if (currentRole === 'driver') q = q.eq('status', 'delivering');
+  else if (currentRole === 'merchant') { const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id); if (ms && ms.length > 0) q = q.in('store_id', ms.map(s => s.id)); else { l.innerHTML = '-'; return; } }
+  else if (currentRole === 'driver') q = q.eq('status', 'delivering');
   const filter = document.getElementById('order-filter').value;
   if (filter) q = q.eq('status', filter);
   const { data: orders, error } = await q;
-  if (error) { list.innerHTML = '<p style="text-align:center;color:red;">❌</p>'; return; }
+  if (error) { l.innerHTML = '❌'; return; }
   document.getElementById('orders-count').textContent = '(' + (orders?.length || 0) + ')';
-  if (!orders || orders.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;">-</p>'; return; }
-  list.innerHTML = '';
+  if (!orders || orders.length === 0) { l.innerHTML = '-'; return; }
+  l.innerHTML = '';
   const stAr = {pending: t('status_pending'), accepted: t('status_accepted'), preparing: '👨‍🍳', delivering: t('status_delivering'), delivered: t('status_delivered'), cancelled: t('status_cancelled')};
   for (const o of orders) {
-    const div = document.createElement('div'); div.className = 'order-item';
+    const d = document.createElement('div'); d.className = 'order-item';
     const { data: items } = await DB.from('order_items').select('*').eq('order_id', o.id);
     let ph = '';
     if (items && items.length > 0) ph = '<div class="order-products">' + items.map(it => `• ${it.product_name} × ${it.quantity} = ${it.price * it.quantity} DH`).join('<br>') + '</div>';
     const dt = o.created_at ? new Date(o.created_at).toLocaleString('ar-MA', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '-';
+    const payTxt = o.payment_method === 'card' ? t('paid_card') : t('paid_cash');
     let dh = '';
-    if (currentRole === 'customer' && o.driver_id && (o.status === 'delivering' || o.status === 'delivered')) {
-      const { data: drv } = await DB.from('profiles').select('full_name, phone').eq('id', o.driver_id).single();
-      if (drv) dh = `<div style="background:#e7f3ff; padding:8px; border-radius:8px; margin-top:8px;"><b style="color:#007bff;">🚚</b> ${drv.full_name || ''}<br>📞 ${drv.phone || ''}</div>`;
-    }
-    div.innerHTML = `<b>📦 #${o.id.substring(0, 6)}</b><br><div class="order-date">🕐 ${dt}</div>👤 ${o.customer_name || ''}<br>📞 ${o.customer_phone || ''}<br>📍 ${o.delivery_address || ''}<br>💰 <b>${o.total_price} DH</b><br>${stAr[o.status] || o.status}${ph}${dh}`;
-    const cb = document.createElement('button'); cb.className = 'green small-btn'; cb.textContent = '💬';
-    cb.onclick = () => openChat(o.id, '#' + o.id.substring(0, 6)); div.appendChild(cb);
-    if ((currentRole === 'merchant' || currentRole === 'driver') && o.customer_phone) {
-      let phone = o.customer_phone.replace(/\D/g, '');
-      if (phone.startsWith('0')) phone = '212' + phone.substring(1);
-      const wa = document.createElement('button'); wa.className = 'whatsapp small-btn'; wa.textContent = '📱';
-      wa.onclick = () => window.open('https://wa.me/' + phone, '_blank'); div.appendChild(wa);
-      const ca = document.createElement('button'); ca.className = 'blue small-btn'; ca.textContent = '📞';
-      ca.onclick = () => window.location.href = 'tel:' + phone; div.appendChild(ca);
-      const cp = document.createElement('button'); cp.className = 'teal small-btn'; cp.textContent = '📋';
-      cp.onclick = () => navigator.clipboard.writeText(o.customer_phone).then(() => show('✅', true));
-      div.appendChild(cp);
-    }
-    if ((currentRole === 'merchant' || currentRole === 'driver') && o.delivery_address) {
-      const mb = document.createElement('button'); mb.className = 'purple small-btn'; mb.textContent = '📍';
-      if (o.latitude && o.longitude) mb.onclick = () => window.open('https://www.google.com/maps?q=' + o.latitude + ',' + o.longitude, '_blank');
-      else mb.onclick = () => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.delivery_address), '_blank');
-      div.appendChild(mb);
-      if (o.latitude && o.longitude) {
-        const sm = document.createElement('button'); sm.className = 'teal small-btn'; sm.textContent = '🗺️';
-        const mid = 'om-' + o.id;
-        sm.onclick = () => {
-          let ex = document.getElementById(mid);
-          if (ex) { ex.style.display = ex.style.display === 'none' ? 'block' : 'none'; return; }
-          const md = document.createElement('div'); md.id = mid; md.style.cssText = 'height:250px; border-radius:10px; margin-top:10px;';
-          div.appendChild(md);
-          setTimeout(() => {
-            const m = L.map(mid).setView([o.latitude, o.longitude], 16);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM', maxZoom: 19 }).addTo(m);
-            L.marker([o.latitude, o.longitude]).addTo(m).bindPopup('📍').openPopup();
-          }, 50);
-        };
-        div.appendChild(sm);
-      }
-    }
-    if (currentRole === 'customer' && o.status === 'delivered' && o.driver_id) {
-      const { data: exR } = await DB.from('driver_ratings').select('id').eq('order_id', o.id).eq('customer_id', currentUser.id).single();
-      const rd = document.createElement('div'); rd.style.marginTop = '10px';
-      if (exR) rd.innerHTML = '<span style="color:#28a745; font-weight:bold; font-size:13px;">✅</span>';
-      else rd.innerHTML = `<button class="orange small-btn" onclick="rateDriver('${o.id}', '${o.driver_id}')">⭐</button>`;
-      div.appendChild(rd);
-    }
-    if (currentRole === 'merchant' && o.status === 'pending') {
-      const bd = document.createElement('div'); bd.style.marginTop = '10px';
-      bd.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'accepted')">✅</button><button class="red small-btn" onclick="updateOrderStatus('${o.id}', 'cancelled')">❌</button>`;
-      div.appendChild(bd);
-    }
-    if (currentRole === 'customer' && o.status === 'pending') {
-      const bd = document.createElement('div'); bd.style.marginTop = '10px';
-      bd.innerHTML = `<button class="red small-btn" onclick="cancelOrder('${o.id}')">❌</button>`;
-      div.appendChild(bd);
-    }
-    if (currentRole === 'merchant' && o.status === 'accepted') {
-      const bd = document.createElement('div'); bd.style.marginTop = '10px';
-      bd.innerHTML = `<button class="blue small-btn" onclick="updateOrderStatus('${o.id}', 'delivering')">🚗</button>`;
-      div.appendChild(bd);
-    }
-    if (currentRole === 'driver' && o.status === 'delivering') {
-      const bd = document.createElement('div'); bd.style.marginTop = '10px';
-      bd.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'delivered')">✅</button>`;
-      div.appendChild(bd);
-    }
-    list.appendChild(div);
+    if (currentRole === 'customer' && o.driver_id && (o.status === 'delivering' || o.status === 'delivered')) { const { data: dr } = await DB.from('profiles').select('full_name, phone').eq('id', o.driver_id).single(); if (dr) dh = `<div style="background:#e7f3ff; padding:8px; border-radius:8px; margin-top:8px;"><b style="color:#007bff;">🚚</b> ${dr.full_name || ''}<br>📞 ${dr.phone || ''}</div>`; }
+    d.innerHTML = `<b>📦 #${o.id.substring(0, 6)}</b><br><div class="order-date">🕐 ${dt}</div>👤 ${o.customer_name || ''}<br>📞 ${o.customer_phone || ''}<br>📍 ${o.delivery_address || ''}<br>💰 <b>${o.total_price} DH</b> • ${payTxt}<br>${stAr[o.status] || o.status}${ph}${dh}`;
+    const cb = document.createElement('button'); cb.className = 'green small-btn'; cb.textContent = '💬'; cb.onclick = () => openChat(o.id, '#' + o.id.substring(0, 6)); d.appendChild(cb);
+    if ((currentRole === 'merchant' || currentRole === 'driver') && o.customer_phone) { let pn = o.customer_phone.replace(/\D/g, ''); if (pn.startsWith('0')) pn = '212' + pn.substring(1); const wa = document.createElement('button'); wa.className = 'whatsapp small-btn'; wa.textContent = '📱'; wa.onclick = () => window.open('https://wa.me/' + pn, '_blank'); d.appendChild(wa); const ca2 = document.createElement('button'); ca2.className = 'blue small-btn'; ca2.textContent = '📞'; ca2.onclick = () => window.location.href = 'tel:' + pn; d.appendChild(ca2); const cp2 = document.createElement('button'); cp2.className = 'teal small-btn'; cp2.textContent = '📋'; cp2.onclick = () => navigator.clipboard.writeText(o.customer_phone).then(() => show('✅', true)); d.appendChild(cp2); }
+    if ((currentRole === 'merchant' || currentRole === 'driver') && o.delivery_address) { const mb = document.createElement('button'); mb.className = 'purple small-btn'; mb.textContent = '📍'; if (o.latitude && o.longitude) mb.onclick = () => window.open('https://www.google.com/maps?q=' + o.latitude + ',' + o.longitude, '_blank'); else mb.onclick = () => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.delivery_address), '_blank'); d.appendChild(mb); if (o.latitude && o.longitude) { const sm = document.createElement('button'); sm.className = 'teal small-btn'; sm.textContent = '🗺️'; const mid = 'om-' + o.id; sm.onclick = () => { let ex = document.getElementById(mid); if (ex) { ex.style.display = ex.style.display === 'none' ? 'block' : 'none'; return; } const md = document.createElement('div'); md.id = mid; md.style.cssText = 'height:250px; border-radius:10px; margin-top:10px;'; d.appendChild(md); setTimeout(() => { const m = L.map(mid).setView([o.latitude, o.longitude], 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM', maxZoom: 19 }).addTo(m); L.marker([o.latitude, o.longitude]).addTo(m).bindPopup('📍').openPopup(); }, 50); }; d.appendChild(sm); } }
+    if (currentRole === 'customer' && o.status === 'delivered' && o.driver_id) { const { data: exR } = await DB.from('driver_ratings').select('id').eq('order_id', o.id).eq('customer_id', currentUser.id).single(); const rd = document.createElement('div'); rd.style.marginTop = '10px'; rd.innerHTML = exR ? '<span style="color:#28a745; font-weight:bold; font-size:13px;">✅</span>' : `<button class="orange small-btn" onclick="rateDriver('${o.id}', '${o.driver_id}')">⭐</button>`; d.appendChild(rd); }
+    if (currentRole === 'merchant' && o.status === 'pending') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'accepted')">✅</button><button class="red small-btn" onclick="updateOrderStatus('${o.id}', 'cancelled')">❌</button>`; d.appendChild(bd); }
+    if (currentRole === 'customer' && o.status === 'pending') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="red small-btn" onclick="cancelOrder('${o.id}')">❌</button>`; d.appendChild(bd); }
+    if (currentRole === 'merchant' && o.status === 'accepted') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="blue small-btn" onclick="updateOrderStatus('${o.id}', 'delivering')">🚗</button>`; d.appendChild(bd); }
+    if (currentRole === 'driver' && o.status === 'delivering') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'delivered')">✅</button>`; d.appendChild(bd); }
+    l.appendChild(d);
   }
 }
-function filterOrders() {
-  const s = document.getElementById('orders-search').value.toLowerCase().trim();
-  document.querySelectorAll('.order-item').forEach(o => { o.style.display = (s === '' || o.textContent.toLowerCase().includes(s)) ? 'block' : 'none'; });
-}
-async function cancelOrder(id) {
-  if (!confirm('?')) return;
-  try { await DB.from('orders').update({ status: 'cancelled' }).eq('id', id).eq('customer_id', currentUser.id); show('✅', true); loadOrders(); }
-  catch (e) { show('❌', false); }
-}
-async function updateOrderStatus(id, st) {
-  try {
-    await DB.from('orders').update({ status: st }).eq('id', id);
-    show('✅', true); loadOrders();
-    if (currentRole === 'merchant') lastPendingCount = await updatePendingBadge();
-  } catch (e) { show('❌', false); }
-}
-async function rateDriver(orderId, driverId) {
-  const stars = prompt('⭐ (1-5)', '5');
-  if (!stars) return;
-  const n = parseInt(stars); if (n < 1 || n > 5) return;
-  try { await DB.from('driver_ratings').insert([{ order_id: orderId, customer_id: currentUser.id, driver_id: driverId, stars: n }]); show('✅', true); loadOrders(); }
-  catch (e) { show('❌', false); }
-}
+function filterOrders() { const s = document.getElementById('orders-search').value.toLowerCase().trim(); document.querySelectorAll('.order-item').forEach(o => { o.style.display = (s === '' || o.textContent.toLowerCase().includes(s)) ? 'block' : 'none'; }); }
+async function cancelOrder(id) { if (!confirm('?')) return; try { await DB.from('orders').update({ status: 'cancelled' }).eq('id', id).eq('customer_id', currentUser.id); show('✅', true); loadOrders(); } catch (e) { show('❌', false); } }
+async function updateOrderStatus(id, st) { try { await DB.from('orders').update({ status: st }).eq('id', id); show('✅', true); loadOrders(); if (currentRole === 'merchant') lastPendingCount = await updatePendingBadge(); } catch (e) { show('❌', false); } }
+async function rateDriver(oid, did) { const s = prompt('⭐ 1-5', '5'); if (!s) return; const n = parseInt(s); if (n < 1 || n > 5) return; try { await DB.from('driver_ratings').insert([{ order_id: oid, customer_id: currentUser.id, driver_id: did, stars: n }]); show('✅', true); loadOrders(); } catch (e) { show('❌', false); } }
 </script>
 </body>
 </html>
