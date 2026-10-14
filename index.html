@@ -366,6 +366,9 @@ async function loadOrders() {
     const { data: myStores } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
     if (myStores && myStores.length > 0) {
       query = query.in('store_id', myStores.map(s => s.id));
+    } else {
+      list.innerHTML = '<p style="text-align:center;color:#888;">لا توجد طلبات</p>';
+      return;
     }
   }
   const { data: orders, error } = await query;
@@ -377,8 +380,47 @@ async function loadOrders() {
     div.className = 'order-item';
     const statusAr = {pending: '⏳ قيد الانتظار', accepted: '✅ مقبول', preparing: '👨‍🍳 قيد التحضير', delivering: '🚗 في الطريق', delivered: '🎉 تم التوصيل', cancelled: '❌ ملغى'};
     div.innerHTML = `<b>طلب #${o.id.substring(0, 6)}</b><br>المجموع: ${o.total_price} درهم<br>الحالة: ${statusAr[o.status] || o.status}`;
+
+    // أزرار التاجر (قبول / رفض) - للطلبات الجديدة
+    if (currentRole === 'merchant' && o.status === 'pending') {
+      const btnDiv = document.createElement('div');
+      btnDiv.style.marginTop = '8px';
+      btnDiv.innerHTML = `
+        <button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'accepted')">✅ قبول</button>
+        <button class="red small-btn" onclick="updateOrderStatus('${o.id}', 'cancelled')">❌ رفض</button>
+      `;
+      div.appendChild(btnDiv);
+    }
+
+    // زر التاجر (إرسال للموصل) - للطلبات المقبولة
+    if (currentRole === 'merchant' && o.status === 'accepted') {
+      const btnDiv = document.createElement('div');
+      btnDiv.style.marginTop = '8px';
+      btnDiv.innerHTML = `<button class="blue small-btn" onclick="updateOrderStatus('${o.id}', 'delivering')">🚗 إرسال للموصل</button>`;
+      div.appendChild(btnDiv);
+    }
+
+    // زر الموصل (تأكيد التوصيل) - للطلبات في الطريق
+    if (currentRole === 'driver' && o.status === 'delivering') {
+      const btnDiv = document.createElement('div');
+      btnDiv.style.marginTop = '8px';
+      btnDiv.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'delivered')">✅ تم التوصيل</button>`;
+      div.appendChild(btnDiv);
+    }
+
     list.appendChild(div);
   });
+}
+
+async function updateOrderStatus(orderId, newStatus) {
+  try {
+    const { error } = await DB.from('orders').update({ status: newStatus }).eq('id', orderId);
+    if (error) throw error;
+    show('✅ تم تحديث حالة الطلب', true);
+    loadOrders();
+  } catch (e) {
+    show('❌ ' + e.message, false);
+  }
 }
 </script>
 </body>
