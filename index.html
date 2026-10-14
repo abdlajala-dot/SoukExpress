@@ -54,7 +54,7 @@ button:active { transform: scale(0.98); }
 
 .product-item { background: #fff8e1; padding: 12px; margin: 8px 0; border-radius: 10px; border-right: 4px solid #ffb300; font-size: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .product-item b { color: #333; display: block; margin-bottom: 3px; }
-.product-img { width: 55px; height: 55px; border-radius: 8px; object-fit: cover; border: 2px solid #ffb300; }
+.product-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #ffb300; }
 
 .section-title { font-weight: bold; font-size: 16px; margin: 15px 0 12px 0; color: #333; padding-bottom: 8px; border-bottom: 2px solid #ff6b35; display: flex; align-items: center; gap: 8px; }
 
@@ -212,7 +212,7 @@ button:active { transform: scale(0.98); }
 <div style="text-align:center; padding:10px 0;">
 <div style="font-size:60px; margin-bottom:10px;">🛒</div>
 <h3 style="color:#ff6b35; margin:5px 0;">SoukExpress</h3>
-<p style="color:#888; font-size:13px;">الإصدار 1.0.0</p>
+<p style="color:#888; font-size:13px;">الإصدار 1.2.0</p>
 </div>
 <p style="line-height:1.8; font-size:14px;">🚚 منصة توصيل سريع بأكادير كتربط بين <b>الزبون</b>، <b>التاجر</b>، و<b>الموصل</b>.</p>
 <p style="line-height:1.8; font-size:14px;">✨ <b>المميزات:</b></p>
@@ -222,6 +222,7 @@ button:active { transform: scale(0.98); }
 <li>💬 شات مباشر مع التجار والموصلين</li>
 <li>🚗 تتبع الطلبات فـ الوقت الحقيقي</li>
 <li>🗺️ خريطة لتحديد مكان التوصيل</li>
+<li>📸 رفع صور المنتجات من الهاتف</li>
 <li>🌙 وضع ليلي مريح للعين</li>
 </ul>
 <div style="text-align:center; margin-top:20px; padding-top:15px; border-top:1px solid #eee;">
@@ -250,7 +251,10 @@ button:active { transform: scale(0.98); }
 <input type="text" id="pr-name" placeholder="اسم المنتج">
 <textarea id="pr-desc" placeholder="وصف المنتج" rows="2"></textarea>
 <input type="number" id="pr-price" placeholder="السعر (درهم)">
-<input type="url" id="pr-image" placeholder="🔗 رابط الصورة (اختياري)">
+<label style="display:block; margin-top:10px; font-size:14px; color:#666;">📸 صورة المنتج:</label>
+<input type="file" id="pr-image-file" accept="image/*" capture="environment" style="padding:10px; font-size:13px; background:#f0f2f5;">
+<input type="url" id="pr-image" placeholder="🔗 ولا الصق رابط صورة (اختياري)" style="margin-top:6px;">
+<div id="image-preview" style="text-align:center; margin-top:10px;"></div>
 <button class="purple" onclick="doAddProduct()" id="pr-submit-btn">حفظ المنتج</button>
 <button class="red" onclick="hideProductForm()">إلغاء</button>
 </div>
@@ -491,6 +495,21 @@ function getMyLocation() {
   );
 }
 
+/* ===== IMAGE PREVIEW ===== */
+document.addEventListener('change', function(e) {
+  if (e.target && e.target.id === 'pr-image-file') {
+    const file = e.target.files[0];
+    const preview = document.getElementById('image-preview');
+    if (!file) { preview.innerHTML = ''; return; }
+    
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      preview.innerHTML = '<img src="' + ev.target.result + '" style="max-width:150px; max-height:150px; border-radius:10px; border:2px solid #ff6b35; object-fit:cover;">';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
 /* ===== CHAT ===== */
 async function openChat(orderId, orderTitle) {
   currentChatOrderId = orderId;
@@ -513,7 +532,8 @@ async function loadChatMessages() {
     .order('created_at', {ascending: true});
   
   if (error) { 
-    container.innerHTML = '<p style="color:red;text-align:center;">❌ خطأ فتحميل الرسائل</p>'; 
+    console.error('CHAT ERROR:', error);
+    container.innerHTML = '<p style="color:red;text-align:center;font-size:12px;">❌ ' + (error.message || JSON.stringify(error)) + '</p>'; 
     return; 
   }
   
@@ -1003,6 +1023,13 @@ function editProduct(id, name, price, desc, image, storeId) {
   document.getElementById('pr-price').value = price;
   document.getElementById('pr-desc').value = desc;
   document.getElementById('pr-image').value = image;
+  document.getElementById('pr-image-file').value = '';
+  const preview = document.getElementById('image-preview');
+  if (image) {
+    preview.innerHTML = '<img src="' + image + '" style="max-width:150px; max-height:150px; border-radius:10px; border:2px solid #ff6b35; object-fit:cover;">';
+  } else {
+    preview.innerHTML = '';
+  }
   document.getElementById('product-form-title').textContent = '✏️ تعديل المنتج';
   document.getElementById('pr-submit-btn').textContent = '💾 حفظ التعديلات';
   document.getElementById('product-store-name').textContent = 'تعديل منتج موجود';
@@ -1050,6 +1077,8 @@ function showProductForm(storeId, storeName) {
   document.getElementById('pr-desc').value = '';
   document.getElementById('pr-price').value = '';
   document.getElementById('pr-image').value = '';
+  document.getElementById('pr-image-file').value = '';
+  document.getElementById('image-preview').innerHTML = '';
   document.getElementById('product-form-box').classList.remove('hidden');
   document.getElementById('product-form-box').scrollIntoView({behavior: 'smooth'});
 }
@@ -1058,21 +1087,51 @@ function hideProductForm() {
   document.getElementById('product-form-box').classList.add('hidden');
   currentStoreId = null;
   editingProductId = null;
+  const preview = document.getElementById('image-preview');
+  if (preview) preview.innerHTML = '';
+  const fileInput = document.getElementById('pr-image-file');
+  if (fileInput) fileInput.value = '';
 }
 
 async function doAddProduct() {
   const name = document.getElementById('pr-name').value;
   const desc = document.getElementById('pr-desc').value;
   const price = document.getElementById('pr-price').value;
-  const image = document.getElementById('pr-image').value;
+  const imageUrlInput = document.getElementById('pr-image').value;
+  const imageFile = document.getElementById('pr-image-file').files[0];
+  
   if (!name || !price) { show('اكتب اسم المنتج والسعر', false); return; }
+  
   show('⏳ جاري الحفظ...', true);
+  
   try {
+    let finalImageUrl = imageUrlInput || null;
+    
+    if (imageFile) {
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `product-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+      
+      const { data: uploadData, error: uploadErr } = await DB.storage
+        .from('product-images')
+        .upload(fileName, imageFile, {
+          cacheControl: '3600',
+          upsert: false
+        });
+      
+      if (uploadErr) throw uploadErr;
+      
+      const { data: urlData } = DB.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+      
+      finalImageUrl = urlData.publicUrl;
+    }
+    
     const data = {
       name: name,
       description: desc,
       price: parseFloat(price),
-      image_url: image || null
+      image_url: finalImageUrl
     };
     
     let error;
@@ -1090,7 +1149,10 @@ async function doAddProduct() {
     const sid = currentStoreId;
     hideProductForm();
     loadProducts(sid);
-  } catch (e) { show('❌ ' + e.message, false); }
+  } catch (e) { 
+    console.error('Upload error:', e);
+    show('❌ ' + (e.message || 'خطأ فـ الرفع'), false); 
+  }
 }
 
 function addToCart(prodId, name, price, storeId) {
@@ -1245,7 +1307,6 @@ async function loadOrders() {
       ${productsHtml}
     `;
     
-    // زر الشات للجميع
     const chatBtn = document.createElement('button');
     chatBtn.className = 'green small-btn';
     chatBtn.textContent = '💬 شات';
