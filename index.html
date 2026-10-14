@@ -77,6 +77,9 @@ button:active { transform: scale(0.98); }
 /* Checkout field */
 .checkout-field { background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 10px; border: 2px dashed #ddd; }
 
+/* Search */
+.search-input { background: #f0f2f5 !important; border: 2px solid #ffb300 !important; font-weight: 600; }
+
 /* Footer */
 .footer { text-align: center; color: #999; font-size: 12px; margin-top: 20px; padding: 15px; }
 </style>
@@ -143,6 +146,7 @@ button:active { transform: scale(0.98); }
 <!-- قائمة المتاجر -->
 <div class="box hidden" id="stores-box">
 <div class="section-title">🏪 قائمة المتاجر</div>
+<input type="text" id="search-input" class="search-input" placeholder="🔍 ابحث عن منتج أو متجر..." oninput="filterProducts()">
 <div id="stores-list"></div>
 </div>
 
@@ -263,6 +267,7 @@ async function doLogout() {
   ['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.getElementById('signup-box').classList.remove('hidden');
   document.getElementById('login-box').classList.remove('hidden');
+  document.getElementById('search-input').value = '';
   show('✅ تم الخروج', true);
 }
 
@@ -335,6 +340,40 @@ async function loadProducts(storeId) {
     }
     pDiv.innerHTML = `<div><b>${pr.name}</b>${pr.price} درهم - ${pr.description || ''}</div>${btn}`;
     container.appendChild(pDiv);
+  });
+}
+
+function filterProducts() {
+  const search = document.getElementById('search-input').value.toLowerCase().trim();
+  const stores = document.querySelectorAll('.store-item');
+
+  stores.forEach(store => {
+    const storeText = store.textContent.toLowerCase();
+    const products = store.querySelectorAll('.product-item');
+    let hasVisible = false;
+
+    if (products.length === 0) {
+      store.style.display = (search === '' || storeText.includes(search)) ? 'block' : 'none';
+      return;
+    }
+
+    products.forEach(p => {
+      const text = p.textContent.toLowerCase();
+      if (search === '' || text.includes(search)) {
+        p.style.display = 'flex';
+        hasVisible = true;
+      } else {
+        p.style.display = 'none';
+      }
+    });
+
+    if (search === '') {
+      store.style.display = 'block';
+    } else if (hasVisible || storeText.includes(search)) {
+      store.style.display = 'block';
+    } else {
+      store.style.display = 'none';
+    }
   });
 }
 
