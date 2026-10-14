@@ -76,24 +76,25 @@ async function doSignup() {
   
   show('⏳ جاري التسجيل...', true);
   try {
-    const r = await DB.auth.signUp({ 
-      email: email, 
-      password: pass,
-      options: { 
-        data: { 
-          full_name: name, 
-          phone: phone, 
-          role: role 
-        } 
-      }
-    });
+    const r = await DB.auth.signUp({ email: email, password: pass });
     if (r.error) throw r.error;
+    
+    // كتابة البروفايل مباشرة
+    if (r.data.user) {
+      const { error: pErr } = await DB.from('profiles').upsert([{
+        id: r.data.user.id,
+        full_name: name,
+        phone: phone,
+        role: role
+      }]);
+      if (pErr) throw pErr;
+    }
+    
     show('✅ تم التسجيل! دابا دخل.', true);
   } catch (e) { 
     show('❌ ' + e.message, false); 
   }
 }
-
 async function doLogin() {
   const email = document.getElementById('l-email').value;
   const pass = document.getElementById('l-pass').value;
