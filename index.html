@@ -79,7 +79,6 @@ async function doSignup() {
     const r = await DB.auth.signUp({ email: email, password: pass });
     if (r.error) throw r.error;
     
-    // كتابة البروفايل مباشرة
     if (r.data.user) {
       const { error: pErr } = await DB.from('profiles').upsert([{
         id: r.data.user.id,
@@ -95,6 +94,7 @@ async function doSignup() {
     show('❌ ' + e.message, false); 
   }
 }
+
 async function doLogin() {
   const email = document.getElementById('l-email').value;
   const pass = document.getElementById('l-pass').value;
