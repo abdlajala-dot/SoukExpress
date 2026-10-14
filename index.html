@@ -44,6 +44,7 @@ button:active { transform: scale(0.98); }
 .store-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 .store-item h3 { margin: 0 0 8px 0; color: #ff6b35; font-size: 18px; }
 .store-item p { margin: 4px 0; font-size: 14px; color: #666; }
+.rating-line { color: #ff9800; font-size: 14px; margin: 5px 0; font-weight: 600; }
 
 .product-item { background: #fff8e1; padding: 12px; margin: 8px 0; border-radius: 10px; border-right: 4px solid #ffb300; font-size: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .product-item b { color: #333; display: block; margin-bottom: 3px; }
@@ -435,7 +436,7 @@ async function loadStores() {
   for (const s of stores) {
     const div = document.createElement('div');
     div.className = 'store-item';
-    div.innerHTML = `<h3>🏪 ${s.name}</h3><p>${s.description || 'لا يوجد وصف'}</p><p>📍 ${s.address || 'العنوان غير محدد'}</p><div id="prod-${s.id}">⏳ جاري تحميل المنتجات...</div>`;
+    div.innerHTML = `<h3>🏪 ${s.name}</h3><p>${s.description || 'لا يوجد وصف'}</p><p>📍 ${s.address || 'العنوان غير محدد'}</p><div id="rating-${s.id}" class="rating-line">⭐ جاري التحميل...</div><div id="prod-${s.id}">⏳ جاري تحميل المنتجات...</div>`;
     list.appendChild(div);
     if (currentRole === 'merchant' && s.owner_id === currentUser.id) {
       const addBtn = document.createElement('button');
@@ -444,8 +445,42 @@ async function loadStores() {
       addBtn.onclick = () => showProductForm(s.id, s.name);
       div.appendChild(addBtn);
     }
+    loadRating(s.id);
     loadProducts(s.id);
   }
+}
+
+async function loadRating(storeId) {
+  const el = document.getElementById('rating-' + storeId);
+  if (!el) return;
+  const { data } = await DB.from('ratings').select('stars').eq('store_id', storeId);
+  if (!data || data.length === 0) {
+    el.innerHTML = '⭐ لا توجد تقييمات بعد';
+  } else {
+    const avg = (data.reduce((s, r) => s + r.stars, 0) / data.length).toFixed(1);
+    el.innerHTML = `⭐ ${avg} / 5 (${data.length} تقييم)`;
+  }
+  if (currentRole === 'customer') {
+    const { data: myRating } = await DB.from('ratings').select('stars').eq('store_id', storeId).eq('customer_id', currentUser.id).single();
+    const btn = document.createElement('button');
+    btn.className = 'orange small-btn';
+    btn.textContent = myRating ? `⭐ تقييمك: ${myRating.stars}/5` : '⭐ قيّم المتجر';
+    btn.onclick = () => rateStore(storeId);
+    el.parentElement.appendChild(btn);
+  }
+}
+
+async function rateStore(storeId) {
+  const stars = prompt('كم نجمة تعطي للمتجر؟ (1-5)', '5');
+  if (!stars) return;
+  const n = parseInt(stars);
+  if (n < 1 || n > 5) { show('اختار رقم بين 1 و 5', false); return; }
+  try {
+    const { error } = await DB.from('ratings').insert([{ store_id: storeId, customer_id: currentUser.id, stars: n }]);
+    if (error) throw error;
+    show('✅ شكراً على تقييمك!', true);
+    loadStores();
+  } catch (e) { show('❌ ' + e.message, false); }
 }
 
 async function loadProducts(storeId) {
