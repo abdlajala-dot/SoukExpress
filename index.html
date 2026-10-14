@@ -359,4 +359,361 @@ async function showStats() {
 
     const total = orders.length;
     const pending = orders.filter(o => o.status === 'pending').length;
-    const accepted = orders.filter(o => o.status === 'accepted').
+    const accepted = orders.filter(o => o.status === 'accepted').length;
+    const delivering = orders.filter(o => o.status === 'delivering').length;
+    const delivered = orders.filter(o => o.status === 'delivered').length;
+    const cancelled = orders.filter(o => o.status === 'cancelled').length;
+    const revenue = orders.filter(o => o.status === 'delivered').reduce((s, o) => s + parseFloat(o.total_price), 0);
+
+    content.innerHTML = `
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="stat-card" style="background:#e7f3ff;">
+          <div class="stat-num" style="color:#007bff;">${total}</div>
+          <div class="stat-label">📋 مجموع الطلبات</div>
+        </div>
+        <div class="stat-card" style="background:#d4edda;">
+          <div class="stat-num" style="color:#28a745;">${revenue}</div>
+          <div class="stat-label">💰 الأرباح (درهم)</div>
+        </div>
+        <div class="stat-card" style="background:#fff3cd;">
+          <div class="stat-num" style="color:#ff9800;">${pending}</div>
+          <div class="stat-label">⏳ قيد الانتظار</div>
+        </div>
+        <div class="stat-card" style="background:#d1ecf1;">
+          <div class="stat-num" style="color:#17a2b8;">${accepted}</div>
+          <div class="stat-label">✅ مقبولة</div>
+        </div>
+        <div class="stat-card" style="background:#cce5ff;">
+          <div class="stat-num" style="color:#007bff;">${delivering}</div>
+          <div class="stat-label">🚗 في الطريق</div>
+        </div>
+        <div class="stat-card" style="background:#d4edda;">
+          <div class="stat-num" style="color:#28a745;">${delivered}</div>
+          <div class="stat-label">🎉 تم التوصيل</div>
+        </div>
+        <div class="stat-card" style="background:#f8d7da; grid-column: span 2;">
+          <div class="stat-num" style="color:#dc3545;">${cancelled}</div>
+          <div class="stat-label">❌ ملغاة</div>
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    content.innerHTML = '<p style="color:red;text-align:center;">❌ ' + e.message + '</p>';
+  }
+}
+
+function hideStats() {
+  document.getElementById('stats-box').classList.add('hidden');
+  document.getElementById('add-store-box').classList.remove('hidden');
+}
+
+async function doAddStore() {
+  const name = document.getElementById('st-name').value;
+  const desc = document.getElementById('st-desc').value;
+  const address = document.getElementById('st-address').value;
+  if (!name) { show('اكتب اسم المتجر', false); return; }
+  show('⏳ جاري حفظ المتجر...', true);
+  try {
+    const { error } = await DB.from('stores').insert([{ owner_id: currentUser.id, name: name, description: desc, address: address }]);
+    if (error) throw error;
+    show('✅ تم إضافة المتجر بنجاح!', true);
+    document.getElementById('st-name').value = '';
+    document.getElementById('st-desc').value = '';
+    document.getElementById('st-address').value = '';
+    hideStoreForm();
+    loadStores();
+  } catch (e) { show('❌ ' + e.message, false); }
+}
+
+async function loadStores() {
+  const list = document.getElementById('stores-list');
+  list.innerHTML = '<p style="text-align:center;color:#888;">⏳ جاري التحميل...</p>';
+  const { data: stores, error } = await DB.from('stores').select('*');
+  if (error) { list.innerHTML = '<p style="text-align:center;color:red;">خطأ فتحميل المتاجر</p>'; return; }
+  if (!stores || stores.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;">لا توجد متاجر</p>'; return; }
+  list.innerHTML = '';
+  for (const s of stores) {
+    const div = document.createElement('div');
+    div.className = 'store-item';
+    div.innerHTML = `<h3>🏪 ${s.name}</h3><p>${s.description || 'لا يوجد وصف'}</p><p>📍 ${s.address || 'العنوان غير محدد'}</p><div id="prod-${s.id}">⏳ جاري تحميل المنتجات...</div>`;
+    list.appendChild(div);
+    if (currentRole === 'merchant' && s.owner_id === currentUser.id) {
+      const addBtn = document.createElement('button');
+      addBtn.className = 'purple small-btn';
+      addBtn.textContent = '📦 إضافة منتج';
+      addBtn.onclick = () => showProductForm(s.id, s.name);
+      div.appendChild(addBtn);
+    }
+    loadProducts(s.id);
+  }
+}
+
+async function loadProducts(storeId) {
+  const container = document.getElementById('prod-' + storeId);
+  if (!container) return;
+  const { data: products, error } = await DB.from('products').select('*').eq('store_id', storeId);
+  if (error || !products || products.length === 0) {
+    container.innerHTML = '<p style="font-size:13px;color:#888;">لا توجد منتجات</p>';
+    return;
+  }
+  container.innerHTML = '<b style="font-size:13px;color:#666;">📦 المنتجات:</b>';
+  products.forEach(pr => {
+    const pDiv = document.createElement('div');
+    pDiv.className = 'product-item';
+    let btn = '';
+    if (currentRole === 'customer') {
+      btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕ أضف</button>`;
+    }
+    pDiv.innerHTML = `<div><b>${pr.name}</b>${pr.price} درهم - ${pr.description || ''}</div>${btn}`;
+    container.appendChild(pDiv);
+  });
+}
+
+function filterProducts() {
+  const search = document.getElementById('search-input').value.toLowerCase().trim();
+  const stores = document.querySelectorAll('.store-item');
+  stores.forEach(store => {
+    const storeText = store.textContent.toLowerCase();
+    const products = store.querySelectorAll('.product-item');
+    let hasVisible = false;
+    if (products.length === 0) {
+      store.style.display = (search === '' || storeText.includes(search)) ? 'block' : 'none';
+      return;
+    }
+    products.forEach(p => {
+      const text = p.textContent.toLowerCase();
+      if (search === '' || text.includes(search)) {
+        p.style.display = 'flex';
+        hasVisible = true;
+      } else {
+        p.style.display = 'none';
+      }
+    });
+    if (search === '') {
+      store.style.display = 'block';
+    } else if (hasVisible || storeText.includes(search)) {
+      store.style.display = 'block';
+    } else {
+      store.style.display = 'none';
+    }
+  });
+}
+
+function showProductForm(storeId, storeName) {
+  currentStoreId = storeId;
+  document.getElementById('product-store-name').textContent = 'المتجر: ' + storeName;
+  document.getElementById('product-form-box').classList.remove('hidden');
+  document.getElementById('product-form-box').scrollIntoView({behavior: 'smooth'});
+}
+
+function hideProductForm() {
+  document.getElementById('product-form-box').classList.add('hidden');
+  currentStoreId = null;
+}
+
+async function doAddProduct() {
+  const name = document.getElementById('pr-name').value;
+  const desc = document.getElementById('pr-desc').value;
+  const price = document.getElementById('pr-price').value;
+  if (!name || !price) { show('اكتب اسم المنتج والسعر', false); return; }
+  show('⏳ جاري حفظ المنتج...', true);
+  try {
+    const { error } = await DB.from('products').insert([{ store_id: currentStoreId, name: name, description: desc, price: parseFloat(price) }]);
+    if (error) throw error;
+    show('✅ تم إضافة المنتج!', true);
+    document.getElementById('pr-name').value = '';
+    document.getElementById('pr-desc').value = '';
+    document.getElementById('pr-price').value = '';
+    hideProductForm();
+    loadProducts(currentStoreId);
+  } catch (e) { show('❌ ' + e.message, false); }
+}
+
+function addToCart(prodId, name, price, storeId) {
+  if (cart.length > 0 && cart[0].storeId !== storeId) {
+    show('⚠️ ماشي ممكن تطلب من متاجر مختلفة فـ نفس الوقت!', false);
+    return;
+  }
+  const existing = cart.find(c => c.prodId === prodId);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({ prodId, name, price, storeId, qty: 1 });
+  }
+  show('✅ تمت الإضافة للسلة', true);
+  loadCart();
+}
+
+function loadCart() {
+  const list = document.getElementById('cart-list');
+  const totalDiv = document.getElementById('cart-total');
+  const checkoutFields = document.getElementById('checkout-fields');
+  if (cart.length === 0) {
+    list.innerHTML = '<p style="text-align:center;color:#888;">السلة خاوية</p>';
+    totalDiv.classList.add('hidden');
+    checkoutFields.classList.add('hidden');
+    return;
+  }
+  list.innerHTML = '';
+  let total = 0;
+  cart.forEach((c, i) => {
+    total += c.price * c.qty;
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `<div><b>${c.name}</b> - ${c.price} درهم × ${c.qty}</div><button class="red small-btn" onclick="removeFromCart(${i})">❌</button>`;
+    list.appendChild(div);
+  });
+  totalDiv.textContent = '💰 المجموع: ' + total + ' درهم';
+  totalDiv.classList.remove('hidden');
+  checkoutFields.classList.remove('hidden');
+}
+
+function removeFromCart(i) {
+  cart.splice(i, 1);
+  loadCart();
+}
+
+function clearCart() {
+  cart = [];
+  loadCart();
+}
+
+async function doCheckout() {
+  if (cart.length === 0) { show('السلة خاوية', false); return; }
+  const coName = document.getElementById('co-name').value;
+  const coPhone = document.getElementById('co-phone').value;
+  const coAddress = document.getElementById('co-address').value;
+  if (!coName || !coPhone || !coAddress) {
+    show('املأ الاسم، الهاتف، والعنوان', false);
+    return;
+  }
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const storeId = cart[0].storeId;
+  show('⏳ جاري تأكيد الطلب...', true);
+  try {
+    const { data: orderData, error: orderErr } = await DB.from('orders').insert([{
+      customer_id: currentUser.id,
+      store_id: storeId,
+      status: 'pending',
+      total_price: total,
+      delivery_address: coAddress,
+      customer_phone: coPhone,
+      customer_name: coName
+    }]).select();
+    if (orderErr) throw orderErr;
+    const orderId = orderData[0].id;
+    const items = cart.map(c => ({
+      order_id: orderId,
+      product_id: c.prodId,
+      product_name: c.name,
+      price: c.price,
+      quantity: c.qty
+    }));
+    const { error: itemsErr } = await DB.from('order_items').insert(items);
+    if (itemsErr) throw itemsErr;
+    show('✅ تم إرسال الطلب بنجاح!', true);
+    cart = [];
+    loadCart();
+    loadOrders();
+  } catch (e) { show('❌ ' + e.message, false); }
+}
+
+async function loadOrders() {
+  const list = document.getElementById('orders-list');
+  list.innerHTML = '<p style="text-align:center;color:#888;">⏳ جاري التحميل...</p>';
+  let query = DB.from('orders').select('*').order('created_at', {ascending: false});
+  if (currentRole === 'customer') {
+    query = query.eq('customer_id', currentUser.id);
+  } else if (currentRole === 'merchant') {
+    const { data: myStores } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
+    if (myStores && myStores.length > 0) {
+      query = query.in('store_id', myStores.map(s => s.id));
+    } else {
+      list.innerHTML = '<p style="text-align:center;color:#888;">لا توجد طلبات</p>';
+      return;
+    }
+  } else if (currentRole === 'driver') {
+    query = query.eq('status', 'delivering');
+  }
+  const filter = document.getElementById('order-filter').value;
+  if (filter) {
+    query = query.eq('status', filter);
+  }
+  const { data: orders, error } = await query;
+  if (error) { list.innerHTML = '<p style="text-align:center;color:red;">خطأ فتحميل الطلبات</p>'; return; }
+  if (!orders || orders.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;">لا توجد طلبات</p>'; return; }
+  list.innerHTML = '';
+  const statusAr = {pending: '⏳ قيد الانتظار', accepted: '✅ مقبول', preparing: '👨‍🍳 قيد التحضير', delivering: '🚗 في الطريق', delivered: '🎉 تم التوصيل', cancelled: '❌ ملغى'};
+  for (const o of orders) {
+    const div = document.createElement('div');
+    div.className = 'order-item';
+    const { data: items } = await DB.from('order_items').select('*').eq('order_id', o.id);
+    let productsHtml = '';
+    if (items && items.length > 0) {
+      productsHtml = '<div class="order-products">' + items.map(it => `• ${it.product_name} × ${it.quantity} = ${it.price * it.quantity} درهم`).join('<br>') + '</div>';
+    }
+    const orderDate = o.created_at ? new Date(o.created_at).toLocaleString('ar-MA', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '-';
+    div.innerHTML = `
+      <b>📦 طلب #${o.id.substring(0, 6)}</b><br>
+      <div class="order-date">🕐 ${orderDate}</div>
+      👤 ${o.customer_name || 'زبون'}<br>
+      📞 ${o.customer_phone || '-'}<br>
+      📍 ${o.delivery_address || '-'}<br>
+      💰 <b>المجموع: ${o.total_price} درهم</b><br>
+      الحالة: ${statusAr[o.status] || o.status}
+      ${productsHtml}
+    `;
+    if ((currentRole === 'merchant' || currentRole === 'driver') && o.customer_phone) {
+      let phone = o.customer_phone.replace(/\D/g, '');
+      if (phone.startsWith('0')) phone = '212' + phone.substring(1);
+
+      const waBtn = document.createElement('button');
+      waBtn.className = 'whatsapp small-btn';
+      waBtn.textContent = '📱 واتساب';
+      waBtn.onclick = () => window.open('https://wa.me/' + phone, '_blank');
+      div.appendChild(waBtn);
+
+      const callBtn = document.createElement('button');
+      callBtn.className = 'blue small-btn';
+      callBtn.textContent = '📞 اتصال';
+      callBtn.onclick = () => window.location.href = 'tel:' + phone;
+      div.appendChild(callBtn);
+    }
+    if (currentRole === 'merchant' && o.status === 'pending') {
+      const btnDiv = document.createElement('div');
+      btnDiv.style.marginTop = '10px';
+      btnDiv.innerHTML = `
+        <button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'accepted')">✅ قبول</button>
+        <button class="red small-btn" onclick="updateOrderStatus('${o.id}', 'cancelled')">❌ رفض</button>
+      `;
+      div.appendChild(btnDiv);
+    }
+    if (currentRole === 'merchant' && o.status === 'accepted') {
+      const btnDiv = document.createElement('div');
+      btnDiv.style.marginTop = '10px';
+      btnDiv.innerHTML = `<button class="blue small-btn" onclick="updateOrderStatus('${o.id}', 'delivering')">🚗 إرسال للموصل</button>`;
+      div.appendChild(btnDiv);
+    }
+    if (currentRole === 'driver' && o.status === 'delivering') {
+      const btnDiv = document.createElement('div');
+      btnDiv.style.marginTop = '10px';
+      btnDiv.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'delivered')">✅ تم التوصيل</button>`;
+      div.appendChild(btnDiv);
+    }
+    list.appendChild(div);
+  }
+}
+
+async function updateOrderStatus(orderId, newStatus) {
+  try {
+    const { error } = await DB.from('orders').update({ status: newStatus }).eq('id', orderId);
+    if (error) throw error;
+    show('✅ تم تحديث حالة الطلب', true);
+    loadOrders();
+  } catch (e) {
+    show('❌ ' + e.message, false);
+  }
+}
+</script>
+</body>
+</html>
