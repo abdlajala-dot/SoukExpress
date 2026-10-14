@@ -16,6 +16,7 @@ button { color: white; border: none; cursor: pointer; }
 .orange { background: #fd7e14; }
 .purple { background: #6f42c1; }
 .teal { background: #17a2b8; }
+.whatsapp { background: #25D366; }
 #msg { padding: 15px; border-radius: 5px; text-align: center; font-weight: bold; margin: 10px 0; }
 .ok { background: #d4edda; color: green; }
 .err { background: #f8d7da; color: red; }
@@ -187,7 +188,6 @@ async function doLogin() {
     if (currentRole === 'merchant') {
       document.getElementById('add-store-box').classList.remove('hidden');
     }
-    // تعمير الاسم والهاتف فـ التوصيل من البروفايل
     if (p.data) {
       if (p.data.full_name) document.getElementById('co-name').value = p.data.full_name;
       if (p.data.phone) document.getElementById('co-phone').value = p.data.phone;
@@ -312,7 +312,6 @@ async function doAddProduct() {
 }
 
 function addToCart(prodId, name, price, storeId) {
-  // إلا كان فالسلة منتج من متجر آخر، نسألو
   if (cart.length > 0 && cart[0].storeId !== storeId) {
     show('⚠️ ماشي ممكن تطلب من متاجر مختلفة فـ نفس الوقت!', false);
     return;
@@ -374,7 +373,6 @@ async function doCheckout() {
   const storeId = cart[0].storeId;
   show('⏳ جاري تأكيد الطلب...', true);
   try {
-    // 1. إنشاء الطلب
     const { data: orderData, error: orderErr } = await DB.from('orders').insert([{
       customer_id: currentUser.id,
       store_id: storeId,
@@ -388,7 +386,6 @@ async function doCheckout() {
 
     const orderId = orderData[0].id;
 
-    // 2. إضافة المنتجات
     const items = cart.map(c => ({
       order_id: orderId,
       product_id: c.prodId,
@@ -434,7 +431,6 @@ async function loadOrders() {
     const div = document.createElement('div');
     div.className = 'order-item';
 
-    // جلب المنتجات
     const { data: items } = await DB.from('order_items').select('*').eq('order_id', o.id);
     let productsHtml = '';
     if (items && items.length > 0) {
@@ -450,6 +446,17 @@ async function loadOrders() {
       الحالة: ${statusAr[o.status] || o.status}
       ${productsHtml}
     `;
+
+    // زر واتساب (للتاجر والموصل)
+    if ((currentRole === 'merchant' || currentRole === 'driver') && o.customer_phone) {
+      const waBtn = document.createElement('button');
+      waBtn.className = 'whatsapp small-btn';
+      waBtn.textContent = '📱 واتساب الزبون';
+      let phone = o.customer_phone.replace(/\D/g, '');
+      if (phone.startsWith('0')) phone = '212' + phone.substring(1);
+      waBtn.onclick = () => window.open('https://wa.me/' + phone, '_blank');
+      div.appendChild(waBtn);
+    }
 
     // أزرار التاجر
     if (currentRole === 'merchant' && o.status === 'pending') {
