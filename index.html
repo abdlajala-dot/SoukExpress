@@ -442,9 +442,18 @@ async function showStats() {
       const cancelled = orders.filter(o => o.status === 'cancelled').length;
       const revenue = orders.filter(o => o.status === 'delivered').reduce((s, o) => s + parseFloat(o.total_price), 0);
       const avgOrder = delivered > 0 ? (revenue / delivered).toFixed(1) : '0';
+      const today = new Date().toDateString();
+      const todayOrders = orders.filter(o => new Date(o.created_at).toDateString() === today).length;
+      const todayRevenue = orders
+        .filter(o => o.status === 'delivered' && new Date(o.created_at).toDateString() === today)
+        .reduce((s, o) => s + parseFloat(o.total_price), 0);
 
       content.innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="stat-card" style="background:#d1ecf1; grid-column: span 2;">
+            <div class="stat-num" style="color:#17a2b8;">${todayOrders} طلب / ${todayRevenue} درهم</div>
+            <div class="stat-label">📅 طلبات اليوم</div>
+          </div>
           <div class="stat-card" style="background:#f8d7da; grid-column: span 2;">
             <div class="stat-num" style="color:#dc3545;">${avgOrder} درهم</div>
             <div class="stat-label">📊 متوسط قيمة الطلب</div>
