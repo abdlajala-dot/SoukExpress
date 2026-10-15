@@ -121,7 +121,7 @@ button:active{transform:scale(0.97)}
 [data-theme="dark"] .hours-line{color:#aaa}
 [data-theme="dark"] .qr-modal-content{background:#1e1e1e;color:#e0e0e0}
 [data-theme="dark"] .chat-theirs{background:#2a2a2a;color:#e0e0e0}
-[data-theme="dark"] #track-map{background:#2a2a2a}
+[data-theme="dark"] #track-modal > div{background:#1e1e1e!important;color:#e0e0e0}
 </style>
 </head>
 <body>
@@ -213,7 +213,7 @@ button:active{transform:scale(0.97)}
 </div>
 <div class="box hidden" id="about-box">
 <h2 data-i18n="about">ℹ️ عن التطبيق</h2>
-<div style="text-align:center;padding:10px 0"><div style="font-size:60px;margin-bottom:10px">🛒</div><h3 style="color:var(--primary);margin:5px 0">SoukExpress</h3><p style="color:#888;font-size:13px">v3.3.1</p></div>
+<div style="text-align:center;padding:10px 0"><div style="font-size:60px;margin-bottom:10px">🛒</div><h3 style="color:var(--primary);margin:5px 0">SoukExpress</h3><p style="color:#888;font-size:13px">v3.4.0</p></div>
 <p style="line-height:1.8;font-size:14px" data-i18n="about_desc">🚚 منصة توصيل سريع بأكادير.</p>
 <button class="whatsapp" onclick="supportWhatsApp()" data-i18n="contact_us">💬 تواصل</button>
 <button class="red" onclick="hideAbout()" data-i18n="close">إغلاق</button>
@@ -327,14 +327,17 @@ button:active{transform:scale(0.97)}
 </div>
 <button class="float-wa" onclick="supportWhatsApp()">💬</button>
 <button class="float-cart" onclick="scrollToCart()">🛒<span id="cart-float-count" class="float-cart-count">0</span></button>
+
+<!-- 📍 تتبع — iframe بسيط -->
 <div class="qr-modal hidden" id="track-modal">
-  <div style="background:white;padding:15px;border-radius:20px;max-width:420px;width:100%">
+  <div style="background:white;padding:15px;border-radius:20px;max-width:420px;width:100%;position:relative">
     <h3 style="text-align:center;margin:0 0 10px 0;color:var(--primary)">📍 تتبع الموصل</h3>
     <div id="track-iframe-wrap" style="height:350px;width:100%;border-radius:10px;background:#e9ecef;overflow:hidden;position:relative">
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:14px">⏳ جاري التحميل...</div>
     </div>
     <div id="track-info" style="text-align:center;padding:10px;font-size:13px;color:#666;min-height:40px"></div>
-    <button class="red" onclick="closeTrackModal()" style="z-index:9999;position:relative">✕ إغلاق</button>
+    <div id="track-link-wrap"></div>
+    <button class="red" onclick="closeTrackModal()" style="z-index:9999;position:relative;margin-top:8px">✕ إغلاق</button>
   </div>
 </div>
 
@@ -375,7 +378,16 @@ function toggleDarkMode(){const cur=document.documentElement.getAttribute('data-
 (function(){document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light');})();
 function updateOnlineStatus(){const b=document.getElementById('offline-banner');if(b)b.classList.toggle('hidden',navigator.onLine);}
 window.addEventListener('online',updateOnlineStatus);window.addEventListener('offline',updateOnlineStatus);
-window.addEventListener('DOMContentLoaded',()=>{const s=localStorage.getItem('theme')||'light';document.getElementById('dark-btn').textContent=s==='dark'?'☀️':'🌙';document.getElementById('mute-btn').textContent=soundMuted?'🔇':'🔊';const labels0={ar:'AR',fr:'FR',en:'EN'};document.getElementById('lang-btn').textContent=labels0[currentLang]||'AR';setLanguage(currentLang);selectPay('cash');updateOnlineStatus();checkProductUrl();checkStoreUrl();applyTheme();updateFloatCart();});
+window.addEventListener('DOMContentLoaded',()=>{
+  const s=localStorage.getItem('theme')||'light';
+  document.getElementById('dark-btn').textContent=s==='dark'?'☀️':'🌙';
+  document.getElementById('mute-btn').textContent=soundMuted?'🔇':'🔊';
+  const labels0={ar:'AR',fr:'FR',en:'EN'};
+  document.getElementById('lang-btn').textContent=labels0[currentLang]||'AR';
+  setLanguage(currentLang);selectPay('cash');updateOnlineStatus();checkProductUrl();checkStoreUrl();applyTheme();updateFloatCart();
+  // 🖱️ إغلاق modal بالضغط على الخلفية
+  document.getElementById('track-modal')?.addEventListener('click',(e)=>{if(e.target.id==='track-modal')closeTrackModal();});
+});
 function selectSched(mode){scheduleMode=mode;document.getElementById('sched-now').classList.toggle('selected',mode==='now');document.getElementById('sched-later').classList.toggle('selected',mode==='later');document.querySelectorAll('input[name="sched"]').forEach(r=>r.checked=r.value===mode);const el=document.getElementById('sched-time');el.style.display=mode==='later'?'block':'none';if(mode==='later'){const tzOffset=new Date().getTimezoneOffset();const d=new Date(Date.now()+3600000-tzOffset*60000);el.value=d.toISOString().slice(0,16);const nowMin=new Date(Date.now()-tzOffset*60000);el.min=nowMin.toISOString().slice(0,16);}}
 function selectPay(m){selectedPayment=m;document.getElementById('pay-cash').classList.toggle('selected',m==='cash');document.getElementById('pay-card').classList.toggle('selected',m==='card');document.querySelectorAll('input[name="pay"]').forEach(r=>r.checked=r.value===m);}
 function compressImage(file,maxSize,quality){return new Promise(resolve=>{const reader=new FileReader();reader.readAsDataURL(file);reader.onload=e=>{const img=new Image();img.src=e.target.result;img.onload=()=>{const canvas=document.createElement('canvas');let w=img.width,h=img.height;if(w>h&&w>maxSize){h=(h*maxSize)/w;w=maxSize;}else if(h>maxSize){w=(w*maxSize)/h;h=maxSize;}canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);canvas.toBlob(blob=>resolve(blob),'image/jpeg',quality||0.7);};};});}
@@ -466,7 +478,7 @@ function clearCart(){cart=[];appliedCoupon=null;selectedLat=null;selectedLng=nul
 async function doCheckout(){if(cart.length===0){show('⚠️',false);return;}const cn=document.getElementById('co-name').value,cp=document.getElementById('co-phone').value,ca=document.getElementById('co-address').value;if(!cn||!cp||!ca){show('⚠️',false);vibrate(100);return;}const total=cart.reduce((s,c)=>s+c.price*c.qty,0);let ft=total;if(appliedCoupon){const d=appliedCoupon.discount_type==='percent'?(total*appliedCoupon.discount_value/100):appliedCoupon.discount_value;ft=Math.max(0,total-d);}const sid=cart[0].storeId;let scheduledAt=null,isSched=false;if(scheduleMode==='later'){const tv=document.getElementById('sched-time').value;if(!tv){show('⚠️',false);return;}scheduledAt=new Date(tv).toISOString();isSched=true;}let payStatus='unpaid',payRef=null;if(selectedPayment==='card'){payStatus='pending_online';payRef='REF-'+Date.now();}show('⏳',true);try{const{data:od,error:oe}=await DB.from('orders').insert([{customer_id:currentUser.id,store_id:sid,status:'pending',total_price:ft,delivery_address:ca,customer_phone:cp,customer_name:cn,latitude:selectedLat,longitude:selectedLng,payment_method:selectedPayment,scheduled_at:scheduledAt,is_scheduled:isSched,payment_status:payStatus,payment_ref:payRef}]).select();if(oe)throw oe;const oid=od[0].id;const items=cart.map(c=>({order_id:oid,product_id:c.prodId,product_name:c.name,price:c.price,quantity:c.qty}));await DB.from('order_items').insert(items);if(appliedCoupon)await DB.from('coupons').update({used_count:appliedCoupon.used_count+1}).eq('id',appliedCoupon.id);try{const{data:st}=await DB.from('stores').select('owner_id').eq('id',sid).single();if(st&&st.owner_id)await pushNotif(st.owner_id,'🔔 طلب جديد!',(cn||'زبون')+' - '+ft+' DH');}catch(e){}const earned=Math.floor(ft/10);if(earned>0&&currentProfile){const cur=currentProfile.loyalty_points||0;await DB.from('profiles').update({loyalty_points:cur+earned}).eq('id',currentUser.id);currentProfile.loyalty_points=cur+earned;setTimeout(()=>show('🎁 +'+earned,true),1500);}playBeep();setTimeout(()=>playBeep(),150);setTimeout(()=>playBeep(),300);vibrate([200,100,200,100,400]);show(t('order_placed'),true);cart=[];appliedCoupon=null;selectedLat=null;selectedLng=null;selectedPayment='cash';scheduleMode='now';if(marker&&map){map.removeLayer(marker);marker=null;}document.getElementById('location-status').textContent='';document.getElementById('coupon-input').value='';selectPay('cash');loadCart();updateFloatCart();loadOrders();}catch(e){show('❌ '+e.message,false);vibrate(500);}}
 async function claimOrder(id){try{const{data,error}=await DB.from('orders').update({status:'delivering',driver_id:currentUser.id}).eq('id',id).is('driver_id',null).in('status',['accepted','delivering']).select();if(error)throw error;if(!data||data.length===0){show('⚠️',false);return;}show('✅',true);playBeep();vibrate(150);loadOrders();}catch(e){show('❌ '+e.message,false);}}
 
-// 📍 LIVE TRACKING — محسّن
+// 📍 LIVE TRACKING
 async function startDriverTracking(orderId){
   if(!navigator.geolocation){ show('❌ GPS غير مدعوم', false); return; }
   if(driverWatchId){ navigator.geolocation.clearWatch(driverWatchId); driverWatchId=null; }
@@ -499,100 +511,84 @@ function stopDriverTracking(){
   loadOrders();
 }
 
+// 🗺️ خريطة iframe (بديل بسيط عن Leaflet)
 async function showLiveTracking(orderId){
   const modal = document.getElementById('track-modal');
   modal.classList.remove('hidden');
   const info = document.getElementById('track-info');
-  info.textContent = '⏳ جاري تحديد الموقع...';
+  const wrap = document.getElementById('track-iframe-wrap');
+  const linkWrap = document.getElementById('track-link-wrap');
   
-  // 🗑️ تنظيف الخريطة القديمة
-  if(trackMap){ try{trackMap.remove();}catch(e){} trackMap=null; }
-  driverMarker=null; customerMarker=null;
+  info.innerHTML = '⏳ جاري تحديد الموقع...';
+  wrap.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:14px">⏳ جاري التحميل...</div>';
+  linkWrap.innerHTML = '';
   
-  // ⏳ تسنى باش modal ياخذ أبعادو
-  setTimeout(()=>{
-    const container = document.getElementById('track-map');
-    container.style.width='100%';
-    container.style.height='350px';
-    container.style.display='block';
-    container.innerHTML='';
-    
-    try{
-      trackMap = L.map('track-map', {
-        center: [30.4278, -9.5981],
-        zoom: 13,
-        zoomControl: true
-      });
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-        attribution:'© OSM',
-        maxZoom: 19
-      }).addTo(trackMap);
-      
-      // 🔄 invalidateSize أكثر من مرة
-      trackMap.invalidateSize();
-      setTimeout(()=>trackMap && trackMap.invalidateSize(), 100);
-      setTimeout(()=>trackMap && trackMap.invalidateSize(), 300);
-      setTimeout(()=>trackMap && trackMap.invalidateSize(), 600);
-      
-      refreshTracking(orderId);
-    }catch(e){
-      console.error('Map init error:', e);
-      info.textContent = '❌ فشل تحميل الخريطة';
-    }
-  }, 300);
-  
-  if(trackInterval) clearInterval(trackInterval);
-  trackInterval = setInterval(()=>{
-    if(trackMap) trackMap.invalidateSize();
-    refreshTracking(orderId);
-  }, 15000);
-}
-
-async function refreshTracking(orderId){
   try{
     const {data:o} = await DB.from('orders')
-      .select('customer_name, delivery_address, latitude, longitude, driver_lat, driver_lng, driver_last_update, driver_id, status')
+      .select('latitude, longitude, driver_lat, driver_lng, driver_last_update, status, delivery_address')
       .eq('id', orderId).single();
-    if(!o){ return; }
-    if(o.status==='delivered'){
-      document.getElementById('track-info').innerHTML = '🎉 <b>تم التوصيل بنجاح!</b>';
-      return;
-    }
-    if(o.latitude && o.longitude && !customerMarker){
-      customerMarker = L.marker([o.latitude,o.longitude],{
-        icon: L.divIcon({html:'<div style="font-size:28px">🏠</div>',className:'',iconSize:[30,30],iconAnchor:[15,15]})
-      }).addTo(trackMap).bindPopup('موقعك');
-    }
+    
+    if(!o){ info.textContent = '❌ الطلب غير موجود'; return; }
+    
+    let mapLat = 30.4278;
+    let mapLng = -9.5981;
+    let mapZoom = 13;
+    
     if(o.driver_lat && o.driver_lng){
-      const dLatLng = [o.driver_lat, o.driver_lng];
-      if(driverMarker){
-        driverMarker.setLatLng(dLatLng);
-      } else {
-        driverMarker = L.marker(dLatLng,{
-          icon: L.divIcon({html:'<div style="font-size:28px">🛵</div>',className:'',iconSize:[30,30],iconAnchor:[15,15]})
-        }).addTo(trackMap).bindPopup('الموصل');
-      }
+      mapLat = o.driver_lat;
+      mapLng = o.driver_lng;
+      mapZoom = 15;
+    } else if(o.latitude && o.longitude){
+      mapLat = o.latitude;
+      mapLng = o.longitude;
+      mapZoom = 14;
+    }
+    
+    // 🗺️ OpenStreetMap embed via iframe
+    const bboxDelta = 0.02;
+    const bbox = (mapLng-bboxDelta)+','+(mapLat-bboxDelta)+','+(mapLng+bboxDelta)+','+(mapLat+bboxDelta);
+    const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${mapLat},${mapLng}`;
+    
+    wrap.innerHTML = `<iframe src="${osmUrl}" style="width:100%;height:100%;border:0;border-radius:10px" loading="lazy" referrerpolicy="no-referrer"></iframe>`;
+    
+    // 📝 معلومات
+    let infoHtml = '';
+    if(o.driver_lat && o.driver_lng){
       const last = o.driver_last_update ? new Date(o.driver_last_update) : null;
       const secsAgo = last ? Math.floor((Date.now()-last.getTime())/1000) : null;
       const timeStr = secsAgo===null ? '-' : (secsAgo<60 ? secsAgo+' ثانية' : Math.floor(secsAgo/60)+' دقيقة');
-      document.getElementById('track-info').innerHTML =
-        '🛵 الموصل منذ '+timeStr+'<br>📍 '+o.driver_lat.toFixed(5)+', '+o.driver_lng.toFixed(5);
-      const bounds = L.latLngBounds([dLatLng]);
-      if(customerMarker) bounds.extend(customerMarker.getLatLng());
-      trackMap.fitBounds(bounds, {padding:[50,50], maxZoom:16});
+      infoHtml = '🛵 الموصل منذ <b>'+timeStr+'</b>';
+      if(o.latitude && o.longitude){
+        const dLat = Math.abs(o.driver_lat - o.latitude);
+        const dLng = Math.abs(o.driver_lng - o.longitude);
+        const distKm = Math.sqrt(dLat*dLat + dLng*dLng) * 111;
+        infoHtml += '<br>📏 المسافة: <b>~'+distKm.toFixed(1)+' km</b>';
+      }
+    } else if(o.latitude && o.longitude){
+      infoHtml = '📍 موقع الزبون (الموصل مازال ما بداش)';
     } else {
-      document.getElementById('track-info').textContent = '⏳ الموصل مازال ما بداش التتبع';
+      infoHtml = '⚠️ الموصل مازال ما بداش التتبع';
     }
-  } catch(e){ console.error(e); }
+    info.innerHTML = infoHtml;
+    
+    // 🔗 رابط خريطة كاملة
+    linkWrap.innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${mapLat}&mlon=${mapLng}#map=${mapZoom}/${mapLat}/${mapLng}" target="_blank" style="display:block;text-align:center;color:#2196F3;font-size:13px;text-decoration:none;padding:8px;background:#f0f8ff;border-radius:8px;margin-top:5px">🗺️ افتح في خريطة كاملة</a>`;
+    
+  }catch(e){
+    console.error(e);
+    info.textContent = '❌ خطأ: ' + e.message;
+  }
 }
 
 function closeTrackModal(){
-  document.getElementById('track-modal').classList.add('hidden');
-  if(trackInterval){ clearInterval(trackInterval); trackInterval=null; }
-  if(trackMap){ try{trackMap.remove();}catch(e){} trackMap=null; }
-  driverMarker=null; customerMarker=null;
-  const c = document.getElementById('track-map');
-  if(c) c.innerHTML='';
+  try{
+    document.getElementById('track-modal').classList.add('hidden');
+    if(trackInterval){ clearInterval(trackInterval); trackInterval=null; }
+    const wrap = document.getElementById('track-iframe-wrap');
+    if(wrap) wrap.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:14px">⏳ جاري التحميل...</div>';
+    const linkWrap = document.getElementById('track-link-wrap');
+    if(linkWrap) linkWrap.innerHTML = '';
+  }catch(e){ console.error('close error:', e); }
 }
 
 async function loadOrders(){const l=document.getElementById('orders-list');l.innerHTML='⏳';let q=DB.from('orders').select('*').order('created_at',{ascending:false});if(currentRole==='customer')q=q.eq('customer_id',currentUser.id);else if(currentRole==='merchant'){const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);if(ms&&ms.length>0)q=q.in('store_id',ms.map(s=>s.id));else{l.innerHTML='-';return;}}else if(currentRole==='driver')q=q.or(`status.eq.accepted,and(status.eq.delivering,driver_id.eq.${currentUser.id})`);const filter=document.getElementById('order-filter').value;if(filter)q=q.eq('status',filter);const{data:orders,error}=await q;if(error){l.innerHTML='❌';return;}document.getElementById('orders-count').textContent='('+(orders?.length||0)+')';if(!orders||orders.length===0){l.innerHTML='-';return;}l.innerHTML='';const stAr={pending:t('status_pending'),accepted:t('status_accepted'),delivering:t('status_delivering'),delivered:t('status_delivered'),cancelled:t('status_cancelled')};for(const o of orders){const d=document.createElement('div');d.className='order-item';const{data:items}=await DB.from('order_items').select('*').eq('order_id',o.id);let ph='';if(items&&items.length>0)ph='<div class="order-products">'+items.map(it=>'• '+esc(it.product_name)+' × '+esc(it.quantity)).join('<br>')+'</div>';const dt=o.created_at?new Date(o.created_at).toLocaleString(currentLang==='ar'?'ar-MA':currentLang==='fr'?'fr-FR':'en-US',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'-';const mins=o.created_at?Math.floor((Date.now()-new Date(o.created_at).getTime())/60000):0;const timeTxt=mins<1?'🟢':mins<60?'🟡 '+mins+'m':mins<1440?'🟠 '+Math.floor(mins/60)+'h':'🔴 '+Math.floor(mins/1440)+'d';const payTxt=o.payment_method==='card'?'💳':'💵';let dh='';if(currentRole==='customer'&&o.driver_id&&(o.status==='delivering'||o.status==='delivered')){const{data:dr}=await DB.from('profiles').select('full_name, phone').eq('id',o.driver_id).single();if(dr)dh='<div style="background:#e7f3ff;padding:8px;border-radius:8px;margin-top:8px">🚚 '+esc(dr.full_name||'')+'<br>📞 '+esc(dr.phone||'')+'</div>';}d.innerHTML='<b>📦 #'+esc(o.id.substring(0,6))+'</b><br><div class="order-date">🕐 '+esc(dt)+' • '+timeTxt+'</div>👤 '+esc(o.customer_name||'')+'<br>📞 '+esc(o.customer_phone||'')+'<br>📍 '+esc(o.delivery_address||'')+'<br>💰 <b>'+esc(o.total_price)+' DH</b> • '+payTxt+'<br>'+(stAr[o.status]||o.status)+ph+dh;const cb=document.createElement('button');cb.className='green small-btn';cb.textContent='💬';cb.onclick=()=>openChat(o.id,'#'+o.id.substring(0,6));d.appendChild(cb);const piBtn=document.createElement('button');piBtn.className='teal small-btn';piBtn.textContent='🖨️';piBtn.onclick=()=>printInvoice(o.id);d.appendChild(piBtn);const cpBtn=document.createElement('button');cpBtn.className='pink small-btn';cpBtn.textContent='📋';cpBtn.onclick=()=>navigator.clipboard.writeText(o.id).then(()=>show('✅',true));d.appendChild(cpBtn);if(currentRole==='customer'&&(o.status==='delivered'||o.status==='cancelled')){const rb=document.createElement('button');rb.className='orange small-btn';rb.textContent='🔁';rb.onclick=()=>reorder(o.id);d.appendChild(rb);}if((currentRole==='merchant'||currentRole==='driver')&&o.customer_phone){let pn=o.customer_phone.replace(/\D/g,'');if(pn.startsWith('0'))pn='212'+pn.substring(1);const wa=document.createElement('button');wa.className='whatsapp small-btn';wa.textContent='📱';wa.onclick=()=>window.open('https://wa.me/'+pn,'_blank');d.appendChild(wa);const ca2=document.createElement('button');ca2.className='blue small-btn';ca2.textContent='📞';ca2.onclick=()=>window.location.href='tel:'+pn;d.appendChild(ca2);}if((currentRole==='merchant'||currentRole==='driver')&&o.delivery_address){const mb=document.createElement('button');mb.className='purple small-btn';mb.textContent='📍';if(o.latitude&&o.longitude)mb.onclick=()=>window.open('https://www.google.com/maps?q='+o.latitude+','+o.longitude,'_blank');else mb.onclick=()=>window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(o.delivery_address),'_blank');d.appendChild(mb);}if(currentRole==='customer'&&o.status==='delivered'&&o.driver_id){const{data:exR}=await DB.from('driver_ratings').select('id').eq('order_id',o.id).eq('customer_id',currentUser.id).single();const rd=document.createElement('div');rd.style.marginTop='10px';rd.innerHTML=exR?'✅':'<button class="orange small-btn" onclick="rateDriver(\''+o.id+'\', \''+o.driver_id+'\')">⭐</button>';d.appendChild(rd);}if(currentRole==='customer'&&o.status==='delivering'&&o.driver_id){const bd=document.createElement('div');bd.style.marginTop='10px';const tb=document.createElement('button');tb.className='green small-btn';tb.textContent='📍 تتبع الموصل';tb.onclick=()=>showLiveTracking(o.id);bd.appendChild(tb);d.appendChild(bd);}if(currentRole==='driver'&&o.status==='accepted'&&!o.driver_id){const bd=document.createElement('div');bd.style.marginTop='10px';const cb2=document.createElement('button');cb2.className='green small-btn';cb2.textContent=t('claim_order');cb2.onclick=()=>claimOrder(o.id);bd.appendChild(cb2);d.appendChild(bd);}if(currentRole==='merchant'&&o.status==='pending'){const bd=document.createElement('div');bd.style.marginTop='10px';bd.innerHTML='<button class="green small-btn" onclick="updateOrderStatus(\''+o.id+'\', \'accepted\')">✅</button><button class="red small-btn" onclick="updateOrderStatus(\''+o.id+'\', \'cancelled\')">❌</button>';d.appendChild(bd);}if(currentRole==='customer'&&o.status==='pending'){const bd=document.createElement('div');bd.style.marginTop='10px';bd.innerHTML='<button class="red small-btn" onclick="cancelOrder(\''+o.id+'\')">❌</button>';d.appendChild(bd);}if(currentRole==='merchant'&&o.status==='accepted'){const bd=document.createElement('div');bd.style.marginTop='10px';bd.innerHTML='<button class="blue small-btn" onclick="updateOrderStatus(\''+o.id+'\', \'delivering\')">🚗</button>';d.appendChild(bd);}if(currentRole==='driver'&&o.status==='delivering'&&o.driver_id===currentUser.id){const bd=document.createElement('div');bd.style.marginTop='10px';bd.innerHTML='<button class="green small-btn" onclick="updateOrderStatus(\''+o.id+'\', \'delivered\')">✅</button>';const tb=document.createElement('button');tb.className='blue small-btn';if(activeDriverOrderId===o.id&&driverWatchId){tb.textContent='⏹️ وقف التتبع';tb.onclick=()=>stopDriverTracking();}else{tb.textContent='📍 ابدأ التتبع';tb.onclick=()=>startDriverTracking(o.id);}bd.appendChild(tb);d.appendChild(bd);}l.appendChild(d);}}
