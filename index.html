@@ -76,6 +76,8 @@ button:active{transform:scale(0.97)}
 .chat-theirs{background:#fff;margin-left:auto;border-bottom-left-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
 .chat-meta{font-size:11px;color:#888;margin-top:4px}
 .chat-name{font-weight:bold;font-size:12px;color:var(--primary);margin-bottom:3px}
+.del-msg-btn{background:transparent!important;border:none!important;color:#999!important;cursor:pointer!important;padding:2px 6px!important;font-size:13px!important;width:auto!important;margin:0!important;opacity:0.6;transition:0.2s}
+.del-msg-btn:hover{opacity:1;color:#FF3D00!important}
 .filter-bar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .filter-bar input,.filter-bar select{margin:0;padding:10px;font-size:13px}
 .filter-full{grid-column:span 2}
@@ -118,6 +120,7 @@ button:active{transform:scale(0.97)}
 [data-theme="dark"] .pay-option.selected{background:#3a2015;border-color:var(--primary)}
 [data-theme="dark"] .hours-line{color:#aaa}
 [data-theme="dark"] .qr-modal-content{background:#1e1e1e;color:#e0e0e0}
+[data-theme="dark"] .chat-theirs{background:#2a2a2a;color:#e0e0e0}
 </style>
 </head>
 <body>
@@ -205,10 +208,11 @@ button:active{transform:scale(0.97)}
 <input type="email" id="pf-email" disabled style="background:#eee;color:#888">
 <button class="green" onclick="doUpdateProfile()" data-i18n="save_changes">💾 حفظ</button>
 <button class="red" onclick="hideProfile()" data-i18n="close">إغلاق</button>
+<button class="red" onclick="doDeleteAccount()" style="margin-top:15px;background:linear-gradient(135deg,#8B0000,#5C0000)">🗑️ حذف الحساب نهائياً</button>
 </div>
 <div class="box hidden" id="about-box">
 <h2 data-i18n="about">ℹ️ عن التطبيق</h2>
-<div style="text-align:center;padding:10px 0"><div style="font-size:60px;margin-bottom:10px">🛒</div><h3 style="color:var(--primary);margin:5px 0">SoukExpress</h3><p style="color:#888;font-size:13px">v3.2.0</p></div>
+<div style="text-align:center;padding:10px 0"><div style="font-size:60px;margin-bottom:10px">🛒</div><h3 style="color:var(--primary);margin:5px 0">SoukExpress</h3><p style="color:#888;font-size:13px">v3.3.0</p></div>
 <p style="line-height:1.8;font-size:14px" data-i18n="about_desc">🚚 منصة توصيل سريع بأكادير.</p>
 <button class="whatsapp" onclick="supportWhatsApp()" data-i18n="contact_us">💬 تواصل</button>
 <button class="red" onclick="hideAbout()" data-i18n="close">إغلاق</button>
@@ -323,7 +327,6 @@ button:active{transform:scale(0.97)}
 <button class="float-wa" onclick="supportWhatsApp()">💬</button>
 <button class="float-cart" onclick="scrollToCart()">🛒<span id="cart-float-count" class="float-cart-count">0</span></button>
 
-<!-- 📍 Tracking Modal -->
 <div class="qr-modal hidden" id="track-modal">
   <div style="background:white;padding:15px;border-radius:20px;max-width:420px;width:100%">
     <h3 style="text-align:center;margin:0 0 10px 0;color:var(--primary)">📍 تتبع الموصل</h3>
@@ -419,21 +422,118 @@ async function createCoupon(){const code=document.getElementById('cp-code').valu
 async function deleteCoupon(id){if(!confirm('?'))return;try{await DB.from('coupons').delete().eq('id',id);show('✅',true);await loadCoupons();}catch(e){show('❌',false);}}
 async function applyCoupon(){const code=document.getElementById('coupon-input').value.toUpperCase().trim();if(!code||cart.length===0)return;const storeId=cart[0].storeId;const total=cart.reduce((s,c)=>s+c.price*c.qty,0);try{const{data:c}=await DB.from('coupons').select('*').eq('code',code).eq('store_id',storeId).eq('is_active',true).single();if(!c){show('❌',false);appliedCoupon=null;updateCouponResult();return;}if(c.used_count>=c.max_uses){show('❌',false);return;}if(c.min_order>0&&total<c.min_order){show('⚠️',false);return;}appliedCoupon=c;updateCouponResult();show('✅',true);}catch(e){show('❌',false);appliedCoupon=null;updateCouponResult();}}
 function updateCouponResult(){const el=document.getElementById('coupon-result');if(!appliedCoupon){el.innerHTML='';return;}const total=cart.reduce((s,c)=>s+c.price*c.qty,0);const d=appliedCoupon.discount_type==='percent'?(total*appliedCoupon.discount_value/100):appliedCoupon.discount_value;el.innerHTML='<div style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;padding:10px;border-radius:8px;margin-top:8px;font-size:13px;text-align:center">🎟️ '+esc(appliedCoupon.code)+': -'+d.toFixed(0)+' DH</div>';loadCart();}
-async function openChat(orderId,title){currentChatOrderId=orderId;document.getElementById('chat-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');document.getElementById('chat-title').textContent='💬 '+title;document.getElementById('chat-input').value='';let wrap=document.getElementById('auto-replies-wrap');if(wrap){if(currentRole==='merchant'||currentRole==='driver'){wrap.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"><button class="small-btn green" type="button" onclick="sendQuickReply(\'👋\')">👋</button><button class="small-btn blue" type="button" onclick="sendQuickReply(\'🚗\')">🚗</button><button class="small-btn orange" type="button" onclick="sendQuickReply(\'📍\')">📍</button><button class="small-btn teal" type="button" onclick="sendQuickReply(\'🙏\')">🙏</button></div>';}else{wrap.innerHTML='';}}await loadChatMessages();if(chatInterval)clearInterval(chatInterval);chatInterval=setInterval(loadChatMessages,4000);document.getElementById('chat-box').scrollIntoView({behavior:'smooth'});}
+
+// ═══════════════════════════════════════════
+// 💬 CHAT — realtime + delete
+// ═══════════════════════════════════════════
+async function openChat(orderId,title){
+  currentChatOrderId=orderId;
+  document.getElementById('chat-box').classList.remove('hidden');
+  document.getElementById('add-store-box').classList.add('hidden');
+  document.getElementById('chat-title').textContent='💬 '+title;
+  document.getElementById('chat-input').value='';
+  let wrap=document.getElementById('auto-replies-wrap');
+  if(wrap){
+    if(currentRole==='merchant'||currentRole==='driver'){
+      wrap.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"><button class="small-btn green" type="button" onclick="sendQuickReply(\'👋\')">👋</button><button class="small-btn blue" type="button" onclick="sendQuickReply(\'🚗\')">🚗</button><button class="small-btn orange" type="button" onclick="sendQuickReply(\'📍\')">📍</button><button class="small-btn teal" type="button" onclick="sendQuickReply(\'🙏\')">🙏</button></div>';
+    }else{wrap.innerHTML='';}
+  }
+  await loadChatMessages();
+  startChatRealtime(orderId);
+  document.getElementById('chat-box').scrollIntoView({behavior:'smooth'});
+}
+
+function startChatRealtime(orderId){
+  stopChatRealtime();
+  try{
+    window.chatChannel = DB.channel('chat-'+orderId+'-'+Date.now())
+      .on('postgres_changes',
+        { event:'*', schema:'public', table:'messages', filter:'order_id=eq.'+orderId },
+        (payload)=>{
+          if(payload.eventType==='INSERT'){
+            if(payload.new.sender_id !== currentUser.id){
+              loadChatMessages();
+              playBeep();
+            }
+          } else if(payload.eventType==='DELETE'){
+            loadChatMessages();
+          }
+        }
+      )
+      .subscribe();
+  }catch(e){ console.error('Realtime error:', e); }
+}
+
+function stopChatRealtime(){
+  if(window.chatChannel){
+    try{ DB.removeChannel(window.chatChannel); }catch(e){}
+    window.chatChannel = null;
+  }
+}
+
+async function deleteMessage(msgId){
+  if(!confirm('حذف هذه الرسالة؟')) return;
+  try{
+    const{error}=await DB.from('messages').delete().eq('id',msgId).eq('sender_id',currentUser.id);
+    if(error) throw error;
+    show('✅',true);
+    loadChatMessages();
+  }catch(e){ show('❌',false); }
+}
+
 function sendQuickReply(text){document.getElementById('chat-input').value=text;sendChatMessage();}
-async function loadChatMessages(){if(!currentChatOrderId)return;const c=document.getElementById('chat-messages');const{data:msgs,error}=await DB.from('messages').select('*').eq('order_id',currentChatOrderId).order('created_at',{ascending:true});if(error){c.innerHTML='❌';return;}if(!msgs||msgs.length===0){c.innerHTML='<p style="text-align:center;color:#888">💬</p>';return;}c.innerHTML=msgs.map(m=>{const isMine=m.sender_id===currentUser.id;const tm=m.created_at?new Date(m.created_at).toLocaleTimeString('ar-MA',{hour:'2-digit',minute:'2-digit'}):'';return '<div class="chat-msg '+(isMine?'chat-mine':'chat-theirs')+'">'+(!isMine?'<div class="chat-name">'+esc(m.sender_name||'')+'</div>':'')+'<div>'+esc(m.message||'')+'</div><div class="chat-meta">'+esc(tm)+'</div></div>';}).join('');c.scrollTop=c.scrollHeight;}
+async function loadChatMessages(){
+  if(!currentChatOrderId)return;
+  const c=document.getElementById('chat-messages');
+  const{data:msgs,error}=await DB.from('messages').select('*').eq('order_id',currentChatOrderId).order('created_at',{ascending:true});
+  if(error){c.innerHTML='❌';return;}
+  if(!msgs||msgs.length===0){c.innerHTML='<p style="text-align:center;color:#888">💬</p>';return;}
+  c.innerHTML=msgs.map(m=>{
+    const isMine=m.sender_id===currentUser.id;
+    const tm=m.created_at?new Date(m.created_at).toLocaleTimeString('ar-MA',{hour:'2-digit',minute:'2-digit'}):'';
+    const delBtn = isMine ? '<button class="del-msg-btn" onclick="deleteMessage(\''+m.id+'\')" title="حذف">🗑️</button>' : '';
+    return '<div class="chat-msg '+(isMine?'chat-mine':'chat-theirs')+'" data-id="'+m.id+'">'+(!isMine?'<div class="chat-name">'+esc(m.sender_name||'')+'</div>':'')+'<div style="display:flex;justify-content:space-between;align-items:start;gap:8px"><div>'+esc(m.message||'')+'</div>'+delBtn+'</div><div class="chat-meta">'+esc(tm)+'</div></div>';
+  }).join('');
+  c.scrollTop=c.scrollHeight;
+}
 async function sendChatMessage(){if(!currentChatOrderId)return;const i=document.getElementById('chat-input');const txt=i.value.trim();if(!txt)return;try{await DB.from('messages').insert([{order_id:currentChatOrderId,sender_id:currentUser.id,sender_name:currentProfile?.full_name||'User',sender_role:currentRole,message:txt}]);i.value='';await loadChatMessages();}catch(e){show('❌',false);}}
-function closeChat(){document.getElementById('chat-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');currentChatOrderId=null;if(chatInterval){clearInterval(chatInterval);chatInterval=null;}}
+function closeChat(){
+  document.getElementById('chat-box').classList.add('hidden');
+  document.getElementById('add-store-box').classList.remove('hidden');
+  currentChatOrderId=null;
+  stopChatRealtime();
+}
+
 async function updatePendingBadge(){const b=document.getElementById('pending-badge');if(!b||currentRole!=='merchant'){if(b)b.style.display='none';return 0;}try{const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);if(!ms||ms.length===0){b.style.display='none';return 0;}const{data:p}=await DB.from('orders').select('id').in('store_id',ms.map(s=>s.id)).eq('status','pending');const n=p?.length||0;if(n>0){b.textContent=n;b.style.display='inline-block';}else b.style.display='none';return n;}catch(e){return 0;}}
 async function toggleAllStores(){try{const{data:ms}=await DB.from('stores').select('id, is_open').eq('owner_id',currentUser.id);if(!ms||ms.length===0){show('⚠️',false);return;}const n=!(ms[0].is_open!==false);for(const s of ms)await DB.from('stores').update({is_open:n}).eq('id',s.id);document.getElementById('toggle-stores-btn').textContent=n?t('close_stores'):t('open_stores');show(n?'✅':'🔒',true);loadStores();}catch(e){show('❌',false);}}
 async function doSignup(){const e=document.getElementById('s-email').value,p=document.getElementById('s-pass').value,n=document.getElementById('s-name').value,ph=document.getElementById('s-phone').value,r=document.getElementById('s-role').value,g=document.getElementById('s-gender').value;if(!e||!p||!r){show('⚠️',false);return;}show('⏳',true);try{const res=await DB.auth.signUp({email:e,password:p});if(res.error)throw res.error;if(res.data.user)await DB.from('profiles').upsert([{id:res.data.user.id,full_name:n,phone:ph,role:r,gender:g}]);show('✅',true);}catch(err){show('❌ '+err.message,false);}}
 async function doLogin(){const e=document.getElementById('l-email').value,p=document.getElementById('l-pass').value;if(!e||!p){show('⚠️',false);return;}show('⏳',true);try{const r=await DB.auth.signInWithPassword({email:e,password:p});if(r.error)throw r.error;currentUser=r.data.user;const pp=await DB.from('profiles').select('*').eq('id',r.data.user.id).single();currentProfile=pp.data;currentRole=pp.data?.role;['signup-box','login-box'].forEach(id=>document.getElementById(id).classList.add('hidden'));['dash-box','stores-box','cart-box','orders-box','add-store-box'].forEach(id=>document.getElementById(id).classList.remove('hidden'));document.getElementById('welcome').textContent='أهلاً '+(pp.data?.full_name||e);document.getElementById('role').textContent=roleAr[currentRole]||'-';document.getElementById('notif-bell').style.display='flex';if(currentRole==='merchant'){document.getElementById('stats-btn').style.display='block';document.getElementById('store-btn').style.display='block';document.getElementById('toggle-stores-btn').style.display='block';document.getElementById('coupons-btn').style.display='block';document.getElementById('csv-btn').style.display='block';}else if(currentRole==='driver'){document.getElementById('stats-btn').style.display='block';}else if(currentRole==='customer'){document.getElementById('favorites-btn').style.display='block';}if(pp.data){if(pp.data.full_name)document.getElementById('co-name').value=pp.data.full_name;if(pp.data.phone)document.getElementById('co-phone').value=pp.data.phone;}loadStores();loadCart();loadOrders();await loadNotifCount();if(notifCountInterval)clearInterval(notifCountInterval);notifCountInterval=setInterval(loadNotifCount,30000);if(currentRole==='merchant')setTimeout(async()=>{lastPendingCount=await updatePendingBadge();},1500);if(window.autoRefreshInterval)clearInterval(window.autoRefreshInterval);window.autoRefreshInterval=setInterval(async()=>{loadOrders();if(currentRole==='merchant'){lastPendingCount=await updatePendingBadge();}},60000);startNotificationPolling();if(currentRole==='merchant')startRealtimeOrders();setLanguage(currentLang);show('✅',true);}catch(err){show('❌ '+err.message,false);}}
-async function doLogout(){await DB.auth.signOut();if(realtimeChannel){try{DB.removeChannel(realtimeChannel);}catch(e){}realtimeChannel=null;}if(driverWatchId){try{navigator.geolocation.clearWatch(driverWatchId);}catch(e){}driverWatchId=null;}if(trackInterval){clearInterval(trackInterval);trackInterval=null;}currentUser=null;currentRole=null;currentStoreId=null;currentProfile=null;cart=[];appliedCoupon=null;editingProductId=null;lastPendingCount=0;selectedLat=null;selectedLng=null;selectedPayment='cash';scheduleMode='now';favoritesCache=new Set();if(marker&&map){map.removeLayer(marker);marker=null;}if(chatInterval){clearInterval(chatInterval);chatInterval=null;}if(notifInterval){clearInterval(notifInterval);notifInterval=null;}if(notifCountInterval){clearInterval(notifCountInterval);notifCountInterval=null;}currentChatOrderId=null;allStoresCache={};allProductsCache={};updateFloatCart();['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box','profile-box','stats-box','about-box','chat-box','coupons-box','favorites-box','notif-box'].forEach(id=>document.getElementById(id).classList.add('hidden'));document.getElementById('signup-box').classList.remove('hidden');document.getElementById('login-box').classList.remove('hidden');document.getElementById('notif-bell').style.display='none';if(window.autoRefreshInterval){clearInterval(window.autoRefreshInterval);window.autoRefreshInterval=null;}show('✅',true);}
+async function doLogout(){await DB.auth.signOut();if(realtimeChannel){try{DB.removeChannel(realtimeChannel);}catch(e){}realtimeChannel=null;}if(driverWatchId){try{navigator.geolocation.clearWatch(driverWatchId);}catch(e){}driverWatchId=null;}if(trackInterval){clearInterval(trackInterval);trackInterval=null;}stopChatRealtime();currentUser=null;currentRole=null;currentStoreId=null;currentProfile=null;cart=[];appliedCoupon=null;editingProductId=null;lastPendingCount=0;selectedLat=null;selectedLng=null;selectedPayment='cash';scheduleMode='now';favoritesCache=new Set();if(marker&&map){map.removeLayer(marker);marker=null;}if(notifInterval){clearInterval(notifInterval);notifInterval=null;}if(notifCountInterval){clearInterval(notifCountInterval);notifCountInterval=null;}currentChatOrderId=null;allStoresCache={};allProductsCache={};updateFloatCart();['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box','profile-box','stats-box','about-box','chat-box','coupons-box','favorites-box','notif-box'].forEach(id=>document.getElementById(id).classList.add('hidden'));document.getElementById('signup-box').classList.remove('hidden');document.getElementById('login-box').classList.remove('hidden');document.getElementById('notif-bell').style.display='none';if(window.autoRefreshInterval){clearInterval(window.autoRefreshInterval);window.autoRefreshInterval=null;}show('✅',true);}
 function showStoreForm(){if(currentRole!=='merchant'){show('❌',false);return;}document.getElementById('store-form-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');}
 function hideStoreForm(){document.getElementById('store-form-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
 async function showProfile(){document.getElementById('profile-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');if(!currentProfile)return;document.getElementById('profile-avatar').textContent=getAvatar(currentRole,currentProfile.gender);document.getElementById('profile-name-display').textContent=currentProfile.full_name||'';document.getElementById('profile-email-display').textContent=currentUser.email||'';document.getElementById('pf-name').value=currentProfile.full_name||'';document.getElementById('pf-phone').value=currentProfile.phone||'';document.getElementById('pf-email').value=currentUser.email||'';let h='',badges=[];try{if(currentRole==='customer'){const{data:o}=await DB.from('orders').select('id, status, total_price').eq('customer_id',currentUser.id);const tt=o?.length||0;const sp=o?.filter(x=>x.status==='delivered').reduce((s,x)=>s+parseFloat(x.total_price||0),0)||0;const pts=currentProfile.loyalty_points||0;h='<div class="profile-stat"><div class="profile-stat-num">'+tt+'</div><div class="profile-stat-label">📋</div></div><div class="profile-stat"><div class="profile-stat-num">'+pts+'</div><div class="profile-stat-label">🎁</div></div><div class="profile-stat"><div class="profile-stat-num">'+sp+'</div><div class="profile-stat-label">💰</div></div>';badges=getBadges('customer',{orders:tt,spent:sp,points:pts});}else if(currentRole==='merchant'){const{data:s}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);const ids=s?.map(x=>x.id)||[];let oc=0,rev=0;if(ids.length>0){const{data:o}=await DB.from('orders').select('status, total_price').in('store_id',ids);oc=o?.length||0;rev=o?.filter(x=>x.status==='delivered').reduce((a,x)=>a+parseFloat(x.total_price||0),0)||0;}h='<div class="profile-stat"><div class="profile-stat-num">'+(s?.length||0)+'</div><div class="profile-stat-label">🏪</div></div><div class="profile-stat"><div class="profile-stat-num">'+oc+'</div><div class="profile-stat-label">📋</div></div><div class="profile-stat"><div class="profile-stat-num">'+rev+'</div><div class="profile-stat-label">💰</div></div>';badges=getBadges('merchant',{orders:oc,revenue:rev});}else if(currentRole==='driver'){const{data:d}=await DB.from('orders').select('id, total_price').eq('status','delivered').eq('driver_id',currentUser.id);const{data:r}=await DB.from('driver_ratings').select('stars').eq('driver_id',currentUser.id);const avg=r&&r.length>0?r.reduce((a,x)=>a+x.stars,0)/r.length:0;const c=d?d.reduce((a,x)=>a+parseFloat(x.total_price||0)*0.1,0):0;h='<div class="profile-stat"><div class="profile-stat-num">'+(d?.length||0)+'</div><div class="profile-stat-label">🚗</div></div><div class="profile-stat"><div class="profile-stat-num">'+(avg||'-')+'</div><div class="profile-stat-label">⭐</div></div><div class="profile-stat"><div class="profile-stat-num">'+c.toFixed(0)+'</div><div class="profile-stat-label">💰</div></div>';badges=getBadges('driver',{delivered:d?.length||0,avg});}}catch(e){}document.getElementById('profile-stats').innerHTML=h+renderBadges(badges);document.getElementById('profile-box').scrollIntoView({behavior:'smooth'});}
 function hideProfile(){document.getElementById('profile-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
 async function doUpdateProfile(){const n=document.getElementById('pf-name').value,p=document.getElementById('pf-phone').value;if(!n){show('⚠️',false);return;}try{await DB.from('profiles').update({full_name:n,phone:p}).eq('id',currentUser.id);currentProfile.full_name=n;currentProfile.phone=p;document.getElementById('welcome').textContent='أهلاً '+n;document.getElementById('co-name').value=n;document.getElementById('co-phone').value=p;show('✅',true);setTimeout(hideProfile,1000);}catch(e){show('❌',false);}}
+
+// ═══════════════════════════════════════════
+// 🗑️ حذف الحساب
+// ═══════════════════════════════════════════
+async function doDeleteAccount(){
+  const c1 = confirm('⚠️ حذف الحساب نهائياً؟');
+  if(!c1) return;
+  const c2 = confirm('🔴 هل أنت متأكد 100%؟ لا يمكن التراجع!');
+  if(!c2) return;
+  const typed = prompt('اكتب "نعم" للتأكيد:');
+  if(typed !== 'نعم'){ show('❌ تم الإلغاء', false); return; }
+  show('⏳ جاري الحذف...', true);
+  try{
+    const {error} = await DB.rpc('delete_my_account');
+    if(error) throw error;
+    show('✅ تم الحذف', true);
+    setTimeout(async()=>{ await DB.auth.signOut(); location.reload(); }, 1500);
+  }catch(e){ show('❌ '+e.message, false); }
+}
+
 async function showStats(){document.getElementById('stats-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');const c=document.getElementById('stats-content');c.innerHTML='⏳';try{if(currentRole==='merchant'){const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);if(!ms||ms.length===0){c.innerHTML='-';return;}const{data:o}=await DB.from('orders').select('*').in('store_id',ms.map(s=>s.id));if(!o||o.length===0){c.innerHTML='-';return;}const rev=o.filter(x=>x.status==='delivered').reduce((s,x)=>s+parseFloat(x.total_price),0);c.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="stat-card" style="background:#e7f3ff"><div class="stat-num" style="color:#2196F3">'+o.length+'</div><div class="stat-label">📋</div></div><div class="stat-card" style="background:#d4edda"><div class="stat-num" style="color:#00C853">'+rev+'</div><div class="stat-label">💰</div></div><div class="stat-card" style="background:#fff3cd"><div class="stat-num" style="color:#FFB300">'+o.filter(x=>x.status==='pending').length+'</div><div class="stat-label">⏳</div></div><div class="stat-card" style="background:#cce5ff"><div class="stat-num" style="color:#2196F3">'+o.filter(x=>x.status==='delivering').length+'</div><div class="stat-label">🚗</div></div></div>';}else if(currentRole==='driver'){const{data:d}=await DB.from('orders').select('*').eq('status','delivered').eq('driver_id',currentUser.id);const rev=d?d.reduce((s,x)=>s+parseFloat(x.total_price),0):0;const{data:r}=await DB.from('driver_ratings').select('stars').eq('driver_id',currentUser.id);const avg=r&&r.length>0?(r.reduce((a,x)=>a+x.stars,0)/r.length).toFixed(1):'-';c.innerHTML='<div class="stat-card" style="background:#fff3cd"><div class="stat-num" style="color:#FFB300">⭐ '+avg+'</div></div><div class="stat-card" style="background:#d4edda;margin-top:10px"><div class="stat-num" style="color:#00C853">'+(d?.length||0)+'</div><div class="stat-label">🎉</div></div><div class="stat-card" style="background:#e7f3ff;margin-top:10px"><div class="stat-num" style="color:#2196F3">'+(rev*0.1).toFixed(0)+'</div><div class="stat-label">💵</div></div>';}}catch(e){c.innerHTML='❌';}}
 function hideStats(){document.getElementById('stats-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
 async function doAddStore(){if(currentRole!=='merchant'){show('❌',false);return;}const n=document.getElementById('st-name').value,d=document.getElementById('st-desc').value,a=document.getElementById('st-address').value,p=document.getElementById('st-promo').value;const op=document.getElementById('st-open').value,cl=document.getElementById('st-close').value;if(!n){show('⚠️',false);return;}try{await DB.from('stores').insert([{owner_id:currentUser.id,name:n,description:d,address:a,is_open:true,promo_text:p||null,promo_active:p?true:false,opening_time:op,closing_time:cl}]);show('✅',true);['st-name','st-desc','st-address','st-promo'].forEach(id=>document.getElementById(id).value='');hideStoreForm();loadStores();}catch(e){show('❌',false);}}
@@ -483,14 +583,12 @@ async function startDriverTracking(orderId){
   show('📍 بدأ التتبع المباشر', true);
   loadOrders();
 }
-
 function stopDriverTracking(){
   if(driverWatchId){ navigator.geolocation.clearWatch(driverWatchId); driverWatchId=null; }
   activeDriverOrderId = null;
   show('⏹️ وقف التتبع', true);
   loadOrders();
 }
-
 async function showLiveTracking(orderId){
   const modal = document.getElementById('track-modal');
   modal.classList.remove('hidden');
@@ -507,7 +605,6 @@ async function showLiveTracking(orderId){
   if(trackInterval) clearInterval(trackInterval);
   trackInterval = setInterval(()=>refreshTracking(orderId), 15000);
 }
-
 async function refreshTracking(orderId){
   try{
     const {data:o} = await DB.from('orders')
@@ -545,7 +642,6 @@ async function refreshTracking(orderId){
     }
   } catch(e){ console.error(e); }
 }
-
 function closeTrackModal(){
   document.getElementById('track-modal').classList.add('hidden');
   if(trackInterval){ clearInterval(trackInterval); trackInterval=null; }
