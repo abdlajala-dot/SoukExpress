@@ -23,7 +23,9 @@ input:focus, select:focus, textarea:focus { border-color: #ff6b35; outline: none
 button { width: 100%; padding: 13px; margin: 6px 0; font-size: 15px; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; }
 button:active { transform: scale(0.98); }
 .green { background: #28a745; color: white; } .blue { background: #007bff; color: white; } .red { background: #dc3545; color: white; } .orange { background: #fd7e14; color: white; } .purple { background: #6f42c1; color: white; } .teal { background: #17a2b8; color: white; } .whatsapp { background: #25D366; color: white; } .pink { background: #e91e63; color: white; }
-.small-btn { padding: 8px 14px; font-size: 13px; margin: 4px 4px 0 0; width: auto; display: inline-block; }
+
+/* ==== أزرار كبيرة وواضحة ==== */
+.small-btn { padding: 12px 20px; font-size: 16px; font-weight: bold; margin: 6px 6px 0 0; width: auto; display: inline-block; border-radius: 10px; }
 #msg { padding: 20px 30px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 18px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; max-width: 90%; box-shadow: 0 15px 40px rgba(0,0,0,0.4); animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
 @keyframes popIn { from { transform: translate(-50%, -50%) scale(0.3); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
 #msg.ok { background: #28a745; color: white; }
@@ -44,10 +46,11 @@ button:active { transform: scale(0.98); }
 .cart-item { background: #e7f3ff; padding: 12px; margin: 6px 0; border-radius: 10px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
 .order-item { background: #f8fff9; padding: 15px; margin: 10px 0; border-radius: 12px; border-right: 5px solid #28a745; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
 .order-item b { color: #155724; font-size: 15px; }
+.order-item .small-btn { padding: 12px 20px; font-size: 16px; font-weight: bold; margin: 6px 6px 0 0; min-width: 55px; }
 .order-products { background: #fff8e1; padding: 10px; margin: 8px 0; border-radius: 8px; font-size: 13px; color: #555; }
 .order-date { color: #888; font-size: 12px; margin: 4px 0; }
 .cart-total { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; margin: 12px 0; font-size: 17px; }
-.add-cart-btn { background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; white-space: nowrap; }
+.add-cart-btn { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; white-space: nowrap; }
 .checkout-field { background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 10px; border: 2px dashed #ddd; }
 .search-input { background: #f0f2f5 !important; border: 2px solid #ffb300 !important; font-weight: 600; }
 .footer { text-align: center; color: #999; font-size: 12px; margin-top: 20px; padding: 15px; }
@@ -428,7 +431,6 @@ function startNotificationPolling() {
   }, 30000);
 }
 
-/* ===== REALTIME: إشعار فوري للتاجر ===== */
 async function startRealtimeOrders() {
   if (currentRole !== 'merchant') return;
   if (realtimeChannel) { try { DB.removeChannel(realtimeChannel); } catch (e) {} realtimeChannel = null; }
@@ -449,15 +451,11 @@ async function startRealtimeOrders() {
 }
 
 function showNewOrderAlert(order) {
-  // 🔊 صوت (3 مرات)
   playBeep();
   setTimeout(() => playBeep(), 250);
   setTimeout(() => playBeep(), 500);
-  // 📳 اهتزاز قوي
   vibrate([300, 150, 300, 150, 500]);
-  // ✅ رسالة
   show('🔔 عندك طلب جديد! ' + (order.total_price || '') + ' DH', true);
-  // 🎯 Popup كبير
   const popup = document.createElement('div');
   popup.id = 'newOrderPopup';
   popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99998;background:linear-gradient(135deg,#ff6b35,#f7931a);color:white;padding:30px 25px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.5);text-align:center;max-width:90%;width:340px;animation:popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);';
@@ -727,11 +725,11 @@ function renderStores(stores) {
     const promo = (s.promo_active && s.promo_text) ? `<div class="promo-banner">📢 ${s.promo_text}</div>` : '';
     d.innerHTML = `<h3>🏪 ${s.name}</h3>${promo}${st}<p>${s.description || ''}</p><p>📍 ${s.address || ''}</p><div class="rating-line">${r}</div><div id="prod-${s.id}"></div>`;
     l.appendChild(d);
-    if (currentRole === 'merchant' && s.owner_id === currentUser.id) { const b = document.createElement('button'); b.className = 'purple small-btn'; b.textContent = '📦'; b.onclick = () => showProductForm(s.id, s.name); d.appendChild(b); }
-    if (currentRole === 'customer') { const b = document.createElement('button'); b.className = 'orange small-btn'; DB.from('ratings').select('stars').eq('store_id', s.id).eq('customer_id', currentUser.id).single().then(r => { b.textContent = r.data ? `⭐ ${r.data.stars}/5` : '⭐'; b.onclick = () => rateStore(s.id); }); d.appendChild(b); }
+    if (currentRole === 'merchant' && s.owner_id === currentUser.id) { const b = document.createElement('button'); b.className = 'purple small-btn'; b.textContent = '📦 إضافة منتج'; b.onclick = () => showProductForm(s.id, s.name); d.appendChild(b); }
+    if (currentRole === 'customer') { const b = document.createElement('button'); b.className = 'orange small-btn'; DB.from('ratings').select('stars').eq('store_id', s.id).eq('customer_id', currentUser.id).single().then(r => { b.textContent = r.data ? `⭐ ${r.data.stars}/5` : '⭐ قيّم'; b.onclick = () => rateStore(s.id); }); d.appendChild(b); }
     const pc = document.getElementById('prod-' + s.id); const p = allProductsCache[s.id] || [];
     if (p.length === 0) pc.innerHTML = '-';
-    else { pc.innerHTML = '<b style="font-size:13px;color:#666;">📦</b>'; p.forEach(pr => { const pd = document.createElement('div'); pd.className = 'product-item'; let btn = ''; if (currentRole === 'customer') btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕</button>`; else if (currentRole === 'merchant') btn = `<button class="blue small-btn" onclick="editProduct('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${(pr.description || '').replace(/'/g, "\\'")}', '${pr.image_url || ''}', '${s.id}')">✏️</button><button class="red small-btn" onclick="deleteProduct('${pr.id}', '${s.id}')">🗑️</button>`; const img = pr.image_url ? `<img src="${pr.image_url}" class="product-img" onerror="this.style.display='none'">` : ''; pd.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${img}<div><b>${pr.name}</b>${pr.price} DH - ${pr.description || ''}</div></div><div>${btn}</div>`; pc.appendChild(pd); }); }
+    else { pc.innerHTML = '<b style="font-size:13px;color:#666;">📦</b>'; p.forEach(pr => { const pd = document.createElement('div'); pd.className = 'product-item'; let btn = ''; if (currentRole === 'customer') btn = `<button class="add-cart-btn" onclick="addToCart('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${pr.store_id}')">➕ أضف</button>`; else if (currentRole === 'merchant') btn = `<button class="blue small-btn" onclick="editProduct('${pr.id}', '${pr.name.replace(/'/g, "\\'")}', ${pr.price}, '${(pr.description || '').replace(/'/g, "\\'")}', '${pr.image_url || ''}', '${s.id}')">✏️</button><button class="red small-btn" onclick="deleteProduct('${pr.id}', '${s.id}')">🗑️</button>`; const img = pr.image_url ? `<img src="${pr.image_url}" class="product-img" onerror="this.style.display='none'">` : ''; pd.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${img}<div><b>${pr.name}</b>${pr.price} DH - ${pr.description || ''}</div></div><div>${btn}</div>`; pc.appendChild(pd); }); }
   });
 }
 
@@ -828,16 +826,17 @@ async function loadOrders() {
     const dt = o.created_at ? new Date(o.created_at).toLocaleString('ar-MA', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '-';
     const payTxt = o.payment_method === 'card' ? t('paid_card') : t('paid_cash');
     let dh = '';
-    if (currentRole === 'customer' && o.driver_id && (o.status === 'delivering' || o.status === 'delivered')) { const { data: dr } = await DB.from('profiles').select('full_name, phone').eq('id', o.driver_id).single(); if (dr) dh = `<div style="background:#e7f3ff; padding:8px; border-radius:8px; margin-top:8px;"><b style="color:#007bff;">🚚</b> ${dr.full_name || ''}<br>📞 ${dr.phone || ''}</div>`; }
+    if (currentRole === 'customer' && o.driver_id && (o.status === 'delivering' || o.status === 'delivered')) { const { data: dr } = await DB.from('profiles').select('full_name, phone').eq('id', o.driver_id).single(); if (dr) dh = `<div style="background:#e7f3ff; padding:8px; border-radius:8px; margin-top:8px;"><b style="color:#007bff;">🚚 الموصل ديالك:</b><br>👤 ${dr.full_name || ''}<br>📞 ${dr.phone || ''}</div>`; }
     d.innerHTML = `<b>📦 #${o.id.substring(0, 6)}</b><br><div class="order-date">🕐 ${dt}</div>👤 ${o.customer_name || ''}<br>📞 ${o.customer_phone || ''}<br>📍 ${o.delivery_address || ''}<br>💰 <b>${o.total_price} DH</b> • ${payTxt}<br>${stAr[o.status] || o.status}${ph}${dh}`;
-    const cb = document.createElement('button'); cb.className = 'green small-btn'; cb.textContent = '💬'; cb.onclick = () => openChat(o.id, '#' + o.id.substring(0, 6)); d.appendChild(cb);
-    if ((currentRole === 'merchant' || currentRole === 'driver') && o.customer_phone) { let pn = o.customer_phone.replace(/\D/g, ''); if (pn.startsWith('0')) pn = '212' + pn.substring(1); const wa = document.createElement('button'); wa.className = 'whatsapp small-btn'; wa.textContent = '📱'; wa.onclick = () => window.open('https://wa.me/' + pn, '_blank'); d.appendChild(wa); const ca2 = document.createElement('button'); ca2.className = 'blue small-btn'; ca2.textContent = '📞'; ca2.onclick = () => window.location.href = 'tel:' + pn; d.appendChild(ca2); const cp2 = document.createElement('button'); cp2.className = 'teal small-btn'; cp2.textContent = '📋'; cp2.onclick = () => navigator.clipboard.writeText(o.customer_phone).then(() => show('✅', true)); d.appendChild(cp2); }
-    if ((currentRole === 'merchant' || currentRole === 'driver') && o.delivery_address) { const mb = document.createElement('button'); mb.className = 'purple small-btn'; mb.textContent = '📍'; if (o.latitude && o.longitude) mb.onclick = () => window.open('https://www.google.com/maps?q=' + o.latitude + ',' + o.longitude, '_blank'); else mb.onclick = () => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.delivery_address), '_blank'); d.appendChild(mb); if (o.latitude && o.longitude) { const sm = document.createElement('button'); sm.className = 'teal small-btn'; sm.textContent = '🗺️'; const mid = 'om-' + o.id; sm.onclick = () => { let ex = document.getElementById(mid); if (ex) { ex.style.display = ex.style.display === 'none' ? 'block' : 'none'; return; } const md = document.createElement('div'); md.id = mid; md.style.cssText = 'height:250px; border-radius:10px; margin-top:10px;'; d.appendChild(md); setTimeout(() => { const m = L.map(mid).setView([o.latitude, o.longitude], 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM', maxZoom: 19 }).addTo(m); L.marker([o.latitude, o.longitude]).addTo(m).bindPopup('📍').openPopup(); }, 50); }; d.appendChild(sm); } }
-    if (currentRole === 'customer' && o.status === 'delivered' && o.driver_id) { const { data: exR } = await DB.from('driver_ratings').select('id').eq('order_id', o.id).eq('customer_id', currentUser.id).single(); const rd = document.createElement('div'); rd.style.marginTop = '10px'; rd.innerHTML = exR ? '<span style="color:#28a745; font-weight:bold; font-size:13px;">✅</span>' : `<button class="orange small-btn" onclick="rateDriver('${o.id}', '${o.driver_id}')">⭐</button>`; d.appendChild(rd); }
-    if (currentRole === 'merchant' && o.status === 'pending') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'accepted')">✅</button><button class="red small-btn" onclick="updateOrderStatus('${o.id}', 'cancelled')">❌</button>`; d.appendChild(bd); }
-    if (currentRole === 'customer' && o.status === 'pending') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="red small-btn" onclick="cancelOrder('${o.id}')">❌</button>`; d.appendChild(bd); }
-    if (currentRole === 'merchant' && o.status === 'accepted') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="blue small-btn" onclick="updateOrderStatus('${o.id}', 'delivering')">🚗</button>`; d.appendChild(bd); }
-    if (currentRole === 'driver' && o.status === 'delivering') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'delivered')">✅</button>`; d.appendChild(bd); }
+    // ═══ أزرار كبيرة + نص واضح ═══
+    const cb = document.createElement('button'); cb.className = 'green small-btn'; cb.textContent = '💬 شات'; cb.onclick = () => openChat(o.id, '#' + o.id.substring(0, 6)); d.appendChild(cb);
+    if ((currentRole === 'merchant' || currentRole === 'driver') && o.customer_phone) { let pn = o.customer_phone.replace(/\D/g, ''); if (pn.startsWith('0')) pn = '212' + pn.substring(1); const wa = document.createElement('button'); wa.className = 'whatsapp small-btn'; wa.textContent = '📱 واتساب'; wa.onclick = () => window.open('https://wa.me/' + pn, '_blank'); d.appendChild(wa); const ca2 = document.createElement('button'); ca2.className = 'blue small-btn'; ca2.textContent = '📞 اتصال'; ca2.onclick = () => window.location.href = 'tel:' + pn; d.appendChild(ca2); const cp2 = document.createElement('button'); cp2.className = 'teal small-btn'; cp2.textContent = '📋 نسخ'; cp2.onclick = () => navigator.clipboard.writeText(o.customer_phone).then(() => show('✅ تم النسخ!', true)); d.appendChild(cp2); }
+    if ((currentRole === 'merchant' || currentRole === 'driver') && o.delivery_address) { const mb = document.createElement('button'); mb.className = 'purple small-btn'; mb.textContent = '📍 خريطة'; if (o.latitude && o.longitude) mb.onclick = () => window.open('https://www.google.com/maps?q=' + o.latitude + ',' + o.longitude, '_blank'); else mb.onclick = () => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.delivery_address), '_blank'); d.appendChild(mb); if (o.latitude && o.longitude) { const sm = document.createElement('button'); sm.className = 'teal small-btn'; sm.textContent = '🗺️ عرض'; const mid = 'om-' + o.id; sm.onclick = () => { let ex = document.getElementById(mid); if (ex) { ex.style.display = ex.style.display === 'none' ? 'block' : 'none'; return; } const md = document.createElement('div'); md.id = mid; md.style.cssText = 'height:250px; border-radius:10px; margin-top:10px;'; d.appendChild(md); setTimeout(() => { const m = L.map(mid).setView([o.latitude, o.longitude], 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM', maxZoom: 19 }).addTo(m); L.marker([o.latitude, o.longitude]).addTo(m).bindPopup('📍').openPopup(); }, 50); }; d.appendChild(sm); } }
+    if (currentRole === 'customer' && o.status === 'delivered' && o.driver_id) { const { data: exR } = await DB.from('driver_ratings').select('id').eq('order_id', o.id).eq('customer_id', currentUser.id).single(); const rd = document.createElement('div'); rd.style.marginTop = '10px'; rd.innerHTML = exR ? '<span style="color:#28a745; font-weight:bold; font-size:14px;">✅ قيمتي الموصل</span>' : `<button class="orange small-btn" onclick="rateDriver('${o.id}', '${o.driver_id}')">⭐ قيّم الموصل</button>`; d.appendChild(rd); }
+    if (currentRole === 'merchant' && o.status === 'pending') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'accepted')">✅ قبول</button><button class="red small-btn" onclick="updateOrderStatus('${o.id}', 'cancelled')">❌ رفض</button>`; d.appendChild(bd); }
+    if (currentRole === 'customer' && o.status === 'pending') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="red small-btn" onclick="cancelOrder('${o.id}')">❌ إلغاء الطلب</button>`; d.appendChild(bd); }
+    if (currentRole === 'merchant' && o.status === 'accepted') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="blue small-btn" onclick="updateOrderStatus('${o.id}', 'delivering')">🚗 للموصل</button>`; d.appendChild(bd); }
+    if (currentRole === 'driver' && o.status === 'delivering') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = `<button class="green small-btn" onclick="updateOrderStatus('${o.id}', 'delivered')">✅ تم التوصيل</button>`; d.appendChild(bd); }
     l.appendChild(d);
   }
 }
