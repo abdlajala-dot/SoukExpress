@@ -10,16 +10,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root {
-  --primary: #ff6b35;
-  --primary-dark: #e85a2a;
-  --primary-light: #ff8c5f;
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --info: #3b82f6;
-  --gradient: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffb800 100%);
-}
+:root { --primary: #ff6b35; --primary-dark: #e85a2a; --primary-light: #ff8c5f; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6; --gradient: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffb800 100%); }
 * { box-sizing: border-box; }
 body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; padding: 0; background: #f0f2f5; max-width: 500px; margin: 0 auto; padding-bottom: 30px; }
 .header { background: var(--gradient); color: white; padding: 20px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 8px 20px rgba(255,107,53,0.4); margin-bottom: 15px; position: relative; }
@@ -30,21 +21,22 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; padding: 0; backgroun
 h2 { text-align: center; color: #333; font-size: 20px; margin-top: 0; margin-bottom: 15px; }
 input, select, textarea { width: 100%; padding: 13px; margin: 6px 0; font-size: 15px; border-radius: 10px; border: 2px solid #e9ecef; background: #fafbfc; transition: 0.2s; }
 input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; background: white; box-shadow: 0 0 0 4px rgba(255,107,53,0.1); }
-button { width: 100%; padding: 13px; margin: 6px 0; font-size: 15px; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; }
-button:active { transform: scale(0.98); }
-.green { background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
-.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
-.red { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
-.orange { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
-.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
-.teal { background: linear-gradient(135deg, #14b8a6, #0d9488); color: white; box-shadow: 0 4px 12px rgba(20,184,166,0.3); }
-.whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); color: white; box-shadow: 0 4px 12px rgba(37,211,102,0.3); }
-.pink { background: linear-gradient(135deg, #ec4899, #db2777); color: white; box-shadow: 0 4px 12px rgba(236,72,153,0.3); }
+button { width: 100%; padding: 13px; margin: 6px 0; font-size: 15px; font-weight: 700; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; letter-spacing: 0.3px; }
+button:active { transform: scale(0.97); }
+button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+.green { background: linear-gradient(135deg, #00C853 0%, #00A344 100%); color: white; box-shadow: 0 4px 15px rgba(0,200,83,0.4); }
+.blue { background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%); color: white; box-shadow: 0 4px 15px rgba(33,150,243,0.4); }
+.red { background: linear-gradient(135deg, #FF3D00 0%, #D32F2F 100%); color: white; box-shadow: 0 4px 15px rgba(255,61,0,0.4); }
+.orange { background: linear-gradient(135deg, #FFB300 0%, #FF6F00 100%); color: white; box-shadow: 0 4px 15px rgba(255,179,0,0.4); }
+.purple { background: linear-gradient(135deg, #9C27B0 0%, #6A1B9A 100%); color: white; box-shadow: 0 4px 15px rgba(156,39,176,0.4); }
+.teal { background: linear-gradient(135deg, #00BCD4 0%, #00838F 100%); color: white; box-shadow: 0 4px 15px rgba(0,188,212,0.4); }
+.whatsapp { background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; box-shadow: 0 4px 15px rgba(37,211,102,0.4); }
+.pink { background: linear-gradient(135deg, #FF4081 0%, #C2185B 100%); color: white; box-shadow: 0 4px 15px rgba(255,64,129,0.4); }
 .small-btn { padding: 12px 20px; font-size: 16px; font-weight: bold; margin: 6px 6px 0 0; width: auto; display: inline-block; border-radius: 10px; }
 #msg { padding: 20px 30px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 18px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; max-width: 90%; box-shadow: 0 15px 40px rgba(0,0,0,0.4); animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
 @keyframes popIn { from { transform: translate(-50%, -50%) scale(0.3); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
-#msg.ok { background: linear-gradient(135deg, #10b981, #059669); color: white; }
-#msg.err { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+#msg.ok { background: linear-gradient(135deg, #00C853, #00A344); color: white; }
+#msg.err { background: linear-gradient(135deg, #FF3D00, #D32F2F); color: white; }
 .hidden { display: none; }
 .welcome-banner { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(79,172,254,0.3); }
 .welcome-banner h2 { color: white; margin: 0 0 8px 0; }
@@ -59,19 +51,19 @@ button:active { transform: scale(0.98); }
 .product-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #ffb300; }
 .section-title { font-weight: bold; font-size: 16px; margin: 15px 0 12px 0; color: #333; padding-bottom: 8px; border-bottom: 3px solid transparent; border-image: var(--gradient) 1; display: flex; align-items: center; gap: 8px; }
 .cart-item { background: linear-gradient(135deg, #e7f3ff, #f0f8ff); padding: 12px; margin: 6px 0; border-radius: 10px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-.order-item { background: linear-gradient(135deg, #f8fff9, #f0fff8); padding: 15px; margin: 10px 0; border-radius: 12px; border-right: 5px solid #10b981; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.order-item { background: linear-gradient(135deg, #f8fff9, #f0fff8); padding: 15px; margin: 10px 0; border-radius: 12px; border-right: 5px solid #00C853; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 .order-item b { color: #047857; font-size: 15px; }
 .order-products { background: #fff8e1; padding: 10px; margin: 8px 0; border-radius: 8px; font-size: 13px; color: #555; }
 .order-date { color: #888; font-size: 12px; margin: 4px 0; }
-.cart-total { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; margin: 12px 0; font-size: 17px; box-shadow: 0 4px 15px rgba(20,184,166,0.3); }
-.add-cart-btn { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; white-space: nowrap; box-shadow: 0 3px 10px rgba(16,185,129,0.3); }
+.cart-total { background: linear-gradient(135deg, #00BCD4 0%, #00838F 100%); color: white; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; margin: 12px 0; font-size: 17px; box-shadow: 0 4px 15px rgba(0,188,212,0.4); }
+.add-cart-btn { background: linear-gradient(135deg, #00C853, #00A344); color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; white-space: nowrap; box-shadow: 0 3px 10px rgba(0,200,83,0.4); }
 .checkout-field { background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 10px; border: 2px dashed #ddd; }
 .search-input { background: #f0f2f5 !important; border: 2px solid #ffb300 !important; font-weight: 600; }
 .footer { text-align: center; color: #999; font-size: 12px; margin-top: 20px; padding: 15px; }
 .stat-card { padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
 .stat-num { font-size: 24px; font-weight: bold; }
 .stat-label { font-size: 13px; color: #666; margin-top: 3px; }
-.pending-badge { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-right: 5px; box-shadow: 0 2px 8px rgba(239,68,68,0.4); }
+.pending-badge { background: linear-gradient(135deg, #FF3D00, #D32F2F); color: white; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-right: 5px; box-shadow: 0 2px 8px rgba(255,61,0,0.5); }
 .store-status { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin: 5px 0; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
 .logo-wrap { display:flex; align-items:center; justify-content:center; gap:10px; }
 .logo-circle { width:50px; height:50px; background: rgba(255,255,255,0.25); border-radius:50%; display:flex; align-items:center; justify-content:center; border: 2px solid rgba(255,255,255,0.5); }
@@ -91,9 +83,9 @@ button:active { transform: scale(0.98); }
 .profile-stat { background: linear-gradient(135deg, #f8f9fa, #fff); padding: 12px 5px; border-radius: 10px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 .profile-stat-num { font-size: 22px; font-weight: bold; color: var(--primary); }
 .profile-stat-label { font-size: 11px; color: #666; margin-top: 3px; }
-.coupon-banner { background: linear-gradient(135deg, #ec4899, #db2777); color: white; padding: 12px 15px; border-radius: 10px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; box-shadow: 0 4px 12px rgba(236,72,153,0.3); }
+.coupon-banner { background: linear-gradient(135deg, #FF4081, #C2185B); color: white; padding: 12px 15px; border-radius: 10px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; box-shadow: 0 4px 12px rgba(255,64,129,0.4); }
 .coupon-code { background: rgba(255,255,255,0.25); padding: 4px 10px; border-radius: 6px; font-weight: bold; letter-spacing: 2px; }
-.promo-banner { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 10px 14px; border-radius: 10px; margin: 8px 0; font-size: 14px; font-weight: bold; text-align: center; box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+.promo-banner { background: linear-gradient(135deg, #FFB300, #FF6F00); color: white; padding: 10px 14px; border-radius: 10px; margin: 8px 0; font-size: 14px; font-weight: bold; text-align: center; box-shadow: 0 4px 12px rgba(255,179,0,0.4); }
 .pay-option { display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid #e9ecef; border-radius: 10px; margin: 6px 0; cursor: pointer; transition: 0.2s; position: relative; }
 .pay-option:hover { border-color: var(--primary); }
 .pay-option input[type="radio"] { width: 22px !important; height: 22px !important; padding: 0 !important; margin: 0 !important; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
@@ -163,13 +155,13 @@ button:active { transform: scale(0.98); }
 <div class="box hidden" id="add-store-box">
 <button class="orange" onclick="showStoreForm()" id="store-btn" data-i18n="add_store">➕ إضافة متجر جديد</button>
 <button class="blue" onclick="showProfile()" style="margin-top:8px;" data-i18n="my_account">👤 حسابي</button>
-<button class="blue" onclick="showAbout()" style="margin-top:8px;" data-i18n="about">ℹ️ عن التطبيق</button>
-<button class="whatsapp" onclick="shareApp()" style="margin-top:8px;" data-i18n="share">📤 شارك التطبيق</button>
-<button class="green" onclick="supportWhatsApp()" style="margin-top:8px;" data-i18n="support">💬 الدعم الفني</button>
+<button class="teal" onclick="showAbout()" style="margin-top:8px;" data-i18n="about">ℹ️ عن التطبيق</button>
+<button class="green" onclick="shareApp()" style="margin-top:8px;" data-i18n="share">📤 شارك التطبيق</button>
+<button class="whatsapp" onclick="supportWhatsApp()" style="margin-top:8px;" data-i18n="support">💬 الدعم الفني</button>
 <button class="orange" onclick="installApp()" id="install-btn" style="margin-top:8px; display:none;" data-i18n="install_app">📲 ثبّت التطبيق</button>
 <button class="pink" onclick="requestNotifPermission()" id="notif-btn" style="margin-top:8px;" data-i18n="enable_notifs">🔔 تفعيل الإشعارات</button>
-<button class="teal" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 <span id="stats-btn-text" data-i18n="store_stats">إحصائيات المتجر</span> <span id="pending-badge" class="pending-badge" style="display:none;">0</span></button>
-<button class="purple" onclick="toggleAllStores()" id="toggle-stores-btn" style="margin-top:8px; display:none;" data-i18n="close_stores">🔒 إغلاق المتاجر</button>
+<button class="purple" onclick="showStats()" id="stats-btn" style="margin-top:8px; display:none;">📊 <span id="stats-btn-text" data-i18n="store_stats">إحصائيات المتجر</span> <span id="pending-badge" class="pending-badge" style="display:none;">0</span></button>
+<button class="teal" onclick="toggleAllStores()" id="toggle-stores-btn" style="margin-top:8px; display:none;" data-i18n="close_stores">🔒 إغلاق المتاجر</button>
 <button class="pink" onclick="showMyCoupons()" id="coupons-btn" style="margin-top:8px; display:none;" data-i18n="my_coupons">🎟️ كودات الخصم</button>
 <button class="blue" onclick="exportOrdersCSV()" id="csv-btn" style="margin-top:8px; display:none;" data-i18n="export_csv">📊 تصدير الطلبات (Excel)</button>
 <button class="red" onclick="doLogout()" style="margin-top:8px;" data-i18n="logout">🚪 تسجيل الخروج</button>
@@ -210,7 +202,7 @@ button:active { transform: scale(0.98); }
 <div style="text-align:center; padding:10px 0;">
 <div style="font-size:60px; margin-bottom:10px;">🛒</div>
 <h3 style="color:var(--primary); margin:5px 0;">SoukExpress</h3>
-<p style="color:#888; font-size:13px;">v2.0.0</p>
+<p style="color:#888; font-size:13px;">v2.1.0</p>
 </div>
 <p style="line-height:1.8; font-size:14px;" data-i18n="about_desc">🚚 منصة توصيل سريع بأكادير.</p>
 <ul style="line-height:1.9; font-size:13px; padding-right:20px;">
@@ -351,19 +343,15 @@ let map = null, marker = null, selectedLat = null, selectedLng = null;
 let currentChatOrderId = null, chatInterval = null, notifInterval = null, realtimeChannel = null;
 let allStoresCache = {}, allProductsCache = {};
 let appliedCoupon = null, selectedPayment = 'cash';
-
 const roleAr = {customer: '🛒 زبون', merchant: '🏪 تاجر', driver: '🚚 موصل'};
 const roleEmoji = {customer: '🛒', merchant: '🏪', driver: '🚚'};
-
 const translations = {
   ar: {tagline:'🚚 منصة التوصيل السريع - أكادير',signup_title:'🚀 تسجيل حساب جديد',login_title:'🔐 تسجيل الدخول',welcome:'👋 مرحبا!',my_account:'👤 حسابي',about:'ℹ️ عن التطبيق',share:'📤 شارك',support:'💬 الدعم',install_app:'📲 ثبّت التطبيق',enable_notifs:'🔔 تفعيل الإشعارات',my_stats:'📊 إحصائياتي',store_stats:'📊 إحصائيات المتجر',close_stores:'🔒 إغلاق المتاجر',open_stores:'🔓 فتح المتاجر',my_coupons:'🎟️ كودات الخصم',export_csv:'📊 تصدير Excel',logout:'🚪 خروج',add_store:'➕ إضافة متجر',add_store_title:'🏪 متجر جديد',stores_list:'🏪 المتاجر',search_placeholder:'🔍 ابحث...',price_from:'💰 من',price_to:'💰 إلى',all_ratings:'⭐ الكل',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 ترتيب',sort_price_asc:'💰 الأقل',sort_price_desc:'💰 الأغلى',sort_name:'🔤 أبجدي',sort_rating:'⭐ الأعلى',reset_filters:'🔄 إعادة',cart:'🛒 السلة',cart_empty:'السلة خاوية',confirm_order:'✅ تأكيد',clear_cart:'🗑️ تفريغ',delivery_info:'📍 التوصيل',use_my_location:'🎯 موقعي',orders:'الطلبات',search_orders:'🔍 ابحث',all_orders:'📋 الكل',status_pending:'⏳ انتظار',status_accepted:'✅ مقبولة',status_delivering:'🚗 طريق',status_delivered:'🎉 موصلة',status_cancelled:'❌ ملغاة',chat:'💬 محادثة',back:'🔙 رجوع',chat_ph:'✍️ رسالة',save:'حفظ',cancel:'إلغاء',close:'إغلاق',save_changes:'💾 حفظ',save_product:'حفظ',my_profile:'👤 حسابي',edit_info:'✏️ تعديل:',full_name:'الاسم',phone:'الهاتف',email:'الإيميل',password:'السر',choose_role:'اختر...',role_customer:'🛒 زبون',role_merchant:'🏪 تاجر',role_driver:'🚚 موصل',signup_btn:'تسجيل',login_btn:'دخول',store_name:'اسم المتجر',store_desc:'الوصف',store_address:'العنوان',pr_name:'المنتج',pr_desc:'الوصف',pr_price:'السعر',pr_image_label:'📸 صورة:',camera:'📷 كاميرا',gallery:'🖼️ معرض',pr_url:'🔗 رابط',coupon_placeholder:'🎟️ كود خصم؟',apply:'تطبيق',create_coupon:'➕ كود جديد:',cp_code:'الكود',cp_percent:'💯 %',cp_fixed:'💰 ثابت',cp_value:'القيمة',cp_min:'الحد الأدنى',cp_max:'أقصى استعمالات',create_btn:'🎟️ إنشاء',about_desc:'🚚 منصة توصيل سريع بأكادير.',f1:'🛍️ تسوق',f2:'⭐ تقييمات',f3:'💬 شات',f4:'🗺️ خريطة',f5:'📸 صور',f6:'🎟️ كودات',f7:'🔔 إشعارات فورية',f8:'🌍 3 لغات',f9:'🕐 ساعات العمل',f10:'🎁 نقاط الولاء',contact_us:'💬 تواصل',address_ph:'العنوان',payment_method:'💳 طريقة الدفع:',pay_cash:'💵 نقداً عند التسليم',pay_card:'💳 بطاقة بنكية',paid_cash:'💵 نقداً',paid_card:'💳 بطاقة',order_success:'✅ تم إرسال الطلب بنجاح!',fill_fields:'⚠️ املأ الاسم، الهاتف، والعنوان',loyalty_earned:'🎁 ربحتي',loyalty_points:'نقطة ولاء!'},
   fr: {tagline:'🚚 Livraison rapide - Agadir',signup_title:'🚀 Inscription',login_title:'🔐 Connexion',welcome:'👋 Bienvenue!',my_account:'👤 Compte',about:'ℹ️ À propos',share:'📤 Partager',support:'💬 Support',install_app:'📲 Installer',enable_notifs:'🔔 Notifications',my_stats:'📊 Mes stats',store_stats:'📊 Stats',close_stores:'🔒 Fermer',open_stores:'🔓 Ouvrir',my_coupons:'🎟️ Coupons',export_csv:'📊 Excel',logout:'🚪 Déconnexion',add_store:'➕ Ajouter',add_store_title:'🏪 Boutique',stores_list:'🏪 Boutiques',search_placeholder:'🔍 Rechercher...',price_from:'💰 De',price_to:'💰 À',all_ratings:'⭐ Toutes',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 Tri',sort_price_asc:'💰 Moins cher',sort_price_desc:'💰 Plus cher',sort_name:'🔤 A-Z',sort_rating:'⭐ Mieux',reset_filters:'🔄 Reset',cart:'🛒 Panier',cart_empty:'Vide',confirm_order:'✅ Confirmer',clear_cart:'🗑️ Vider',delivery_info:'📍 Livraison',use_my_location:'🎯 Ma position',orders:'Commandes',search_orders:'🔍 Chercher',all_orders:'📋 Toutes',status_pending:'⏳ Attente',status_accepted:'✅ Acceptée',status_delivering:'🚗 Livraison',status_delivered:'🎉 Livrée',status_cancelled:'❌ Annulée',chat:'💬 Chat',back:'🔙 Retour',chat_ph:'✍️ Message',save:'Enregistrer',cancel:'Annuler',close:'Fermer',save_changes:'💾 OK',save_product:'OK',my_profile:'👤 Compte',edit_info:'✏️ Modifier:',full_name:'Nom',phone:'Tél',email:'Email',password:'Mot de passe',choose_role:'Choisir...',role_customer:'🛒 Client',role_merchant:'🏪 Commerçant',role_driver:'🚚 Livreur',signup_btn:'Inscrire',login_btn:'Connexion',store_name:'Nom',store_desc:'Description',store_address:'Adresse',pr_name:'Produit',pr_desc:'Description',pr_price:'Prix',pr_image_label:'📸 Image:',camera:'📷 Caméra',gallery:'🖼️ Galerie',pr_url:'🔗 URL',coupon_placeholder:'🎟️ Code?',apply:'OK',create_coupon:'➕ Code:',cp_code:'Code',cp_percent:'💯 %',cp_fixed:'💰 Fixe',cp_value:'Valeur',cp_min:'Min',cp_max:'Max',create_btn:'Créer',about_desc:'🚚 Livraison rapide à Agadir.',f1:'🛍️ Achat',f2:'⭐ Avis',f3:'💬 Chat',f4:'🗺️ Carte',f5:'📸 Photos',f6:'🎟️ Codes',f7:'🔔 Notifs temps réel',f8:'🌍 3 langues',f9:'🕐 Heures',f10:'🎁 Points fidélité',contact_us:'💬 Contact',address_ph:'Adresse',payment_method:'💳 Paiement:',pay_cash:'💵 Espèces',pay_card:'💳 Carte',paid_cash:'💵 Espèces',paid_card:'💳 Carte',order_success:'✅ Commande envoyée!',fill_fields:'⚠️ Remplissez les champs',loyalty_earned:'🎁 Vous avez gagné',loyalty_points:'points!'},
   en: {tagline:'🚚 Fast Delivery - Agadir',signup_title:'🚀 Sign Up',login_title:'🔐 Login',welcome:'👋 Welcome!',my_account:'👤 Account',about:'ℹ️ About',share:'📤 Share',support:'💬 Support',install_app:'📲 Install',enable_notifs:'🔔 Notifications',my_stats:'📊 My Stats',store_stats:'📊 Stats',close_stores:'🔒 Close',open_stores:'🔓 Open',my_coupons:'🎟️ Coupons',export_csv:'📊 Excel',logout:'🚪 Logout',add_store:'➕ Add Store',add_store_title:'🏪 Store',stores_list:'🏪 Stores',search_placeholder:'🔍 Search...',price_from:'💰 From',price_to:'💰 To',all_ratings:'⭐ All',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 Sort',sort_price_asc:'💰 Cheapest',sort_price_desc:'💰 Expensive',sort_name:'🔤 A-Z',sort_rating:'⭐ Top',reset_filters:'🔄 Reset',cart:'🛒 Cart',cart_empty:'Empty',confirm_order:'✅ Confirm',clear_cart:'🗑️ Clear',delivery_info:'📍 Delivery',use_my_location:'🎯 My location',orders:'Orders',search_orders:'🔍 Search',all_orders:'📋 All',status_pending:'⏳ Pending',status_accepted:'✅ Accepted',status_delivering:'🚗 Delivering',status_delivered:'🎉 Delivered',status_cancelled:'❌ Cancelled',chat:'💬 Chat',back:'🔙 Back',chat_ph:'✍️ Message',save:'Save',cancel:'Cancel',close:'Close',save_changes:'💾 Save',save_product:'Save',my_profile:'👤 Account',edit_info:'✏️ Edit:',full_name:'Name',phone:'Phone',email:'Email',password:'Password',choose_role:'Choose...',role_customer:'🛒 Customer',role_merchant:'🏪 Merchant',role_driver:'🚚 Driver',signup_btn:'Sign Up',login_btn:'Login',store_name:'Store Name',store_desc:'Description',store_address:'Address',pr_name:'Product',pr_desc:'Description',pr_price:'Price',pr_image_label:'📸 Image:',camera:'📷 Camera',gallery:'🖼️ Gallery',pr_url:'🔗 URL',coupon_placeholder:'🎟️ Code?',apply:'Apply',create_coupon:'➕ Code:',cp_code:'Code',cp_percent:'💯 %',cp_fixed:'💰 Fixed',cp_value:'Value',cp_min:'Min',cp_max:'Max',create_btn:'Create',about_desc:'🚚 Fast delivery in Agadir.',f1:'🛍️ Shop',f2:'⭐ Ratings',f3:'💬 Chat',f4:'🗺️ Map',f5:'📸 Photos',f6:'🎟️ Codes',f7:'🔔 Realtime notifs',f8:'🌍 3 languages',f9:'🕐 Hours',f10:'🎁 Loyalty points',contact_us:'💬 Contact',address_ph:'Address',payment_method:'💳 Payment:',pay_cash:'💵 Cash on delivery',pay_card:'💳 Credit card',paid_cash:'💵 Cash',paid_card:'💳 Card',order_success:'✅ Order sent!',fill_fields:'⚠️ Fill all fields',loyalty_earned:'🎁 You earned',loyalty_points:'points!'}
 };
-
 let currentLang = localStorage.getItem('lang') || 'ar';
 function t(k) { return (translations[currentLang] && translations[currentLang][k]) || translations.ar[k] || k; }
-
 function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('lang', lang);
@@ -391,7 +379,6 @@ function cycleLang() {
   setLanguage(next);
   show(next === 'ar' ? '🇲🇦 العربية' : next === 'fr' ? '🇫🇷 Français' : '🇬🇧 English', true);
 }
-
 function show(txt, ok) {
   const m = document.getElementById('msg');
   m.textContent = txt; m.className = ok ? 'ok' : 'err';
@@ -403,9 +390,7 @@ function show(txt, ok) {
 function playBeep() {
   try { const c = new (window.AudioContext || window.webkitAudioContext)(); const o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.frequency.value = 800; g.gain.value = 0.2; o.start(); o.stop(c.currentTime + 0.2); } catch (e) {}
 }
-function vibrate(pattern) {
-  try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
-}
+function vibrate(pattern) { try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {} }
 function toggleDarkMode() {
   const cur = document.documentElement.getAttribute('data-theme');
   const nt = cur === 'dark' ? 'light' : 'dark';
@@ -420,14 +405,12 @@ window.addEventListener('DOMContentLoaded', () => {
   setLanguage(currentLang);
   selectPay('cash');
 });
-
 function selectPay(method) {
   selectedPayment = method;
   document.getElementById('pay-cash').classList.toggle('selected', method === 'cash');
   document.getElementById('pay-card').classList.toggle('selected', method === 'card');
   document.querySelectorAll('input[name="pay"]').forEach(r => r.checked = r.value === method);
 }
-
 function isStoreOpenByHours(store) {
   if (!store.opening_time || !store.closing_time) return true;
   const now = new Date();
@@ -438,7 +421,6 @@ function isStoreOpenByHours(store) {
   if (close < open) return cur >= open || cur <= close;
   return cur >= open && cur <= close;
 }
-
 async function requestNotifPermission() {
   if (!('Notification' in window)) { show('❌', false); return; }
   if (Notification.permission === 'granted') { show('✅', true); document.getElementById('notif-btn').style.display = 'none'; return; }
@@ -462,7 +444,6 @@ function startNotificationPolling() {
     } catch (e) {}
   }, 30000);
 }
-
 async function startRealtimeOrders() {
   if (currentRole !== 'merchant') return;
   if (realtimeChannel) { try { DB.removeChannel(realtimeChannel); } catch (e) {} realtimeChannel = null; }
@@ -481,7 +462,6 @@ async function startRealtimeOrders() {
       .subscribe((status) => { console.log('Realtime status:', status); });
   } catch (e) { console.error('Realtime error:', e); }
 }
-
 function showNewOrderAlert(order) {
   playBeep(); setTimeout(() => playBeep(), 250); setTimeout(() => playBeep(), 500);
   vibrate([300, 150, 300, 150, 500]);
@@ -495,10 +475,8 @@ function showNewOrderAlert(order) {
   document.body.appendChild(popup);
   setTimeout(() => { const p = document.getElementById('newOrderPopup'); if (p) p.remove(); }, 20000);
 }
-
 function showAbout() { document.getElementById('about-box').classList.remove('hidden'); document.getElementById('add-store-box').classList.add('hidden'); }
 function hideAbout() { document.getElementById('about-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
-
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-btn').style.display = 'block'; });
 function installApp() {
   if (!deferredPrompt) { show('💡 iPhone: Safari > المشاركة', true); return; }
@@ -512,7 +490,6 @@ function shareApp() {
   else navigator.clipboard.writeText(url).then(() => show('✅', true));
 }
 function supportWhatsApp() { window.open('https://wa.me/212671634521?text=' + encodeURIComponent('مساعدة SoukExpress'), '_blank'); }
-
 function initMap() {
   if (map) return;
   document.getElementById('map').style.display = 'block';
@@ -527,13 +504,12 @@ function setMarker(lat, lng) {
   else { marker = L.marker([lat, lng], {draggable: true}).addTo(map); marker.on('dragend', () => { const p = marker.getLatLng(); selectedLat = p.lat; selectedLng = p.lng; updateLocationStatus(); }); }
   updateLocationStatus();
 }
-function updateLocationStatus() { const s = document.getElementById('location-status'); if (selectedLat && selectedLng) { s.innerHTML = '✅ ' + selectedLat.toFixed(4) + ', ' + selectedLng.toFixed(4); s.style.color = '#10b981'; } }
+function updateLocationStatus() { const s = document.getElementById('location-status'); if (selectedLat && selectedLng) { s.innerHTML = '✅ ' + selectedLat.toFixed(4) + ', ' + selectedLng.toFixed(4); s.style.color = '#00C853'; } }
 function getMyLocation() {
-  initMap(); const s = document.getElementById('location-status'); s.textContent = '⏳'; s.style.color = '#f59e0b';
+  initMap(); const s = document.getElementById('location-status'); s.textContent = '⏳'; s.style.color = '#FFB300';
   if (!navigator.geolocation) { s.textContent = '❌'; return; }
-  navigator.geolocation.getCurrentPosition(p => { map.setView([p.coords.latitude, p.coords.longitude], 16); setMarker(p.coords.latitude, p.coords.longitude); }, () => { s.textContent = '⚠️'; s.style.color = '#ef4444'; }, { enableHighAccuracy: true, timeout: 10000 });
+  navigator.geolocation.getCurrentPosition(p => { map.setView([p.coords.latitude, p.coords.longitude], 16); setMarker(p.coords.latitude, p.coords.longitude); }, () => { s.textContent = '⚠️'; s.style.color = '#FF3D00'; }, { enableHighAccuracy: true, timeout: 10000 });
 }
-
 async function exportOrdersCSV() {
   try {
     const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
@@ -553,7 +529,6 @@ async function exportOrdersCSV() {
     show('✅ تم التصدير!', true);
   } catch (e) { show('❌ ' + e.message, false); }
 }
-
 async function showMyCoupons() { document.getElementById('coupons-box').classList.remove('hidden'); document.getElementById('add-store-box').classList.add('hidden'); await loadCoupons(); }
 function hideCoupons() { document.getElementById('coupons-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
 async function loadCoupons() {
@@ -597,7 +572,6 @@ function updateCouponResult() {
   el.innerHTML = '<div style="background:linear-gradient(135deg,#d1fae5,#a7f3d0); color:#065f46; padding:10px; border-radius:8px; margin-top:8px; font-size:13px; text-align:center;">🎟️ ' + appliedCoupon.code + ': -' + d.toFixed(0) + ' DH</div>';
   loadCart();
 }
-
 async function openChat(orderId, title) {
   currentChatOrderId = orderId;
   document.getElementById('chat-box').classList.remove('hidden');
@@ -624,7 +598,6 @@ async function sendChatMessage() {
   try { await DB.from('messages').insert([{ order_id: currentChatOrderId, sender_id: currentUser.id, sender_name: currentProfile?.full_name || 'User', sender_role: currentRole, message: text }]); inp.value = ''; await loadChatMessages(); } catch (e) { show('❌', false); }
 }
 function closeChat() { document.getElementById('chat-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); currentChatOrderId = null; if (chatInterval) { clearInterval(chatInterval); chatInterval = null; } }
-
 async function updatePendingBadge() {
   const b = document.getElementById('pending-badge');
   if (!b || currentRole !== 'merchant') { if (b) b.style.display = 'none'; return 0; }
@@ -685,7 +658,6 @@ async function doLogout() {
 }
 function showStoreForm() { document.getElementById('store-form-box').classList.remove('hidden'); document.getElementById('add-store-box').classList.add('hidden'); }
 function hideStoreForm() { document.getElementById('store-form-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
-
 async function showProfile() {
   document.getElementById('profile-box').classList.remove('hidden');
   document.getElementById('add-store-box').classList.add('hidden');
@@ -707,26 +679,23 @@ async function showProfile() {
 }
 function hideProfile() { document.getElementById('profile-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
 async function doUpdateProfile() { const n = document.getElementById('pf-name').value, p = document.getElementById('pf-phone').value; if (!n) { show('⚠️', false); return; } try { await DB.from('profiles').update({ full_name: n, phone: p }).eq('id', currentUser.id); currentProfile.full_name = n; currentProfile.phone = p; document.getElementById('welcome').textContent = 'أهلاً ' + n; document.getElementById('co-name').value = n; document.getElementById('co-phone').value = p; show('✅', true); setTimeout(hideProfile, 1000); } catch (e) { show('❌', false); } }
-
 async function showStats() {
   document.getElementById('stats-box').classList.remove('hidden');
   document.getElementById('add-store-box').classList.add('hidden');
   const c = document.getElementById('stats-content');
   c.innerHTML = '<p style="text-align:center;color:#888;">⏳</p>';
   try {
-    if (currentRole === 'merchant') { const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id); if (!ms || ms.length === 0) { c.innerHTML = '-'; return; } const { data: o } = await DB.from('orders').select('*').in('store_id', ms.map(s => s.id)); if (!o || o.length === 0) { c.innerHTML = '-'; return; } const rev = o.filter(x => x.status === 'delivered').reduce((s, x) => s + parseFloat(x.total_price), 0); const tod = new Date().toDateString(); const to = o.filter(x => new Date(x.created_at).toDateString() === tod).length; const tr = o.filter(x => x.status === 'delivered' && new Date(x.created_at).toDateString() === tod).reduce((s, x) => s + parseFloat(x.total_price), 0); c.innerHTML = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="stat-card" style="background:linear-gradient(135deg,#d1ecf1,#c4e5ec); grid-column: span 2;"><div class="stat-num" style="color:#0891b2;">' + to + ' / ' + tr + ' DH</div><div class="stat-label">📅</div></div><div class="stat-card" style="background:linear-gradient(135deg,#e7f3ff,#d0e8ff);"><div class="stat-num" style="color:#007bff;">' + o.length + '</div><div class="stat-label">📋</div></div><div class="stat-card" style="background:linear-gradient(135deg,#d4edda,#c1e8d1);"><div class="stat-num" style="color:#10b981;">' + rev + '</div><div class="stat-label">💰</div></div><div class="stat-card" style="background:linear-gradient(135deg,#fff3cd,#ffeaa7);"><div class="stat-num" style="color:#f59e0b;">' + o.filter(x => x.status === 'pending').length + '</div><div class="stat-label">⏳</div></div><div class="stat-card" style="background:linear-gradient(135deg,#cce5ff,#b8d9ff);"><div class="stat-num" style="color:#3b82f6;">' + o.filter(x => x.status === 'delivering').length + '</div><div class="stat-label">🚗</div></div><div class="stat-card" style="background:linear-gradient(135deg,#d4edda,#c1e8d1);"><div class="stat-num" style="color:#10b981;">' + o.filter(x => x.status === 'delivered').length + '</div><div class="stat-label">🎉</div></div><div class="stat-card" style="background:linear-gradient(135deg,#f8d7da,#f5c6cb); grid-column: span 2;"><div class="stat-num" style="color:#ef4444;">' + o.filter(x => x.status === 'cancelled').length + '</div><div class="stat-label">❌</div></div></div>'; }
-    else if (currentRole === 'driver') { const { data: d } = await DB.from('orders').select('*').eq('status', 'delivered'); const { data: di } = await DB.from('orders').select('id').eq('status', 'delivering'); const rev = d ? d.reduce((s, x) => s + parseFloat(x.total_price), 0) : 0; const { data: r } = await DB.from('driver_ratings').select('stars').eq('driver_id', currentUser.id); const avg = r && r.length > 0 ? (r.reduce((a, x) => a + x.stars, 0) / r.length).toFixed(1) : '-'; c.innerHTML = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="stat-card" style="background:linear-gradient(135deg,#fff3cd,#ffeaa7); grid-column: span 2;"><div class="stat-num" style="color:#f59e0b; font-size:30px;">⭐ ' + avg + ' / 5</div><div class="stat-label">(' + (r?.length || 0) + ')</div></div><div class="stat-card" style="background:linear-gradient(135deg,#d4edda,#c1e8d1); grid-column: span 2;"><div class="stat-num" style="color:#10b981; font-size:36px;">' + (d?.length || 0) + '</div><div class="stat-label">🎉</div></div><div class="stat-card" style="background:linear-gradient(135deg,#fff3cd,#ffeaa7);"><div class="stat-num" style="color:#f59e0b;">' + rev + '</div><div class="stat-label">💰</div></div><div class="stat-card" style="background:linear-gradient(135deg,#e7f3ff,#d0e8ff);"><div class="stat-num" style="color:#3b82f6;">' + (rev * 0.1).toFixed(0) + '</div><div class="stat-label">💵</div></div><div class="stat-card" style="background:linear-gradient(135deg,#cce5ff,#b8d9ff); grid-column: span 2;"><div class="stat-num" style="color:#3b82f6;">' + (di?.length || 0) + '</div><div class="stat-label">🚗</div></div></div>'; }
+    if (currentRole === 'merchant') { const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id); if (!ms || ms.length === 0) { c.innerHTML = '-'; return; } const { data: o } = await DB.from('orders').select('*').in('store_id', ms.map(s => s.id)); if (!o || o.length === 0) { c.innerHTML = '-'; return; } const rev = o.filter(x => x.status === 'delivered').reduce((s, x) => s + parseFloat(x.total_price), 0); const tod = new Date().toDateString(); const to = o.filter(x => new Date(x.created_at).toDateString() === tod).length; const tr = o.filter(x => x.status === 'delivered' && new Date(x.created_at).toDateString() === tod).reduce((s, x) => s + parseFloat(x.total_price), 0); c.innerHTML = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="stat-card" style="background:linear-gradient(135deg,#d1ecf1,#c4e5ec); grid-column: span 2;"><div class="stat-num" style="color:#0891b2;">' + to + ' / ' + tr + ' DH</div><div class="stat-label">📅</div></div><div class="stat-card" style="background:linear-gradient(135deg,#e7f3ff,#d0e8ff);"><div class="stat-num" style="color:#2196F3;">' + o.length + '</div><div class="stat-label">📋</div></div><div class="stat-card" style="background:linear-gradient(135deg,#d4edda,#c1e8d1);"><div class="stat-num" style="color:#00C853;">' + rev + '</div><div class="stat-label">💰</div></div><div class="stat-card" style="background:linear-gradient(135deg,#fff3cd,#ffeaa7);"><div class="stat-num" style="color:#FFB300;">' + o.filter(x => x.status === 'pending').length + '</div><div class="stat-label">⏳</div></div><div class="stat-card" style="background:linear-gradient(135deg,#cce5ff,#b8d9ff);"><div class="stat-num" style="color:#2196F3;">' + o.filter(x => x.status === 'delivering').length + '</div><div class="stat-label">🚗</div></div><div class="stat-card" style="background:linear-gradient(135deg,#d4edda,#c1e8d1);"><div class="stat-num" style="color:#00C853;">' + o.filter(x => x.status === 'delivered').length + '</div><div class="stat-label">🎉</div></div><div class="stat-card" style="background:linear-gradient(135deg,#f8d7da,#f5c6cb); grid-column: span 2;"><div class="stat-num" style="color:#FF3D00;">' + o.filter(x => x.status === 'cancelled').length + '</div><div class="stat-label">❌</div></div></div>'; }
+    else if (currentRole === 'driver') { const { data: d } = await DB.from('orders').select('*').eq('status', 'delivered'); const { data: di } = await DB.from('orders').select('id').eq('status', 'delivering'); const rev = d ? d.reduce((s, x) => s + parseFloat(x.total_price), 0) : 0; const { data: r } = await DB.from('driver_ratings').select('stars').eq('driver_id', currentUser.id); const avg = r && r.length > 0 ? (r.reduce((a, x) => a + x.stars, 0) / r.length).toFixed(1) : '-'; c.innerHTML = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="stat-card" style="background:linear-gradient(135deg,#fff3cd,#ffeaa7); grid-column: span 2;"><div class="stat-num" style="color:#FFB300; font-size:30px;">⭐ ' + avg + ' / 5</div><div class="stat-label">(' + (r?.length || 0) + ')</div></div><div class="stat-card" style="background:linear-gradient(135deg,#d4edda,#c1e8d1); grid-column: span 2;"><div class="stat-num" style="color:#00C853; font-size:36px;">' + (d?.length || 0) + '</div><div class="stat-label">🎉</div></div><div class="stat-card" style="background:linear-gradient(135deg,#fff3cd,#ffeaa7);"><div class="stat-num" style="color:#FFB300;">' + rev + '</div><div class="stat-label">💰</div></div><div class="stat-card" style="background:linear-gradient(135deg,#e7f3ff,#d0e8ff);"><div class="stat-num" style="color:#2196F3;">' + (rev * 0.1).toFixed(0) + '</div><div class="stat-label">💵</div></div><div class="stat-card" style="background:linear-gradient(135deg,#cce5ff,#b8d9ff); grid-column: span 2;"><div class="stat-num" style="color:#2196F3;">' + (di?.length || 0) + '</div><div class="stat-label">🚗</div></div></div>'; }
   } catch (e) { c.innerHTML = '❌'; }
 }
 function hideStats() { document.getElementById('stats-box').classList.add('hidden'); document.getElementById('add-store-box').classList.remove('hidden'); }
-
 async function doAddStore() {
   const n = document.getElementById('st-name').value, d = document.getElementById('st-desc').value, a = document.getElementById('st-address').value, p = document.getElementById('st-promo').value;
   const op = document.getElementById('st-open').value, cl = document.getElementById('st-close').value;
   if (!n) { show('⚠️', false); return; }
   try { await DB.from('stores').insert([{ owner_id: currentUser.id, name: n, description: d, address: a, is_open: true, promo_text: p || null, promo_active: p ? true : false, opening_time: op, closing_time: cl }]); show('✅ تم!', true); ['st-name','st-desc','st-address','st-promo'].forEach(id => document.getElementById(id).value = ''); hideStoreForm(); loadStores(); } catch (e) { show('❌', false); }
 }
-
 async function loadStores() {
   const l = document.getElementById('stores-list'); l.innerHTML = '<p style="text-align:center;color:#888;">⏳</p>';
   const { data: stores, error } = await DB.from('stores').select('*');
@@ -735,14 +704,13 @@ async function loadStores() {
   for (const s of stores) { allStoresCache[s.id] = s; const { data: p } = await DB.from('products').select('*').eq('store_id', s.id); allProductsCache[s.id] = p || []; const { data: r } = await DB.from('ratings').select('stars').eq('store_id', s.id); allStoresCache[s.id]._rating = r && r.length > 0 ? r.reduce((a, x) => a + x.stars, 0) / r.length : 0; allStoresCache[s.id]._ratingCount = r?.length || 0; }
   renderStores(stores);
 }
-
 function renderStores(stores) {
   const l = document.getElementById('stores-list'); l.innerHTML = '';
   stores.forEach(s => {
     const d = document.createElement('div'); d.className = 'store-item';
     const autoOpen = isStoreOpenByHours(s);
     const isOpen = s.is_open !== false && autoOpen;
-    const st = isOpen ? '<span class="store-status" style="background:linear-gradient(135deg,#10b981,#059669);color:white;">✅ مفتوح</span>' : '<span class="store-status" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:white;">🔒 مغلق</span>';
+    const st = isOpen ? '<span class="store-status" style="background:linear-gradient(135deg,#00C853,#00A344);color:white;">✅ مفتوح</span>' : '<span class="store-status" style="background:linear-gradient(135deg,#FF3D00,#D32F2F);color:white;">🔒 مغلق</span>';
     const r = s._ratingCount > 0 ? '⭐ ' + s._rating.toFixed(1) + ' / 5 (' + s._ratingCount + ')' : '⭐ -';
     const promo = (s.promo_active && s.promo_text) ? '<div class="promo-banner">📢 ' + s.promo_text + '</div>' : '';
     const hoursTxt = (s.opening_time && s.closing_time) ? '<p class="hours-line">🕐 ' + s.opening_time + ' - ' + s.closing_time + '</p>' : '';
@@ -755,7 +723,6 @@ function renderStores(stores) {
     else { pc.innerHTML = '<b style="font-size:13px;color:#666;">📦</b>'; p.forEach(pr => { const pd = document.createElement('div'); pd.className = 'product-item'; let btn = ''; if (currentRole === 'customer') btn = '<button class="add-cart-btn" onclick="addToCart(\'' + pr.id + '\', \'' + pr.name.replace(/'/g, "\\'") + '\', ' + pr.price + ', \'' + pr.store_id + '\')">➕ أضف</button>'; else if (currentRole === 'merchant') btn = '<button class="blue small-btn" onclick="editProduct(\'' + pr.id + '\', \'' + pr.name.replace(/'/g, "\\'") + '\', ' + pr.price + ', \'' + (pr.description || '').replace(/'/g, "\\'") + '\', \'' + (pr.image_url || '') + '\', \'' + s.id + '\')">✏️</button><button class="red small-btn" onclick="deleteProduct(\'' + pr.id + '\', \'' + s.id + '\')">🗑️</button>'; const img = pr.image_url ? '<img src="' + pr.image_url + '" class="product-img" onerror="this.style.display=\'none\'">' : ''; pd.innerHTML = '<div style="display:flex;align-items:center;gap:10px;">' + img + '<div><b>' + pr.name + '</b>' + pr.price + ' DH - ' + (pr.description || '') + '</div></div><div>' + btn + '</div>'; pc.appendChild(pd); }); }
   });
 }
-
 function applyFilters() {
   const s = document.getElementById('search-input').value.toLowerCase().trim();
   const minP = parseFloat(document.getElementById('filter-min-price').value);
@@ -786,7 +753,6 @@ async function doAddProduct() {
   show('⏳', true);
   try { let fu = u || null; if (f) { const ext = f.name.split('.').pop(); const fn = 'p-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9) + '.' + ext; const { error: ue } = await DB.storage.from('product-images').upload(fn, f, { cacheControl: '3600', upsert: false }); if (ue) throw ue; const { data: ud } = DB.storage.from('product-images').getPublicUrl(fn); fu = ud.publicUrl; } const data = { name: n, description: d, price: parseFloat(p), image_url: fu }; if (editingProductId) await DB.from('products').update(data).eq('id', editingProductId); else { data.store_id = currentStoreId; await DB.from('products').insert([data]); } show('✅', true); hideProductForm(); loadStores(); } catch (e) { show('❌ ' + (e.message || ''), false); }
 }
-
 function addToCart(pid, n, p, sid) { if (cart.length > 0 && cart[0].storeId !== sid) { show('⚠️', false); return; } const ex = cart.find(c => c.prodId === pid); if (ex) ex.qty += 1; else cart.push({ prodId: pid, name: n, price: p, storeId: sid, qty: 1 }); show('✅', true); loadCart(); }
 function loadCart() {
   const l = document.getElementById('cart-list'), t = document.getElementById('cart-total'), cf = document.getElementById('checkout-fields');
@@ -799,7 +765,6 @@ function loadCart() {
 }
 function removeFromCart(i) { cart.splice(i, 1); if (cart.length === 0) appliedCoupon = null; loadCart(); }
 function clearCart() { cart = []; appliedCoupon = null; selectedLat = null; selectedLng = null; if (marker && map) { map.removeLayer(marker); marker = null; } document.getElementById('location-status').textContent = ''; document.getElementById('coupon-result').innerHTML = ''; loadCart(); }
-
 async function doCheckout() {
   if (cart.length === 0) { show('⚠️', false); return; }
   const cn = document.getElementById('co-name').value, cp = document.getElementById('co-phone').value, ca = document.getElementById('co-address').value;
@@ -817,12 +782,7 @@ async function doCheckout() {
     await DB.from('order_items').insert(items);
     if (appliedCoupon) await DB.from('coupons').update({ used_count: appliedCoupon.used_count + 1 }).eq('id', appliedCoupon.id);
     const earned = Math.floor(ft / 10);
-    if (earned > 0 && currentProfile) {
-      const cur = currentProfile.loyalty_points || 0;
-      await DB.from('profiles').update({ loyalty_points: cur + earned }).eq('id', currentUser.id);
-      currentProfile.loyalty_points = cur + earned;
-      setTimeout(() => show(t('loyalty_earned') + ' ' + earned + ' ' + t('loyalty_points'), true), 1500);
-    }
+    if (earned > 0 && currentProfile) { const cur = currentProfile.loyalty_points || 0; await DB.from('profiles').update({ loyalty_points: cur + earned }).eq('id', currentUser.id); currentProfile.loyalty_points = cur + earned; setTimeout(() => show(t('loyalty_earned') + ' ' + earned + ' ' + t('loyalty_points'), true), 1500); }
     playBeep(); setTimeout(() => playBeep(), 150); setTimeout(() => playBeep(), 300);
     vibrate([200, 100, 200, 100, 400]);
     show('🎉 ' + t('order_success'), true);
@@ -833,7 +793,6 @@ async function doCheckout() {
     loadCart(); loadOrders();
   } catch (e) { show('❌ ' + e.message, false); vibrate(500); }
 }
-
 async function loadOrders() {
   const l = document.getElementById('orders-list'); l.innerHTML = '<p style="text-align:center;color:#888;">⏳</p>';
   let q = DB.from('orders').select('*').order('created_at', {ascending: false});
@@ -856,12 +815,12 @@ async function loadOrders() {
     const dt = o.created_at ? new Date(o.created_at).toLocaleString('ar-MA', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '-';
     const payTxt = o.payment_method === 'card' ? t('paid_card') : t('paid_cash');
     let dh = '';
-    if (currentRole === 'customer' && o.driver_id && (o.status === 'delivering' || o.status === 'delivered')) { const { data: dr } = await DB.from('profiles').select('full_name, phone').eq('id', o.driver_id).single(); if (dr) dh = '<div style="background:linear-gradient(135deg,#e7f3ff,#d0e8ff); padding:8px; border-radius:8px; margin-top:8px;"><b style="color:#007bff;">🚚 الموصل ديالك:</b><br>👤 ' + (dr.full_name || '') + '<br>📞 ' + (dr.phone || '') + '</div>'; }
+    if (currentRole === 'customer' && o.driver_id && (o.status === 'delivering' || o.status === 'delivered')) { const { data: dr } = await DB.from('profiles').select('full_name, phone').eq('id', o.driver_id).single(); if (dr) dh = '<div style="background:linear-gradient(135deg,#e7f3ff,#d0e8ff); padding:8px; border-radius:8px; margin-top:8px;"><b style="color:#2196F3;">🚚 الموصل ديالك:</b><br>👤 ' + (dr.full_name || '') + '<br>📞 ' + (dr.phone || '') + '</div>'; }
     d.innerHTML = '<b>📦 #' + o.id.substring(0, 6) + '</b><br><div class="order-date">🕐 ' + dt + '</div>👤 ' + (o.customer_name || '') + '<br>📞 ' + (o.customer_phone || '') + '<br>📍 ' + (o.delivery_address || '') + '<br>💰 <b>' + o.total_price + ' DH</b> • ' + payTxt + '<br>' + (stAr[o.status] || o.status) + ph + dh;
     const cb = document.createElement('button'); cb.className = 'green small-btn'; cb.textContent = '💬 شات'; cb.onclick = () => openChat(o.id, '#' + o.id.substring(0, 6)); d.appendChild(cb);
     if ((currentRole === 'merchant' || currentRole === 'driver') && o.customer_phone) { let pn = o.customer_phone.replace(/\D/g, ''); if (pn.startsWith('0')) pn = '212' + pn.substring(1); const wa = document.createElement('button'); wa.className = 'whatsapp small-btn'; wa.textContent = '📱 واتساب'; wa.onclick = () => window.open('https://wa.me/' + pn, '_blank'); d.appendChild(wa); const ca2 = document.createElement('button'); ca2.className = 'blue small-btn'; ca2.textContent = '📞 اتصال'; ca2.onclick = () => window.location.href = 'tel:' + pn; d.appendChild(ca2); const cp2 = document.createElement('button'); cp2.className = 'teal small-btn'; cp2.textContent = '📋 نسخ'; cp2.onclick = () => navigator.clipboard.writeText(o.customer_phone).then(() => show('✅ تم النسخ!', true)); d.appendChild(cp2); }
     if ((currentRole === 'merchant' || currentRole === 'driver') && o.delivery_address) { const mb = document.createElement('button'); mb.className = 'purple small-btn'; mb.textContent = '📍 خريطة'; if (o.latitude && o.longitude) mb.onclick = () => window.open('https://www.google.com/maps?q=' + o.latitude + ',' + o.longitude, '_blank'); else mb.onclick = () => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.delivery_address), '_blank'); d.appendChild(mb); if (o.latitude && o.longitude) { const sm = document.createElement('button'); sm.className = 'teal small-btn'; sm.textContent = '🗺️ عرض'; const mid = 'om-' + o.id; sm.onclick = () => { let ex = document.getElementById(mid); if (ex) { ex.style.display = ex.style.display === 'none' ? 'block' : 'none'; return; } const md = document.createElement('div'); md.id = mid; md.style.cssText = 'height:250px; border-radius:10px; margin-top:10px;'; d.appendChild(md); setTimeout(() => { const m = L.map(mid).setView([o.latitude, o.longitude], 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM', maxZoom: 19 }).addTo(m); L.marker([o.latitude, o.longitude]).addTo(m).bindPopup('📍').openPopup(); }, 50); }; d.appendChild(sm); } }
-    if (currentRole === 'customer' && o.status === 'delivered' && o.driver_id) { const { data: exR } = await DB.from('driver_ratings').select('id').eq('order_id', o.id).eq('customer_id', currentUser.id).single(); const rd = document.createElement('div'); rd.style.marginTop = '10px'; rd.innerHTML = exR ? '<span style="color:#10b981; font-weight:bold; font-size:14px;">✅ قيمتي الموصل</span>' : '<button class="orange small-btn" onclick="rateDriver(\'' + o.id + '\', \'' + o.driver_id + '\')">⭐ قيّم الموصل</button>'; d.appendChild(rd); }
+    if (currentRole === 'customer' && o.status === 'delivered' && o.driver_id) { const { data: exR } = await DB.from('driver_ratings').select('id').eq('order_id', o.id).eq('customer_id', currentUser.id).single(); const rd = document.createElement('div'); rd.style.marginTop = '10px'; rd.innerHTML = exR ? '<span style="color:#00C853; font-weight:bold; font-size:14px;">✅ قيمتي الموصل</span>' : '<button class="orange small-btn" onclick="rateDriver(\'' + o.id + '\', \'' + o.driver_id + '\')">⭐ قيّم الموصل</button>'; d.appendChild(rd); }
     if (currentRole === 'merchant' && o.status === 'pending') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = '<button class="green small-btn" onclick="updateOrderStatus(\'' + o.id + '\', \'accepted\')">✅ قبول</button><button class="red small-btn" onclick="updateOrderStatus(\'' + o.id + '\', \'cancelled\')">❌ رفض</button>'; d.appendChild(bd); }
     if (currentRole === 'customer' && o.status === 'pending') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = '<button class="red small-btn" onclick="cancelOrder(\'' + o.id + '\')">❌ إلغاء الطلب</button>'; d.appendChild(bd); }
     if (currentRole === 'merchant' && o.status === 'accepted') { const bd = document.createElement('div'); bd.style.marginTop = '10px'; bd.innerHTML = '<button class="blue small-btn" onclick="updateOrderStatus(\'' + o.id + '\', \'delivering\')">🚗 للموصل</button>'; d.appendChild(bd); }
@@ -875,4 +834,4 @@ async function updateOrderStatus(id, st) { try { await DB.from('orders').update(
 async function rateDriver(oid, did) { const s = prompt('⭐ 1-5', '5'); if (!s) return; const n = parseInt(s); if (n < 1 || n > 5) return; try { await DB.from('driver_ratings').insert([{ order_id: oid, customer_id: currentUser.id, driver_id: did, stars: n }]); show('✅', true); loadOrders(); } catch (e) { show('❌', false); } }
 </script>
 </body>
-  </html>
+</html>
