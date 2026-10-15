@@ -327,13 +327,14 @@ button:active{transform:scale(0.97)}
 </div>
 <button class="float-wa" onclick="supportWhatsApp()">💬</button>
 <button class="float-cart" onclick="scrollToCart()">🛒<span id="cart-float-count" class="float-cart-count">0</span></button>
-
 <div class="qr-modal hidden" id="track-modal">
   <div style="background:white;padding:15px;border-radius:20px;max-width:420px;width:100%">
     <h3 style="text-align:center;margin:0 0 10px 0;color:var(--primary)">📍 تتبع الموصل</h3>
-    <div id="track-map" style="height:350px;min-height:350px;width:100%;border-radius:10px;background:#e9ecef"></div>
+    <div id="track-iframe-wrap" style="height:350px;width:100%;border-radius:10px;background:#e9ecef;overflow:hidden;position:relative">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:14px">⏳ جاري التحميل...</div>
+    </div>
     <div id="track-info" style="text-align:center;padding:10px;font-size:13px;color:#666;min-height:40px"></div>
-    <button class="red" onclick="closeTrackModal()">✕ إغلاق</button>
+    <button class="red" onclick="closeTrackModal()" style="z-index:9999;position:relative">✕ إغلاق</button>
   </div>
 </div>
 
