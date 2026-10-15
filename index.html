@@ -213,7 +213,7 @@ button:active{transform:scale(0.97)}
 </div>
 <div class="box hidden" id="about-box">
 <h2 data-i18n="about">ℹ️ عن التطبيق</h2>
-<div style="text-align:center;padding:10px 0"><div style="font-size:60px;margin-bottom:10px">🛒</div><h3 style="color:var(--primary);margin:5px 0">SoukExpress</h3><p style="color:#888;font-size:13px">v3.4.0</p></div>
+<div style="text-align:center;padding:10px 0"><div style="font-size:60px;margin-bottom:10px">🛒</div><h3 style="color:var(--primary);margin:5px 0">SoukExpress</h3><p style="color:#888;font-size:13px">v3.5.0</p></div>
 <p style="line-height:1.8;font-size:14px" data-i18n="about_desc">🚚 منصة توصيل سريع بأكادير.</p>
 <button class="whatsapp" onclick="supportWhatsApp()" data-i18n="contact_us">💬 تواصل</button>
 <button class="red" onclick="hideAbout()" data-i18n="close">إغلاق</button>
@@ -328,15 +328,23 @@ button:active{transform:scale(0.97)}
 <button class="float-wa" onclick="supportWhatsApp()">💬</button>
 <button class="float-cart" onclick="scrollToCart()">🛒<span id="cart-float-count" class="float-cart-count">0</span></button>
 
-<!-- 📍 تتبع — iframe بسيط -->
+<!-- 📍 تتبع الموصل — Static Map -->
 <div class="qr-modal hidden" id="track-modal">
   <div style="background:white;padding:15px;border-radius:20px;max-width:420px;width:100%;position:relative">
     <h3 style="text-align:center;margin:0 0 10px 0;color:var(--primary)">📍 تتبع الموصل</h3>
-    <div id="track-iframe-wrap" style="height:350px;width:100%;border-radius:10px;background:#e9ecef;overflow:hidden;position:relative">
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:14px">⏳ جاري التحميل...</div>
+    
+    <div id="track-map-area" style="height:280px;width:100%;border-radius:10px;overflow:hidden;background:#e9ecef;position:relative">
+      <img id="track-static-map" src="" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';document.getElementById('track-map-error').style.display='block'">
+      <div id="track-map-error" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#666;font-size:13px;padding:10px;line-height:1.6">
+        ⚠️ ما قدرناش نعرضو الخريطة<br>
+        <small>اضغط على زر من الأزرار تحت 👇</small>
+      </div>
     </div>
+    
     <div id="track-info" style="text-align:center;padding:10px;font-size:13px;color:#666;min-height:40px"></div>
-    <div id="track-link-wrap"></div>
+    
+    <div id="track-link-wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px"></div>
+    
     <button class="red" onclick="closeTrackModal()" style="z-index:9999;position:relative;margin-top:8px">✕ إغلاق</button>
   </div>
 </div>
@@ -350,7 +358,7 @@ let currentUser=null,currentRole=null,currentStoreId=null,currentProfile=null;
 let cart=[],editingProductId=null,lastPendingCount=0,deferredPrompt=null;
 let map=null,marker=null,selectedLat=null,selectedLng=null;
 let currentChatOrderId=null,chatInterval=null,notifInterval=null,realtimeChannel=null,notifCountInterval=null;
-let trackInterval=null,trackMap=null,driverMarker=null,customerMarker=null;
+let trackInterval=null;
 let driverWatchId=null,activeDriverOrderId=null;
 let allStoresCache={},allProductsCache={},favoritesCache=new Set();
 let appliedCoupon=null,selectedPayment='cash',scheduleMode='now';
@@ -385,7 +393,6 @@ window.addEventListener('DOMContentLoaded',()=>{
   const labels0={ar:'AR',fr:'FR',en:'EN'};
   document.getElementById('lang-btn').textContent=labels0[currentLang]||'AR';
   setLanguage(currentLang);selectPay('cash');updateOnlineStatus();checkProductUrl();checkStoreUrl();applyTheme();updateFloatCart();
-  // 🖱️ إغلاق modal بالضغط على الخلفية
   document.getElementById('track-modal')?.addEventListener('click',(e)=>{if(e.target.id==='track-modal')closeTrackModal();});
 });
 function selectSched(mode){scheduleMode=mode;document.getElementById('sched-now').classList.toggle('selected',mode==='now');document.getElementById('sched-later').classList.toggle('selected',mode==='later');document.querySelectorAll('input[name="sched"]').forEach(r=>r.checked=r.value===mode);const el=document.getElementById('sched-time');el.style.display=mode==='later'?'block':'none';if(mode==='later'){const tzOffset=new Date().getTimezoneOffset();const d=new Date(Date.now()+3600000-tzOffset*60000);el.value=d.toISOString().slice(0,16);const nowMin=new Date(Date.now()-tzOffset*60000);el.min=nowMin.toISOString().slice(0,16);}}
@@ -485,12 +492,10 @@ async function startDriverTracking(orderId){
   activeDriverOrderId = orderId;
   driverWatchId = navigator.geolocation.watchPosition(
     async (pos) => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
       try {
         await DB.from('orders').update({
-          driver_lat: lat,
-          driver_lng: lng,
+          driver_lat: pos.coords.latitude,
+          driver_lng: pos.coords.longitude,
           driver_last_update: new Date().toISOString()
         }).eq('id', orderId).eq('driver_id', currentUser.id);
       } catch(e){ console.error(e); }
@@ -511,16 +516,17 @@ function stopDriverTracking(){
   loadOrders();
 }
 
-// 🗺️ خريطة iframe (بديل بسيط عن Leaflet)
 async function showLiveTracking(orderId){
   const modal = document.getElementById('track-modal');
   modal.classList.remove('hidden');
   const info = document.getElementById('track-info');
-  const wrap = document.getElementById('track-iframe-wrap');
+  const img = document.getElementById('track-static-map');
+  const errorDiv = document.getElementById('track-map-error');
   const linkWrap = document.getElementById('track-link-wrap');
   
   info.innerHTML = '⏳ جاري تحديد الموقع...';
-  wrap.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:14px">⏳ جاري التحميل...</div>';
+  img.style.display = 'block';
+  errorDiv.style.display = 'none';
   linkWrap.innerHTML = '';
   
   try{
@@ -530,30 +536,27 @@ async function showLiveTracking(orderId){
     
     if(!o){ info.textContent = '❌ الطلب غير موجود'; return; }
     
-    let mapLat = 30.4278;
-    let mapLng = -9.5981;
-    let mapZoom = 13;
+    let mapLat, mapLng, mapZoom, hasDriver = false;
     
     if(o.driver_lat && o.driver_lng){
-      mapLat = o.driver_lat;
-      mapLng = o.driver_lng;
-      mapZoom = 15;
+      mapLat = o.driver_lat; mapLng = o.driver_lng; mapZoom = 15; hasDriver = true;
     } else if(o.latitude && o.longitude){
-      mapLat = o.latitude;
-      mapLng = o.longitude;
-      mapZoom = 14;
+      mapLat = o.latitude; mapLng = o.longitude; mapZoom = 14;
+    } else {
+      mapLat = 30.4278; mapLng = -9.5981; mapZoom = 12;
     }
     
-    // 🗺️ OpenStreetMap embed via iframe
-    const bboxDelta = 0.02;
-    const bbox = (mapLng-bboxDelta)+','+(mapLat-bboxDelta)+','+(mapLng+bboxDelta)+','+(mapLat+bboxDelta);
-    const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${mapLat},${mapLng}`;
+    // 🗺️ Static map من OSM
+    const staticUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${mapLat},${mapLng}&zoom=${mapZoom}&size=400x280&maptype=mapnik&markers=${mapLat},${mapLng},red-pushpin`;
+    img.src = staticUrl;
+    img.onerror = () => {
+      img.style.display = 'none';
+      errorDiv.style.display = 'block';
+    };
     
-    wrap.innerHTML = `<iframe src="${osmUrl}" style="width:100%;height:100%;border:0;border-radius:10px" loading="lazy" referrerpolicy="no-referrer"></iframe>`;
-    
-    // 📝 معلومات
+    // 📊 معلومات
     let infoHtml = '';
-    if(o.driver_lat && o.driver_lng){
+    if(hasDriver){
       const last = o.driver_last_update ? new Date(o.driver_last_update) : null;
       const secsAgo = last ? Math.floor((Date.now()-last.getTime())/1000) : null;
       const timeStr = secsAgo===null ? '-' : (secsAgo<60 ? secsAgo+' ثانية' : Math.floor(secsAgo/60)+' دقيقة');
@@ -562,17 +565,24 @@ async function showLiveTracking(orderId){
         const dLat = Math.abs(o.driver_lat - o.latitude);
         const dLng = Math.abs(o.driver_lng - o.longitude);
         const distKm = Math.sqrt(dLat*dLat + dLng*dLng) * 111;
-        infoHtml += '<br>📏 المسافة: <b>~'+distKm.toFixed(1)+' km</b>';
+        infoHtml += ' • 📏 <b>~'+distKm.toFixed(1)+' km</b>';
       }
-    } else if(o.latitude && o.longitude){
-      infoHtml = '📍 موقع الزبون (الموصل مازال ما بداش)';
     } else {
       infoHtml = '⚠️ الموصل مازال ما بداش التتبع';
     }
     info.innerHTML = infoHtml;
     
-    // 🔗 رابط خريطة كاملة
-    linkWrap.innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${mapLat}&mlon=${mapLng}#map=${mapZoom}/${mapLat}/${mapLng}" target="_blank" style="display:block;text-align:center;color:#2196F3;font-size:13px;text-decoration:none;padding:8px;background:#f0f8ff;border-radius:8px;margin-top:5px">🗺️ افتح في خريطة كاملة</a>`;
+    // 🔘 أزرار الخرائط
+    linkWrap.innerHTML = `
+      <a href="https://www.google.com/maps?q=${mapLat},${mapLng}" target="_blank" 
+         style="text-align:center;color:white;font-size:13px;text-decoration:none;padding:10px;background:linear-gradient(135deg,#4285F4,#0F9D58);border-radius:8px;font-weight:bold">
+        🗺️ Google Maps
+      </a>
+      <a href="https://www.openstreetmap.org/?mlat=${mapLat}&mlon=${mapLng}#map=${mapZoom}/${mapLat}/${mapLng}" target="_blank"
+         style="text-align:center;color:white;font-size:13px;text-decoration:none;padding:10px;background:linear-gradient(135deg,#7EBC6F,#4A8C3E);border-radius:8px;font-weight:bold">
+        🌍 OSM
+      </a>
+    `;
     
   }catch(e){
     console.error(e);
@@ -584,8 +594,8 @@ function closeTrackModal(){
   try{
     document.getElementById('track-modal').classList.add('hidden');
     if(trackInterval){ clearInterval(trackInterval); trackInterval=null; }
-    const wrap = document.getElementById('track-iframe-wrap');
-    if(wrap) wrap.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;font-size:14px">⏳ جاري التحميل...</div>';
+    const img = document.getElementById('track-static-map');
+    if(img) img.src = '';
     const linkWrap = document.getElementById('track-link-wrap');
     if(linkWrap) linkWrap.innerHTML = '';
   }catch(e){ console.error('close error:', e); }
