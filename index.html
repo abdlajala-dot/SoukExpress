@@ -24,10 +24,10 @@ button { width: 100%; padding: 13px; margin: 6px 0; font-size: 15px; font-weight
 button:active { transform: scale(0.98); }
 .green { background: #28a745; color: white; } .blue { background: #007bff; color: white; } .red { background: #dc3545; color: white; } .orange { background: #fd7e14; color: white; } .purple { background: #6f42c1; color: white; } .teal { background: #17a2b8; color: white; } .whatsapp { background: #25D366; color: white; } .pink { background: #e91e63; color: white; }
 .small-btn { padding: 8px 14px; font-size: 13px; margin: 4px 4px 0 0; width: auto; display: inline-block; }
-#msg { padding: 14px; border-radius: 10px; text-align: center; font-weight: bold; margin: 10px 15px; font-size: 15px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; max-width: 90%; box-shadow: 0 8px 25px rgba(0,0,0,0.25); animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-#msg.ok { background: #28a745; color: white; font-size: 16px; }
-#msg.err { background: #dc3545; color: white; font-size: 16px; }
-@keyframes slideDown { from { transform: translateX(-50%) translateY(-100px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+#msg { padding: 20px 30px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 18px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; max-width: 90%; box-shadow: 0 15px 40px rgba(0,0,0,0.4); animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes popIn { from { transform: translate(-50%, -50%) scale(0.3); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+#msg.ok { background: #28a745; color: white; }
+#msg.err { background: #dc3545; color: white; }
 .hidden { display: none; }
 .welcome-banner { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 15px; }
 .welcome-banner h2 { color: white; margin: 0 0 8px 0; }
@@ -186,11 +186,11 @@ button:active { transform: scale(0.98); }
 <div style="text-align:center; padding:10px 0;">
 <div style="font-size:60px; margin-bottom:10px;">🛒</div>
 <h3 style="color:#ff6b35; margin:5px 0;">SoukExpress</h3>
-<p style="color:#888; font-size:13px;">v1.7.0</p>
+<p style="color:#888; font-size:13px;">v1.8.0</p>
 </div>
 <p style="line-height:1.8; font-size:14px;" data-i18n="about_desc">🚚 منصة توصيل سريع بأكادير.</p>
 <ul style="line-height:1.9; font-size:13px; padding-right:20px;">
-<li data-i18n="f1">🛍️ تسوق</li><li data-i18n="f2">⭐ تقييمات</li><li data-i18n="f3">💬 شات</li><li data-i18n="f4">🗺️ خريطة</li><li data-i18n="f5">📸 صور</li><li data-i18n="f6">🎟️ كودات خصم</li><li data-i18n="f7">🔔 إشعارات</li><li data-i18n="f8">🌍 3 لغات</li>
+<li data-i18n="f1">🛍️ تسوق</li><li data-i18n="f2">⭐ تقييمات</li><li data-i18n="f3">💬 شات</li><li data-i18n="f4">🗺️ خريطة</li><li data-i18n="f5">📸 صور</li><li data-i18n="f6">🎟️ كودات خصم</li><li data-i18n="f7">🔔 إشعارات فورية</li><li data-i18n="f8">🌍 3 لغات</li>
 </ul>
 <button class="whatsapp" onclick="supportWhatsApp()" data-i18n="contact_us">💬 تواصل</button>
 <button class="red" onclick="hideAbout()" data-i18n="close">إغلاق</button>
@@ -324,7 +324,7 @@ const DB = window.supabase.createClient(supaURL, supaKEY);
 let currentUser = null, currentRole = null, currentStoreId = null, currentProfile = null;
 let cart = [], editingProductId = null, lastPendingCount = 0, deferredPrompt = null;
 let map = null, marker = null, selectedLat = null, selectedLng = null;
-let currentChatOrderId = null, chatInterval = null, notifInterval = null;
+let currentChatOrderId = null, chatInterval = null, notifInterval = null, realtimeChannel = null;
 let allStoresCache = {}, allProductsCache = {};
 let appliedCoupon = null, selectedPayment = 'cash';
 
@@ -332,9 +332,9 @@ const roleAr = {customer: '🛒 زبون', merchant: '🏪 تاجر', driver: '�
 const roleEmoji = {customer: '🛒', merchant: '🏪', driver: '🚚'};
 
 const translations = {
-  ar: {tagline:'🚚 منصة التوصيل السريع - أكادير',signup_title:'🚀 تسجيل حساب جديد',login_title:'🔐 تسجيل الدخول',welcome:'👋 مرحبا!',my_account:'👤 حسابي',about:'ℹ️ عن التطبيق',share:'📤 شارك',support:'💬 الدعم',install_app:'📲 ثبّت التطبيق',enable_notifs:'🔔 تفعيل الإشعارات',my_stats:'📊 إحصائياتي',store_stats:'📊 إحصائيات المتجر',close_stores:'🔒 إغلاق المتاجر',open_stores:'🔓 فتح المتاجر',my_coupons:'🎟️ كودات الخصم',export_csv:'📊 تصدير Excel',logout:'🚪 خروج',add_store:'➕ إضافة متجر',add_store_title:'🏪 متجر جديد',stores_list:'🏪 المتاجر',search_placeholder:'🔍 ابحث...',price_from:'💰 من',price_to:'💰 إلى',all_ratings:'⭐ الكل',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 ترتيب',sort_price_asc:'💰 الأقل',sort_price_desc:'💰 الأغلى',sort_name:'🔤 أبجدي',sort_rating:'⭐ الأعلى',reset_filters:'🔄 إعادة',cart:'🛒 السلة',cart_empty:'السلة خاوية',confirm_order:'✅ تأكيد',clear_cart:'🗑️ تفريغ',delivery_info:'📍 التوصيل',use_my_location:'🎯 موقعي',orders:'الطلبات',search_orders:'🔍 ابحث',all_orders:'📋 الكل',status_pending:'⏳ انتظار',status_accepted:'✅ مقبولة',status_delivering:'🚗 طريق',status_delivered:'🎉 موصلة',status_cancelled:'❌ ملغاة',chat:'💬 محادثة',back:'🔙 رجوع',chat_ph:'✍️ رسالة',save:'حفظ',cancel:'إلغاء',close:'إغلاق',save_changes:'💾 حفظ',save_product:'حفظ',my_profile:'👤 حسابي',edit_info:'✏️ تعديل:',full_name:'الاسم',phone:'الهاتف',email:'الإيميل',password:'السر',choose_role:'اختر...',role_customer:'🛒 زبون',role_merchant:'🏪 تاجر',role_driver:'🚚 موصل',signup_btn:'تسجيل',login_btn:'دخول',store_name:'اسم المتجر',store_desc:'الوصف',store_address:'العنوان',pr_name:'المنتج',pr_desc:'الوصف',pr_price:'السعر',pr_image_label:'📸 صورة:',camera:'📷 كاميرا',gallery:'🖼️ معرض',pr_url:'🔗 رابط',coupon_placeholder:'🎟️ كود خصم؟',apply:'تطبيق',create_coupon:'➕ كود جديد:',cp_code:'الكود',cp_percent:'💯 %',cp_fixed:'💰 ثابت',cp_value:'القيمة',cp_min:'الحد الأدنى',cp_max:'أقصى استعمالات',create_btn:'🎟️ إنشاء',about_desc:'🚚 منصة توصيل سريع بأكادير.',f1:'🛍️ تسوق',f2:'⭐ تقييمات',f3:'💬 شات',f4:'🗺️ خريطة',f5:'📸 صور',f6:'🎟️ كودات',f7:'🔔 إشعارات',f8:'🌍 3 لغات',contact_us:'💬 تواصل',address_ph:'العنوان',payment_method:'💳 طريقة الدفع:',pay_cash:'💵 نقداً عند التسليم',pay_card:'💳 بطاقة بنكية',paid_cash:'💵 نقداً',paid_card:'💳 بطاقة',order_success:'✅ تم إرسال الطلب بنجاح!',order_error:'❌ خطأ فـ إرسال الطلب',fill_fields:'⚠️ املأ الاسم، الهاتف، والعنوان'},
-  fr: {tagline:'🚚 Livraison rapide - Agadir',signup_title:'🚀 Inscription',login_title:'🔐 Connexion',welcome:'👋 Bienvenue!',my_account:'👤 Compte',about:'ℹ️ À propos',share:'📤 Partager',support:'💬 Support',install_app:'📲 Installer',enable_notifs:'🔔 Notifications',my_stats:'📊 Mes stats',store_stats:'📊 Stats',close_stores:'🔒 Fermer',open_stores:'🔓 Ouvrir',my_coupons:'🎟️ Coupons',export_csv:'📊 Excel',logout:'🚪 Déconnexion',add_store:'➕ Ajouter',add_store_title:'🏪 Boutique',stores_list:'🏪 Boutiques',search_placeholder:'🔍 Rechercher...',price_from:'💰 De',price_to:'💰 À',all_ratings:'⭐ Toutes',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 Tri',sort_price_asc:'💰 Moins cher',sort_price_desc:'💰 Plus cher',sort_name:'🔤 A-Z',sort_rating:'⭐ Mieux',reset_filters:'🔄 Reset',cart:'🛒 Panier',cart_empty:'Vide',confirm_order:'✅ Confirmer',clear_cart:'🗑️ Vider',delivery_info:'📍 Livraison',use_my_location:'🎯 Ma position',orders:'Commandes',search_orders:'🔍 Chercher',all_orders:'📋 Toutes',status_pending:'⏳ Attente',status_accepted:'✅ Acceptée',status_delivering:'🚗 Livraison',status_delivered:'🎉 Livrée',status_cancelled:'❌ Annulée',chat:'💬 Chat',back:'🔙 Retour',chat_ph:'✍️ Message',save:'Enregistrer',cancel:'Annuler',close:'Fermer',save_changes:'💾 OK',save_product:'OK',my_profile:'👤 Compte',edit_info:'✏️ Modifier:',full_name:'Nom',phone:'Tél',email:'Email',password:'Mot de passe',choose_role:'Choisir...',role_customer:'🛒 Client',role_merchant:'🏪 Commerçant',role_driver:'🚚 Livreur',signup_btn:'Inscrire',login_btn:'Connexion',store_name:'Nom',store_desc:'Description',store_address:'Adresse',pr_name:'Produit',pr_desc:'Description',pr_price:'Prix',pr_image_label:'📸 Image:',camera:'📷 Caméra',gallery:'🖼️ Galerie',pr_url:'🔗 URL',coupon_placeholder:'🎟️ Code?',apply:'OK',create_coupon:'➕ Code:',cp_code:'Code',cp_percent:'💯 %',cp_fixed:'💰 Fixe',cp_value:'Valeur',cp_min:'Min',cp_max:'Max',create_btn:'Créer',about_desc:'🚚 Livraison rapide à Agadir.',f1:'🛍️ Achat',f2:'⭐ Avis',f3:'💬 Chat',f4:'🗺️ Carte',f5:'📸 Photos',f6:'🎟️ Codes',f7:'🔔 Notifs',f8:'🌍 3 langues',contact_us:'💬 Contact',address_ph:'Adresse',payment_method:'💳 Paiement:',pay_cash:'💵 Espèces',pay_card:'💳 Carte',paid_cash:'💵 Espèces',paid_card:'💳 Carte',order_success:'✅ Commande envoyée!',order_error:'❌ Erreur',fill_fields:'⚠️ Remplissez les champs'},
-  en: {tagline:'🚚 Fast Delivery - Agadir',signup_title:'🚀 Sign Up',login_title:'🔐 Login',welcome:'👋 Welcome!',my_account:'👤 Account',about:'ℹ️ About',share:'📤 Share',support:'💬 Support',install_app:'📲 Install',enable_notifs:'🔔 Notifications',my_stats:'📊 My Stats',store_stats:'📊 Stats',close_stores:'🔒 Close',open_stores:'🔓 Open',my_coupons:'🎟️ Coupons',export_csv:'📊 Excel',logout:'🚪 Logout',add_store:'➕ Add Store',add_store_title:'🏪 Store',stores_list:'🏪 Stores',search_placeholder:'🔍 Search...',price_from:'💰 From',price_to:'💰 To',all_ratings:'⭐ All',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 Sort',sort_price_asc:'💰 Cheapest',sort_price_desc:'💰 Expensive',sort_name:'🔤 A-Z',sort_rating:'⭐ Top',reset_filters:'🔄 Reset',cart:'🛒 Cart',cart_empty:'Empty',confirm_order:'✅ Confirm',clear_cart:'🗑️ Clear',delivery_info:'📍 Delivery',use_my_location:'🎯 My location',orders:'Orders',search_orders:'🔍 Search',all_orders:'📋 All',status_pending:'⏳ Pending',status_accepted:'✅ Accepted',status_delivering:'🚗 Delivering',status_delivered:'🎉 Delivered',status_cancelled:'❌ Cancelled',chat:'💬 Chat',back:'🔙 Back',chat_ph:'✍️ Message',save:'Save',cancel:'Cancel',close:'Close',save_changes:'💾 Save',save_product:'Save',my_profile:'👤 Account',edit_info:'✏️ Edit:',full_name:'Name',phone:'Phone',email:'Email',password:'Password',choose_role:'Choose...',role_customer:'🛒 Customer',role_merchant:'🏪 Merchant',role_driver:'🚚 Driver',signup_btn:'Sign Up',login_btn:'Login',store_name:'Store Name',store_desc:'Description',store_address:'Address',pr_name:'Product',pr_desc:'Description',pr_price:'Price',pr_image_label:'📸 Image:',camera:'📷 Camera',gallery:'🖼️ Gallery',pr_url:'🔗 URL',coupon_placeholder:'🎟️ Code?',apply:'Apply',create_coupon:'➕ Code:',cp_code:'Code',cp_percent:'💯 %',cp_fixed:'💰 Fixed',cp_value:'Value',cp_min:'Min',cp_max:'Max',create_btn:'Create',about_desc:'🚚 Fast delivery in Agadir.',f1:'🛍️ Shop',f2:'⭐ Ratings',f3:'💬 Chat',f4:'🗺️ Map',f5:'📸 Photos',f6:'🎟️ Codes',f7:'🔔 Notifs',f8:'🌍 3 languages',contact_us:'💬 Contact',address_ph:'Address',payment_method:'💳 Payment:',pay_cash:'💵 Cash on delivery',pay_card:'💳 Credit card',paid_cash:'💵 Cash',paid_card:'💳 Card',order_success:'✅ Order sent!',order_error:'❌ Error',fill_fields:'⚠️ Fill all fields'}
+  ar: {tagline:'🚚 منصة التوصيل السريع - أكادير',signup_title:'🚀 تسجيل حساب جديد',login_title:'🔐 تسجيل الدخول',welcome:'👋 مرحبا!',my_account:'👤 حسابي',about:'ℹ️ عن التطبيق',share:'📤 شارك',support:'💬 الدعم',install_app:'📲 ثبّت التطبيق',enable_notifs:'🔔 تفعيل الإشعارات',my_stats:'📊 إحصائياتي',store_stats:'📊 إحصائيات المتجر',close_stores:'🔒 إغلاق المتاجر',open_stores:'🔓 فتح المتاجر',my_coupons:'🎟️ كودات الخصم',export_csv:'📊 تصدير Excel',logout:'🚪 خروج',add_store:'➕ إضافة متجر',add_store_title:'🏪 متجر جديد',stores_list:'🏪 المتاجر',search_placeholder:'🔍 ابحث...',price_from:'💰 من',price_to:'💰 إلى',all_ratings:'⭐ الكل',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 ترتيب',sort_price_asc:'💰 الأقل',sort_price_desc:'💰 الأغلى',sort_name:'🔤 أبجدي',sort_rating:'⭐ الأعلى',reset_filters:'🔄 إعادة',cart:'🛒 السلة',cart_empty:'السلة خاوية',confirm_order:'✅ تأكيد',clear_cart:'🗑️ تفريغ',delivery_info:'📍 التوصيل',use_my_location:'🎯 موقعي',orders:'الطلبات',search_orders:'🔍 ابحث',all_orders:'📋 الكل',status_pending:'⏳ انتظار',status_accepted:'✅ مقبولة',status_delivering:'🚗 طريق',status_delivered:'🎉 موصلة',status_cancelled:'❌ ملغاة',chat:'💬 محادثة',back:'🔙 رجوع',chat_ph:'✍️ رسالة',save:'حفظ',cancel:'إلغاء',close:'إغلاق',save_changes:'💾 حفظ',save_product:'حفظ',my_profile:'👤 حسابي',edit_info:'✏️ تعديل:',full_name:'الاسم',phone:'الهاتف',email:'الإيميل',password:'السر',choose_role:'اختر...',role_customer:'🛒 زبون',role_merchant:'🏪 تاجر',role_driver:'🚚 موصل',signup_btn:'تسجيل',login_btn:'دخول',store_name:'اسم المتجر',store_desc:'الوصف',store_address:'العنوان',pr_name:'المنتج',pr_desc:'الوصف',pr_price:'السعر',pr_image_label:'📸 صورة:',camera:'📷 كاميرا',gallery:'🖼️ معرض',pr_url:'🔗 رابط',coupon_placeholder:'🎟️ كود خصم؟',apply:'تطبيق',create_coupon:'➕ كود جديد:',cp_code:'الكود',cp_percent:'💯 %',cp_fixed:'💰 ثابت',cp_value:'القيمة',cp_min:'الحد الأدنى',cp_max:'أقصى استعمالات',create_btn:'🎟️ إنشاء',about_desc:'🚚 منصة توصيل سريع بأكادير.',f1:'🛍️ تسوق',f2:'⭐ تقييمات',f3:'💬 شات',f4:'🗺️ خريطة',f5:'📸 صور',f6:'🎟️ كودات',f7:'🔔 إشعارات فورية',f8:'🌍 3 لغات',contact_us:'💬 تواصل',address_ph:'العنوان',payment_method:'💳 طريقة الدفع:',pay_cash:'💵 نقداً عند التسليم',pay_card:'💳 بطاقة بنكية',paid_cash:'💵 نقداً',paid_card:'💳 بطاقة',order_success:'✅ تم إرسال الطلب بنجاح!',fill_fields:'⚠️ املأ الاسم، الهاتف، والعنوان'},
+  fr: {tagline:'🚚 Livraison rapide - Agadir',signup_title:'🚀 Inscription',login_title:'🔐 Connexion',welcome:'👋 Bienvenue!',my_account:'👤 Compte',about:'ℹ️ À propos',share:'📤 Partager',support:'💬 Support',install_app:'📲 Installer',enable_notifs:'🔔 Notifications',my_stats:'📊 Mes stats',store_stats:'📊 Stats',close_stores:'🔒 Fermer',open_stores:'🔓 Ouvrir',my_coupons:'🎟️ Coupons',export_csv:'📊 Excel',logout:'🚪 Déconnexion',add_store:'➕ Ajouter',add_store_title:'🏪 Boutique',stores_list:'🏪 Boutiques',search_placeholder:'🔍 Rechercher...',price_from:'💰 De',price_to:'💰 À',all_ratings:'⭐ Toutes',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 Tri',sort_price_asc:'💰 Moins cher',sort_price_desc:'💰 Plus cher',sort_name:'🔤 A-Z',sort_rating:'⭐ Mieux',reset_filters:'🔄 Reset',cart:'🛒 Panier',cart_empty:'Vide',confirm_order:'✅ Confirmer',clear_cart:'🗑️ Vider',delivery_info:'📍 Livraison',use_my_location:'🎯 Ma position',orders:'Commandes',search_orders:'🔍 Chercher',all_orders:'📋 Toutes',status_pending:'⏳ Attente',status_accepted:'✅ Acceptée',status_delivering:'🚗 Livraison',status_delivered:'🎉 Livrée',status_cancelled:'❌ Annulée',chat:'💬 Chat',back:'🔙 Retour',chat_ph:'✍️ Message',save:'Enregistrer',cancel:'Annuler',close:'Fermer',save_changes:'💾 OK',save_product:'OK',my_profile:'👤 Compte',edit_info:'✏️ Modifier:',full_name:'Nom',phone:'Tél',email:'Email',password:'Mot de passe',choose_role:'Choisir...',role_customer:'🛒 Client',role_merchant:'🏪 Commerçant',role_driver:'🚚 Livreur',signup_btn:'Inscrire',login_btn:'Connexion',store_name:'Nom',store_desc:'Description',store_address:'Adresse',pr_name:'Produit',pr_desc:'Description',pr_price:'Prix',pr_image_label:'📸 Image:',camera:'📷 Caméra',gallery:'🖼️ Galerie',pr_url:'🔗 URL',coupon_placeholder:'🎟️ Code?',apply:'OK',create_coupon:'➕ Code:',cp_code:'Code',cp_percent:'💯 %',cp_fixed:'💰 Fixe',cp_value:'Valeur',cp_min:'Min',cp_max:'Max',create_btn:'Créer',about_desc:'🚚 Livraison rapide à Agadir.',f1:'🛍️ Achat',f2:'⭐ Avis',f3:'💬 Chat',f4:'🗺️ Carte',f5:'📸 Photos',f6:'🎟️ Codes',f7:'🔔 Notifs temps réel',f8:'🌍 3 langues',contact_us:'💬 Contact',address_ph:'Adresse',payment_method:'💳 Paiement:',pay_cash:'💵 Espèces',pay_card:'💳 Carte',paid_cash:'💵 Espèces',paid_card:'💳 Carte',order_success:'✅ Commande envoyée!',fill_fields:'⚠️ Remplissez les champs'},
+  en: {tagline:'🚚 Fast Delivery - Agadir',signup_title:'🚀 Sign Up',login_title:'🔐 Login',welcome:'👋 Welcome!',my_account:'👤 Account',about:'ℹ️ About',share:'📤 Share',support:'💬 Support',install_app:'📲 Install',enable_notifs:'🔔 Notifications',my_stats:'📊 My Stats',store_stats:'📊 Stats',close_stores:'🔒 Close',open_stores:'🔓 Open',my_coupons:'🎟️ Coupons',export_csv:'📊 Excel',logout:'🚪 Logout',add_store:'➕ Add Store',add_store_title:'🏪 Store',stores_list:'🏪 Stores',search_placeholder:'🔍 Search...',price_from:'💰 From',price_to:'💰 To',all_ratings:'⭐ All',rating_3:'⭐ 3+',rating_4:'⭐ 4+',rating_45:'⭐ 4.5+',sort_default:'🔄 Sort',sort_price_asc:'💰 Cheapest',sort_price_desc:'💰 Expensive',sort_name:'🔤 A-Z',sort_rating:'⭐ Top',reset_filters:'🔄 Reset',cart:'🛒 Cart',cart_empty:'Empty',confirm_order:'✅ Confirm',clear_cart:'🗑️ Clear',delivery_info:'📍 Delivery',use_my_location:'🎯 My location',orders:'Orders',search_orders:'🔍 Search',all_orders:'📋 All',status_pending:'⏳ Pending',status_accepted:'✅ Accepted',status_delivering:'🚗 Delivering',status_delivered:'🎉 Delivered',status_cancelled:'❌ Cancelled',chat:'💬 Chat',back:'🔙 Back',chat_ph:'✍️ Message',save:'Save',cancel:'Cancel',close:'Close',save_changes:'💾 Save',save_product:'Save',my_profile:'👤 Account',edit_info:'✏️ Edit:',full_name:'Name',phone:'Phone',email:'Email',password:'Password',choose_role:'Choose...',role_customer:'🛒 Customer',role_merchant:'🏪 Merchant',role_driver:'🚚 Driver',signup_btn:'Sign Up',login_btn:'Login',store_name:'Store Name',store_desc:'Description',store_address:'Address',pr_name:'Product',pr_desc:'Description',pr_price:'Price',pr_image_label:'📸 Image:',camera:'📷 Camera',gallery:'🖼️ Gallery',pr_url:'🔗 URL',coupon_placeholder:'🎟️ Code?',apply:'Apply',create_coupon:'➕ Code:',cp_code:'Code',cp_percent:'💯 %',cp_fixed:'💰 Fixed',cp_value:'Value',cp_min:'Min',cp_max:'Max',create_btn:'Create',about_desc:'🚚 Fast delivery in Agadir.',f1:'🛍️ Shop',f2:'⭐ Ratings',f3:'💬 Chat',f4:'🗺️ Map',f5:'📸 Photos',f6:'🎟️ Codes',f7:'🔔 Realtime notifs',f8:'🌍 3 languages',contact_us:'💬 Contact',address_ph:'Address',payment_method:'💳 Payment:',pay_cash:'💵 Cash on delivery',pay_card:'💳 Credit card',paid_cash:'💵 Cash',paid_card:'💳 Card',order_success:'✅ Order sent!',fill_fields:'⚠️ Fill all fields'}
 };
 
 let currentLang = localStorage.getItem('lang') || 'ar';
@@ -373,7 +373,7 @@ function show(txt, ok) {
   m.textContent = txt; m.className = ok ? 'ok' : 'err';
   m.classList.remove('hidden');
   m.style.animation = 'none';
-  setTimeout(() => m.style.animation = 'slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)', 10);
+  setTimeout(() => m.style.animation = 'popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)', 10);
   setTimeout(() => m.classList.add('hidden'), 4000);
 }
 function playBeep() {
@@ -424,12 +424,59 @@ function startNotificationPolling() {
         o?.forEach(x => { if (saved[x.id] && saved[x.id] !== x.status) { const m = {accepted: '✅ تم قبول طلبك', delivering: '🚗 في الطريق', delivered: '🎉 تم التوصيل', cancelled: '❌ ملغى'}; if (m[x.status]) sendNotification('📦 SoukExpress', m[x.status]); } saved[x.id] = x.status; });
         localStorage.setItem('notif_o', JSON.stringify(saved));
       }
-      if (currentRole === 'merchant') {
-        const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
-        if (ms && ms.length > 0) { const { data: p } = await DB.from('orders').select('id').in('store_id', ms.map(s => s.id)).eq('status', 'pending'); const last = parseInt(localStorage.getItem('notif_p') || '0'); if (p && p.length > last) { sendNotification('🔔 طلب جديد!', p.length + ' طلب'); playBeep(); } localStorage.setItem('notif_p', String(p?.length || 0)); }
-      }
     } catch (e) {}
   }, 30000);
+}
+
+/* ===== REALTIME: إشعار فوري للتاجر ===== */
+async function startRealtimeOrders() {
+  if (currentRole !== 'merchant') return;
+  if (realtimeChannel) { try { DB.removeChannel(realtimeChannel); } catch (e) {} realtimeChannel = null; }
+  try {
+    const { data: ms } = await DB.from('stores').select('id').eq('owner_id', currentUser.id);
+    if (!ms || ms.length === 0) return;
+    const storeIds = ms.map(s => s.id);
+    realtimeChannel = DB.channel('merchant-orders-' + currentUser.id + '-' + Date.now())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, async (payload) => {
+        const newOrder = payload.new;
+        if (storeIds.includes(newOrder.store_id) && newOrder.status === 'pending') {
+          showNewOrderAlert(newOrder);
+          await updatePendingBadge();
+        }
+      })
+      .subscribe((status) => { console.log('Realtime status:', status); });
+  } catch (e) { console.error('Realtime error:', e); }
+}
+
+function showNewOrderAlert(order) {
+  // 🔊 صوت (3 مرات)
+  playBeep();
+  setTimeout(() => playBeep(), 250);
+  setTimeout(() => playBeep(), 500);
+  // 📳 اهتزاز قوي
+  vibrate([300, 150, 300, 150, 500]);
+  // ✅ رسالة
+  show('🔔 عندك طلب جديد! ' + (order.total_price || '') + ' DH', true);
+  // 🎯 Popup كبير
+  const popup = document.createElement('div');
+  popup.id = 'newOrderPopup';
+  popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99998;background:linear-gradient(135deg,#ff6b35,#f7931a);color:white;padding:30px 25px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.5);text-align:center;max-width:90%;width:340px;animation:popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);';
+  popup.innerHTML = `
+    <div style="font-size:60px; margin-bottom:10px;">🔔</div>
+    <div style="font-size:22px; font-weight:bold; margin-bottom:15px;">طلب جديد!</div>
+    <div style="background:rgba(255,255,255,0.2); padding:12px; border-radius:10px; margin-bottom:15px; text-align:right;">
+      <div style="font-size:14px; margin-bottom:5px;">👤 ${order.customer_name || 'زبون'}</div>
+      <div style="font-size:14px; margin-bottom:5px;">📞 ${order.customer_phone || '-'}</div>
+      <div style="font-size:14px; margin-bottom:5px;">📍 ${order.delivery_address || '-'}</div>
+      <div style="font-size:22px; font-weight:bold; margin-top:8px; text-align:center;">💰 ${order.total_price} درهم</div>
+    </div>
+    <button onclick="document.getElementById('newOrderPopup').remove(); document.getElementById('orders-box').scrollIntoView({behavior:'smooth'});" style="background:white;color:#ff6b35;border:none;padding:12px;border-radius:10px;font-weight:bold;font-size:16px;width:100%;cursor:pointer;">👀 شوف الطلب</button>
+    <button onclick="document.getElementById('newOrderPopup').remove()" style="background:rgba(255,255,255,0.25);color:white;border:none;padding:10px;border-radius:10px;font-size:14px;width:100%;margin-top:8px;cursor:pointer;">✕ إغلاق</button>
+  `;
+  const existing = document.getElementById('newOrderPopup');
+  if (existing) existing.remove();
+  document.body.appendChild(popup);
+  setTimeout(() => { const p = document.getElementById('newOrderPopup'); if (p) p.remove(); }, 20000);
 }
 
 function showAbout() { document.getElementById('about-box').classList.remove('hidden'); document.getElementById('add-store-box').classList.add('hidden'); }
@@ -597,14 +644,16 @@ async function doLogin() {
     loadStores(); loadCart(); loadOrders();
     if (currentRole === 'merchant') setTimeout(async () => { lastPendingCount = await updatePendingBadge(); }, 1500);
     if (window.autoRefreshInterval) clearInterval(window.autoRefreshInterval);
-    window.autoRefreshInterval = setInterval(async () => { loadOrders(); if (currentRole === 'merchant') { const n = await updatePendingBadge(); if (n > lastPendingCount) { playBeep(); show('🔔!', true); } lastPendingCount = n; } }, 30000);
+    window.autoRefreshInterval = setInterval(async () => { loadOrders(); if (currentRole === 'merchant') { const n = await updatePendingBadge(); lastPendingCount = n; } }, 60000);
     startNotificationPolling();
+    if (currentRole === 'merchant') startRealtimeOrders();
     show('✅', true);
     setLanguage(currentLang);
   } catch (err) { show('❌ ' + err.message, false); }
 }
 async function doLogout() {
   await DB.auth.signOut();
+  if (realtimeChannel) { try { DB.removeChannel(realtimeChannel); } catch (e) {} realtimeChannel = null; }
   currentUser = null; currentRole = null; currentStoreId = null; currentProfile = null;
   cart = []; appliedCoupon = null; editingProductId = null; lastPendingCount = 0; selectedLat = null; selectedLng = null; selectedPayment = 'cash';
   if (marker && map) { map.removeLayer(marker); marker = null; }
@@ -746,14 +795,9 @@ async function doCheckout() {
     const items = cart.map(c => ({ order_id: oid, product_id: c.prodId, product_name: c.name, price: c.price, quantity: c.qty }));
     await DB.from('order_items').insert(items);
     if (appliedCoupon) await DB.from('coupons').update({ used_count: appliedCoupon.used_count + 1 }).eq('id', appliedCoupon.id);
-    
-    // ═══ صوت + اهتزاز + رسالة قوية ═══
-    playBeep();
-    setTimeout(() => playBeep(), 150);
-    setTimeout(() => playBeep(), 300);
+    playBeep(); setTimeout(() => playBeep(), 150); setTimeout(() => playBeep(), 300);
     vibrate([200, 100, 200, 100, 400]);
     show('🎉 ' + t('order_success'), true);
-    
     cart = []; appliedCoupon = null; selectedLat = null; selectedLng = null; selectedPayment = 'cash';
     if (marker && map) { map.removeLayer(marker); marker = null; }
     document.getElementById('location-status').textContent = ''; document.getElementById('coupon-result').innerHTML = ''; document.getElementById('coupon-input').value = '';
