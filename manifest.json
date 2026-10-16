@@ -1,7 +1,6 @@
 {
   "name": "SoukExpress - منصة التوصيل السريع",
   "short_name": "SoukExpress",
-  "description": "منصة توصيل سريع بأكادير",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
