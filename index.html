@@ -202,7 +202,7 @@ button:active{transform:scale(0.97)}
 </div>
 <div class="box hidden" id="profile-box">
 <h2 data-i18n="profile">👤 حسابي</h2>
-<div class="profile-avatar" id="profile-avatar" onclick="document.getElementById('avatar-input').click()" style="cursor:pointer;position:relative">👤</div>
+<div class="profile-avatar" id="profile-avatar" style="cursor:pointer;position:relative">👤</div>
 <input type="file" id="avatar-input" accept="image/*" style="display:none">
 <p style="text-align:center;color:#999;font-size:11px;margin:0" data-i18n="click_change_photo">📷 اضغط لتغيير الصورة</p>
 <p style="text-align:center;font-size:18px;font-weight:bold;margin:5px 0" id="profile-name-display"></p>
@@ -401,4 +401,495 @@ const translations = {
     delete_account:"🗑️ حذف الحساب نهائياً",about_desc:"🚚 منصة توصيل سريع بأكادير.",contact:"💬 تواصل",
     stats_title:"📊 الإحصائيات",create_coupon:"➕ إنشاء كود:",discount_percent:"💯 نسبة (%)",
     discount_fixed:"💰 مبلغ ثابت",value:"القيمة",min_order:"الحد الأدنى (اختياري)",max_uses:"أقصى استعمالات",
-    create:"🎟️ إنشاء",stores:
+    create:"🎟️ إنشاء",stores:"🏪 المتاجر",search:"🔍 ابحث...",from_price:"💰 من (درهم)",to_price:"💰 إلى (درهم)",
+    all_ratings:"⭐ جميع التقييمات",sort:"🔄 ترتيب",price_asc:"💰 الأقل سعراً",price_desc:"💰 الأغلى",
+    name_asc:"🔤 أبجدي",rating_desc:"⭐ الأعلى تقييماً",only_open:"✅ المفتوحة فقط",only_promo:"📢 فيها عروض",
+    only_fav:"❤️ المفضلة فقط",only_deals:"🎉 عروض اليوم فقط",only_featured:"⭐ المتاجر المميزة فقط",
+    reset_filters:"🔄 إعادة تعيين",add_product:"📦 إضافة منتج",product_name:"اسم المنتج",description:"الوصف",
+    price:"السعر (درهم)",product_images:"📸 صور المنتج (حتى 5):",camera:"📷 الكاميرا",gallery_multi:"🖼️ المعرض (متعدد)",
+    pick_5_images:"💡 تقدر تختار حتى 5 صور",image_link:"🔗 رابط صورة",daily_deal:"🎉 عرض اليوم",
+    deal_price:"💰 سعر العرض",featured_product:"⭐ منتج مميز",save_product:"حفظ المنتج",cart:"🛒 السلة",
+    coupon_input:"🎟️ كود خصم؟",apply:"تطبيق",delivery_info:"📍 معلومات التوصيل:",delivery_address:"عنوان التوصيل",
+    use_my_location:"🎯 استعمل موقعي",share_location:"📤 شارك موقعي واتساب",delivery_time:"📅 وقت التوصيل:",
+    now:"⚡ دابا (فوراً)",schedule:"🕐 جدول وقت",payment_method:"💳 طريقة الدفع:",cash:"💵 نقداً عند التسليم",
+    card:"💳 بطاقة بنكية",confirm_order:"✅ تأكيد الطلب",clear_cart:"🗑️ تفريغ السلة",chat_title:"💬 المحادثة",
+    chat_input:"✍️ رسالة...",back:"🔙 رجوع",rate_experience:"⭐ قيّم تجربتك",review_comment:"💬 اكتب تعليقك (اختياري)",
+    image_optional:"📷 صورة (اختياري):",gallery:"🖼️ معرض",submit_review:"✅ إرسال التقييم",overview:"📊 نظرة",
+    orders:"📋 الطلبات",search_order:"🔍 ابحث بالكود أو الاسم...",all_orders:"📋 كل الطلبات",
+    pending:"⏳ انتظار",accepted:"✅ مقبولة",delivering:"🚗 في الطريق",delivered:"🎉 موصلة",cancelled:"❌ ملغاة",
+  },
+  fr: {
+    header_sub:"🚚 Plateforme de livraison rapide - Agadir",offline:"📴 Hors ligne",
+    signup_title:"🚀 Créer un compte",login_title:"🔐 Connexion",welcome:"👋 Bonjour !",
+    add_store:"➕ Ajouter une boutique",profile:"👤 Mon compte",about:"ℹ️ À propos",share:"📤 Partager",
+    support:"💬 Support",install:"📲 Installer l'app",notifications:"🔔 Notifications",
+    stats:"Statistiques",toggle_stores:"🔒 Fermer les boutiques",coupons:"🎟️ Coupons",
+    export_excel:"📊 Exporter Excel",favorites:"❤️ Favoris",admin:"🔐 Admin",logout:"🚪 Déconnexion",
+    name:"Nom complet",phone:"Téléphone",email:"Email",password:"Mot de passe (6+)",
+    role_placeholder:"Choisir le type de compte...",role_customer:"🛒 Client",role_merchant:"🏪 Commerçant",
+    role_driver:"🚚 Livreur",gender_male:"👨 Homme",gender_female:"👩 Femme",signup_btn:"S'inscrire",
+    login_btn:"Se connecter",add_store_title:"🏪 Ajouter une boutique",store_name:"Nom de la boutique",
+    store_desc:"Description",address:"Adresse",work_hours:"🕐 Heures d'ouverture",promo:"📢 Annonce/Promo",
+    save_store:"Enregistrer",cancel:"Annuler",click_change_photo:"📷 Cliquez pour changer",edit:"✏️ Modifier :",
+    save:"💾 Enregistrer",close:"Fermer",delete_account:"🗑️ Supprimer le compte",about_desc:"🚚 Livraison rapide Agadir.",
+    contact:"💬 Contact",stats_title:"📊 Statistiques",create_coupon:"➕ Créer un code :",discount_percent:"💯 %",
+    discount_fixed:"💰 Montant fixe",value:"Valeur",min_order:"Commande min (optionnel)",max_uses:"Utilisations max",
+    create:"🎟️ Créer",stores:"🏪 Boutiques",search:"🔍 Rechercher...",from_price:"💰 De (DH)",to_price:"💰 À (DH)",
+    all_ratings:"⭐ Toutes notes",sort:"🔄 Trier",price_asc:"💰 Moins cher",price_desc:"💰 Plus cher",
+    name_asc:"🔤 A-Z",rating_desc:"⭐ Mieux notés",only_open:"✅ Ouvertes",only_promo:"📢 Promos",
+    only_fav:"❤️ Favoris",only_deals:"🎉 Promos du jour",only_featured:"⭐ Mises en avant",
+    reset_filters:"🔄 Réinitialiser",add_product:"📦 Ajouter un produit",product_name:"Nom du produit",
+    description:"Description",price:"Prix (DH)",product_images:"📸 Photos (max 5) :",camera:"📷 Caméra",
+    gallery_multi:"🖼️ Galerie (multiple)",pick_5_images:"💡 Choisir jusqu'à 5 photos",image_link:"🔗 Lien image",
+    daily_deal:"🎉 Promo du jour",deal_price:"💰 Prix promo",featured_product:"⭐ Produit vedette",
+    save_product:"Enregistrer",cart:"🛒 Panier",coupon_input:"🎟️ Code promo ?",apply:"Appliquer",
+    delivery_info:"📍 Livraison :",delivery_address:"Adresse",use_my_location:"🎯 Utiliser ma position",
+    share_location:"📤 Partager WhatsApp",delivery_time:"📅 Heure de livraison :",now:"⚡ Maintenant",
+    schedule:"🕐 Programmer",payment_method:"💳 Paiement :",cash:"💵 Cash",card:"💳 Carte",
+    confirm_order:"✅ Confirmer",clear_cart:"🗑️ Vider le panier",chat_title:"💬 Chat",
+    chat_input:"✍️ Message...",back:"🔙 Retour",rate_experience:"⭐ Notez votre expérience",
+    review_comment:"💬 Commentaire",image_optional:"📷 Photo (optionnel) :",gallery:"🖼️ Galerie",
+    submit_review:"✅ Envoyer",overview:"📊 Aperçu",orders:"📋 Commandes",search_order:"🔍 Rechercher...",
+    all_orders:"📋 Toutes",pending:"⏳ En attente",accepted:"✅ Acceptées",delivering:"🚗 En route",
+    delivered:"🎉 Livrées",cancelled:"❌ Annulées",
+  },
+  en: {
+    header_sub:"🚚 Fast Delivery Platform - Agadir",offline:"📴 Offline",
+    signup_title:"🚀 Sign Up",login_title:"🔐 Login",welcome:"👋 Welcome!",
+    add_store:"➕ Add New Store",profile:"👤 My Account",about:"ℹ️ About",share:"📤 Share",
+    support:"💬 Support",install:"📲 Install App",notifications:"🔔 Notifications",
+    stats:"Store Stats",toggle_stores:"🔒 Close Stores",coupons:"🎟️ Coupons",
+    export_excel:"📊 Export Excel",favorites:"❤️ Favorites",admin:"🔐 Admin Panel",logout:"🚪 Logout",
+    name:"Full Name",phone:"Phone",email:"Email",password:"Password (6+)",
+    role_placeholder:"Choose account type...",role_customer:"🛒 Customer",role_merchant:"🏪 Merchant",
+    role_driver:"🚚 Driver",gender_male:"👨 Male",gender_female:"👩 Female",signup_btn:"Sign Up",
+    login_btn:"Login",add_store_title:"🏪 Add New Store",store_name:"Store Name",
+    store_desc:"Description",address:"Address",work_hours:"🕐 Working Hours",promo:"📢 Promo",
+    save_store:"Save Store",cancel:"Cancel",click_change_photo:"📷 Click to change",edit:"✏️ Edit:",
+    save:"💾 Save",close:"Close",delete_account:"🗑️ Delete Account",about_desc:"🚚 Fast delivery Agadir.",
+    contact:"💬 Contact",stats_title:"📊 Statistics",create_coupon:"➕ Create Code:",discount_percent:"💯 %",
+    discount_fixed:"💰 Fixed Amount",value:"Value",min_order:"Min Order",max_uses:"Max Uses",
+    create:"🎟️ Create",stores:"🏪 Stores",search:"🔍 Search...",from_price:"💰 From (DH)",to_price:"💰 To (DH)",
+    all_ratings:"⭐ All Ratings",sort:"🔄 Sort",price_asc:"💰 Cheapest",price_desc:"💰 Most Expensive",
+    name_asc:"🔤 A-Z",rating_desc:"⭐ Top Rated",only_open:"✅ Open Only",only_promo:"📢 With Promos",
+    only_fav:"❤️ Favorites",only_deals:"🎉 Today Deals",only_featured:"⭐ Featured Only",
+    reset_filters:"🔄 Reset",add_product:"📦 Add Product",product_name:"Product Name",
+    description:"Description",price:"Price (DH)",product_images:"📸 Photos (max 5):",camera:"📷 Camera",
+    gallery_multi:"🖼️ Gallery (Multi)",pick_5_images:"💡 Pick up to 5 photos",image_link:"🔗 Image Link",
+    daily_deal:"🎉 Daily Deal",deal_price:"💰 Deal Price",featured_product:"⭐ Featured Product",
+    save_product:"Save Product",cart:"🛒 Cart",coupon_input:"🎟️ Coupon?",apply:"Apply",
+    delivery_info:"📍 Delivery Info:",delivery_address:"Address",use_my_location:"🎯 Use My Location",
+    share_location:"📤 Share WhatsApp",delivery_time:"📅 Delivery Time:",now:"⚡ Now",
+    schedule:"🕐 Schedule",payment_method:"💳 Payment:",cash:"💵 Cash",card:"💳 Card",
+    confirm_order:"✅ Confirm Order",clear_cart:"🗑️ Clear Cart",chat_title:"💬 Chat",
+    chat_input:"✍️ Message...",back:"🔙 Back",rate_experience:"⭐ Rate Your Experience",
+    review_comment:"💬 Comment",image_optional:"📷 Photo (optional):",gallery:"🖼️ Gallery",
+    submit_review:"✅ Submit",overview:"📊 Overview",orders:"📋 Orders",search_order:"🔍 Search...",
+    all_orders:"📋 All Orders",pending:"⏳ Pending",accepted:"✅ Accepted",delivering:"🚗 Delivering",
+    delivered:"🎉 Delivered",cancelled:"❌ Cancelled",
+  }
+};
+
+let currentUser=null,currentRole=null,currentStoreId=null,currentProfile=null;
+let cart=[],editingProductId=null,lastPendingCount=0,deferredPrompt=null;
+let map=null,marker=null,selectedLat=null,selectedLng=null;
+let currentChatOrderId=null,chatInterval=null,notifInterval=null,realtimeChannel=null,notifCountInterval=null;
+let allStoresCache={},allProductsCache={},favoritesCache=new Set();
+let appliedCoupon=null,selectedPayment='cash',scheduleMode='now';
+let soundMuted=localStorage.getItem('muted')==='1';
+let reviewOrderId=null,reviewStoreId=null,reviewStars=5;
+let multipleImagesQueue=[];
+const roleAr={customer:'🛒 زبون',merchant:'🏪 تاجر',driver:'🚚 موصل'};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function show(txt,ok){const m=document.getElementById('msg');m.textContent=txt;m.className=ok?'ok':'err';m.classList.remove('hidden');setTimeout(()=>m.classList.add('hidden'),4000);}
+function playBeep(){if(soundMuted)return;try{const c=new(window.AudioContext||window.webkitAudioContext)();const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.2;o.start();o.stop(c.currentTime+0.2);}catch(e){}}
+function vibrate(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+
+// ═══════════════════════════════════════════
+// 🌍 TRANSLATION
+// ═══════════════════════════════════════════
+function applyTranslations(lang){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(translations[lang]&&translations[lang][key])el.textContent=translations[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key=el.getAttribute('data-i18n-placeholder');
+    if(translations[lang]&&translations[lang][key])el.placeholder=translations[lang][key];
+  });
+}
+function cycleLang(){
+  const langs=['ar','fr','en'];
+  const current=localStorage.getItem('lang')||'ar';
+  const next=langs[(langs.indexOf(current)+1)%langs.length];
+  localStorage.setItem('lang',next);
+  document.getElementById('lang-btn').textContent=next.toUpperCase();
+  document.documentElement.dir=next==='ar'?'rtl':'ltr';
+  document.documentElement.lang=next;
+  applyTranslations(next);
+  show('🌐 '+next.toUpperCase(),true);
+}
+
+function toggleDarkMode(){const cur=document.documentElement.getAttribute('data-theme');const nt=cur==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',nt);localStorage.setItem('theme',nt);document.getElementById('dark-btn').textContent=nt==='dark'?'☀️':'🌙';}
+(function(){document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light');})();
+function toggleMute(){soundMuted=!soundMuted;localStorage.setItem('muted',soundMuted?'1':'0');document.getElementById('mute-btn').textContent=soundMuted?'🔇':'🔊';show(soundMuted?'🔇':'🔊',true);}
+const themeColors=[{name:'برتقالي',p:'#ff6b35',g:'linear-gradient(135deg,#ff6b35 0%,#f7931e 50%,#ffb800 100%)'},{name:'أزرق',p:'#2196F3',g:'linear-gradient(135deg,#2196F3 0%,#1565C0 100%)'},{name:'أخضر',p:'#00C853',g:'linear-gradient(135deg,#00C853 0%,#00A344 100%)'},{name:'بنفسجي',p:'#9C27B0',g:'linear-gradient(135deg,#9C27B0 0%,#6A1B9A 100%)'},{name:'وردي',p:'#FF4081',g:'linear-gradient(135deg,#FF4081 0%,#C2185B 100%)'}];
+let themeIndex=parseInt(localStorage.getItem('themeIdx')||'0');
+function applyTheme(){const tc=themeColors[themeIndex];document.documentElement.style.setProperty('--primary',tc.p);document.documentElement.style.setProperty('--gradient',tc.g);const h=document.querySelector('.header');if(h)h.style.background=tc.g;}
+function cycleTheme(){themeIndex=(themeIndex+1)%themeColors.length;localStorage.setItem('themeIdx',themeIndex);applyTheme();show('🎨 '+themeColors[themeIndex].name,true);}
+function updateOnlineStatus(){const b=document.getElementById('offline-banner');if(b)b.classList.toggle('hidden',navigator.onLine);}
+window.addEventListener('online',updateOnlineStatus);window.addEventListener('offline',updateOnlineStatus);
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const s=localStorage.getItem('theme')||'light';
+  document.getElementById('dark-btn').textContent=s==='dark'?'☀️':'🌙';
+  document.getElementById('mute-btn').textContent=soundMuted?'🔇':'🔊';
+  const cl=localStorage.getItem('lang')||'ar';
+  document.getElementById('lang-btn').textContent=cl.toUpperCase();
+  document.documentElement.dir=cl==='ar'?'rtl':'ltr';
+  selectPay('cash');updateOnlineStatus();applyTheme();updateFloatCart();
+  applyTranslations(cl);
+
+  // 📸 إصلاح زر الصورة الشخصية
+  const avatarBtn=document.getElementById('profile-avatar');
+  if(avatarBtn){avatarBtn.addEventListener('click',()=>{document.getElementById('avatar-input').click();});}
+
+  document.addEventListener('change',e=>{
+    if(e.target&&e.target.id==='chat-image-input'){const f=e.target.files[0];if(f)sendChatImage(f);e.target.value='';}
+    if(e.target&&e.target.id==='avatar-input'){const f=e.target.files[0];if(f)uploadAvatar(f);e.target.value='';}
+    if(e.target&&(e.target.id==='pr-image-file'||e.target.id==='pr-image-gallery')){
+      multipleImagesQueue=[];
+      const files=e.target.files;
+      const p=document.getElementById('image-preview');
+      if(!files||files.length===0){p.innerHTML='';return;}
+      p.innerHTML='<div id="multi-preview" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px"></div>';
+      const container=document.getElementById('multi-preview');
+      for(let i=0;i<Math.min(files.length,5);i++){
+        const file=files[i];
+        const r=new FileReader();
+        r.onload=ev=>{
+          multipleImagesQueue.push({dataUrl:ev.target.result,file:file});
+          const wrap=document.createElement('div');
+          wrap.style.cssText='position:relative';
+          wrap.innerHTML='<img src="'+ev.target.result+'" style="width:70px;height:70px;border-radius:8px;object-fit:cover;border:2px solid #ffb300">'+(i===0?'<span style="position:absolute;top:-5px;right:-5px;background:#FFB300;color:white;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:bold">1</span>':'');
+          container.appendChild(wrap);
+        };
+        r.readAsDataURL(file);
+      }
+    }
+    if(e.target&&(e.target.id==='review-image-file'||e.target.id==='review-image-gallery')){const f=e.target.files[0];const p=document.getElementById('review-image-preview');if(!f){p.innerHTML='';return;}const r=new FileReader();r.onload=ev=>p.innerHTML='<img src="'+ev.target.result+'" style="max-width:150px;border-radius:10px">';r.readAsDataURL(f);}
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeReviewModal();});
+});
+
+function selectSched(mode){scheduleMode=mode;document.getElementById('sched-now').classList.toggle('selected',mode==='now');document.getElementById('sched-later').classList.toggle('selected',mode==='later');document.querySelectorAll('input[name="sched"]').forEach(r=>r.checked=r.value===mode);const el=document.getElementById('sched-time');el.style.display=mode==='later'?'block':'none';if(mode==='later'){const tz=new Date().getTimezoneOffset();const d=new Date(Date.now()+3600000-tz*60000);el.value=d.toISOString().slice(0,16);const now=new Date(Date.now()-tz*60000);el.min=now.toISOString().slice(0,16);}}
+function selectPay(m){selectedPayment=m;document.getElementById('pay-cash').classList.toggle('selected',m==='cash');document.getElementById('pay-card').classList.toggle('selected',m==='card');document.querySelectorAll('input[name="pay"]').forEach(r=>r.checked=r.value===m);}
+function compressImage(file,maxSize,quality){return new Promise(resolve=>{const reader=new FileReader();reader.readAsDataURL(file);reader.onload=e=>{const img=new Image();img.src=e.target.result;img.onload=()=>{const canvas=document.createElement('canvas');let w=img.width,h=img.height;if(w>h&&w>maxSize){h=(h*maxSize)/w;w=maxSize;}else if(h>maxSize){w=(w*maxSize)/h;h=maxSize;}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);canvas.toBlob(blob=>resolve(blob),'image/jpeg',quality||0.7);};};});}
+function isStoreOpenByHours(store){if(!store.opening_time||!store.closing_time)return true;const now=new Date();const cur=now.getHours()*60+now.getMinutes();const[oh,om]=store.opening_time.split(':').map(Number);const[ch,cm]=store.closing_time.split(':').map(Number);const open=oh*60+om,close=ch*60+cm;if(close<open)return cur>=open||cur<=close;return cur>=open&&cur<=close;}
+function getAvatar(role,gender){if(gender==='female'){if(role==='customer')return '👩‍🛍️';if(role==='merchant')return '👩‍💼';if(role==='driver')return '👩‍✈️';return '👩';}if(role==='customer')return '🧑‍🛒';if(role==='merchant')return '👨‍💼';if(role==='driver')return '🧑‍✈️';return '👨';}
+function scrollToCart(){const el=document.getElementById('cart-box');if(el&&!el.classList.contains('hidden'))el.scrollIntoView({behavior:'smooth',block:'start'});else show('⚠️',false);}
+function updateFloatCart(){const c=document.getElementById('cart-float-count');if(!c)return;const n=cart.reduce((s,i)=>s+i.qty,0);c.textContent=n;c.style.display=n>0?'flex':'none';}
+
+async function pushNotif(userId,title,message){try{await DB.from('notifications').insert([{user_id:userId,title,message}]);}catch(e){}}
+async function loadNotifCount(){if(!currentUser)return;try{const{data}=await DB.from('notifications').select('id').eq('user_id',currentUser.id).eq('is_read',false);const n=data?.length||0;const el=document.getElementById('notif-count');if(n>0){el.textContent=n;el.style.display='block';}else el.style.display='none';}catch(e){}}
+async function showNotifications(){document.getElementById('notif-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');const l=document.getElementById('notif-list');l.innerHTML='⏳';const{data}=await DB.from('notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(50);if(!data||data.length===0){l.innerHTML='<p style="text-align:center;color:#888">-</p>';return;}l.innerHTML=data.map(n=>'<div style="background:'+(n.is_read?'#f8f9fa':'#e7f3ff')+';padding:12px;border-radius:10px;margin:6px 0;border-right:4px solid '+(n.is_read?'#ccc':'var(--primary)')+'"><b>'+esc(n.title)+'</b><div style="font-size:13px;color:#666;margin-top:4px">'+esc(n.message||'')+'</div></div>').join('');await DB.from('notifications').update({is_read:true}).eq('user_id',currentUser.id).eq('is_read',false);await loadNotifCount();}
+function hideNotifications(){document.getElementById('notif-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
+async function requestNotifPermission(){if(!('Notification' in window)){show('❌',false);return;}if(Notification.permission==='granted'){show('✅',true);document.getElementById('notif-btn').style.display='none';return;}const p=await Notification.requestPermission();if(p==='granted'){show('✅',true);document.getElementById('notif-btn').style.display='none';}}
+function sendNotification(t2,b){if('Notification' in window&&Notification.permission==='granted'){try{new Notification(t2,{body:b});}catch(e){}}}
+function startNotificationPolling(){if(notifInterval)clearInterval(notifInterval);notifInterval=setInterval(async()=>{if(!currentUser||Notification.permission!=='granted')return;try{if(currentRole==='customer'){const{data:o}=await DB.from('orders').select('id, status').eq('customer_id',currentUser.id);const saved=JSON.parse(localStorage.getItem('notif_o')||'{}');o?.forEach(x=>{if(saved[x.id]&&saved[x.id]!==x.status){const m={accepted:'✅',delivering:'🚗',delivered:'🎉',cancelled:'❌'};if(m[x.status])sendNotification('📦 SoukExpress',m[x.status]);}saved[x.id]=x.status;});localStorage.setItem('notif_o',JSON.stringify(saved));}}catch(e){}},30000);}
+async function startRealtimeOrders(){if(currentRole!=='merchant')return;if(realtimeChannel){try{DB.removeChannel(realtimeChannel);}catch(e){}realtimeChannel=null;}try{const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);if(!ms||ms.length===0)return;const ids=ms.map(s=>s.id);realtimeChannel=DB.channel('m-'+currentUser.id+'-'+Date.now()).on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},async(p)=>{const o=p.new;if(ids.includes(o.store_id)&&o.status==='pending'){playBeep();vibrate([300,150,300]);show('🔔 طلب جديد! '+o.total_price+' DH',true);await updatePendingBadge();}}).subscribe();}catch(e){}}
+function showAbout(){document.getElementById('about-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');}
+function hideAbout(){document.getElementById('about-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('install-btn').style.display='block';});
+function installApp(){if(!deferredPrompt){show('💡 iPhone: Safari > Share',true);return;}deferredPrompt.prompt();deferredPrompt.userChoice.then(c=>{if(c.outcome==='accepted')show('✅',true);deferredPrompt=null;document.getElementById('install-btn').style.display='none';});}
+if('serviceWorker' in navigator)navigator.serviceWorker?.register('sw.js').catch(()=>{});
+function shareApp(){const url='https://abdlajala-dot.github.io/SoukExpress/';if(navigator.share)navigator.share({title:'SoukExpress',text:'🛒',url}).catch(()=>{});else navigator.clipboard.writeText(url).then(()=>show('✅',true));}
+function supportWhatsApp(){window.open('https://wa.me/212671634521?text='+encodeURIComponent('مساعدة SoukExpress'),'_blank');}
+function shareMyLocation(){if(!selectedLat||!selectedLng){show('⚠️',false);return;}const url='https://www.google.com/maps?q='+selectedLat+','+selectedLng;window.open('https://wa.me/?text='+encodeURIComponent('📍 '+url),'_blank');}
+
+async function printInvoice(orderId){try{const{data:o}=await DB.from('orders').select('*').eq('id',orderId).single();if(!o){show('❌',false);return;}const{data:items}=await DB.from('order_items').select('*').eq('order_id',orderId);let ih='';(items||[]).forEach((it,i)=>{ih+='<tr><td style="padding:8px;border-bottom:1px solid #eee;text-align:center">'+(i+1)+'</td><td style="padding:8px;border-bottom:1px solid #eee">'+esc(it.product_name)+'</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center">'+esc(it.price)+'</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center">'+esc(it.quantity)+'</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;font-weight:bold">'+esc(it.price*it.quantity)+'</td></tr>';});const tpl=localStorage.getItem('invoiceTemplate')||'orange';const themes={orange:{p:'#ff6b35',g:'linear-gradient(135deg,#ff6b35,#f7931e)',emoji:'🛒'},blue:{p:'#2196F3',g:'linear-gradient(135deg,#2196F3,#1565C0)',emoji:'📦'},green:{p:'#00C853',g:'linear-gradient(135deg,#00C853,#00A344)',emoji:'🛍️'},dark:{p:'#333',g:'linear-gradient(135deg,#333,#000)',emoji:'🖤'}};const th=themes[tpl]||themes.orange;const win=window.open('','_blank');win.document.write('<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><title>#'+esc(o.id.substring(0,6))+'</title><style>body{font-family:Tahoma;padding:30px;color:#333;background:#fff;max-width:800px;margin:0 auto}.header{text-align:center;border-bottom:3px solid '+th.p+';padding-bottom:15px;margin-bottom:20px}.header h1{color:'+th.p+';margin:0;font-size:32px}table{width:100%;border-collapse:collapse;background:white;border-radius:10px;overflow:hidden}thead{background:'+th.g+';color:white}thead th{padding:12px 8px}.total-box{background:'+th.g+';color:white;padding:20px;border-radius:10px;text-align:center;margin-top:20px}.templates{text-align:center;margin:20px 0;padding:15px;background:#f8f9fa;border-radius:10px}.templates button{background:'+th.p+';color:white;border:none;padding:10px 15px;border-radius:8px;font-weight:bold;cursor:pointer;margin:4px}@media print{.no-print{display:none}}.print-btn{background:'+th.p+';color:white;border:none;padding:12px 30px;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;margin:10px}</style></head><body><div class="templates no-print"><b>🎨 اختر قالب:</b><br><button onclick="localStorage.setItem(\'invoiceTemplate\',\'orange\');location.reload()">🛒 برتقالي</button><button onclick="localStorage.setItem(\'invoiceTemplate\',\'blue\');location.reload()">📦 أزرق</button><button onclick="localStorage.setItem(\'invoiceTemplate\',\'green\');location.reload()">🛍️ أخضر</button><button onclick="localStorage.setItem(\'invoiceTemplate\',\'dark\');location.reload()">🖤 أسود</button></div><div class="header"><h1>'+th.emoji+' SoukExpress</h1><p>منصة التوصيل السريع - أكادير</p></div><p><b>#:</b> '+esc(o.id.substring(0,6))+'</p><p><b>👤:</b> '+esc(o.customer_name||'')+'</p><p><b>📞:</b> '+esc(o.customer_phone||'')+'</p><p><b>📍:</b> '+esc(o.delivery_address||'')+'</p><table><thead><tr><th>#</th><th>Product</th><th>Price</th><th>Qty</th><th>Total</th></tr></thead><tbody>'+ih+'</tbody></table><div class="total-box"><div>💰 Total</div><h2 style="margin:5px 0">'+esc(o.total_price)+' DH</h2></div><div style="text-align:center" class="no-print"><button class="print-btn" onclick="window.print()">🖨️ طباعة</button></div></body></html>');win.document.close();}catch(e){show('❌',false);}}
+
+async function shareProduct(pid,pname,pprice){const url='https://abdlajala-dot.github.io/SoukExpress/?product='+pid;const text='🛒 '+pname+' - '+pprice+' DH\n'+url;if(navigator.share){try{await navigator.share({title:pname,text,url});}catch(e){}}else{try{await navigator.clipboard.writeText(text);show('✅',true);}catch(e){show('📋 '+url,true);}}}
+async function reorder(orderId){try{const{data:items}=await DB.from('order_items').select('*').eq('order_id',orderId);if(!items||items.length===0){show('⚠️',false);return;}cart=[];const{data:products}=await DB.from('products').select('*').in('id',items.map(i=>i.product_id));items.forEach(it=>{const pr=products.find(p=>p.id===it.product_id);if(pr){const price=(pr.daily_deal&&pr.deal_price)?pr.deal_price:pr.price;cart.push({prodId:pr.id,name:pr.name,price:price,storeId:pr.store_id,qty:it.quantity});}});show('✅',true);loadCart();updateFloatCart();document.getElementById('cart-box').scrollIntoView({behavior:'smooth'});}catch(e){show('❌',false);}}
+function shareStoreQR(storeId,storeName){const url='https://abdlajala-dot.github.io/SoukExpress/?store='+storeId;const qr='https://api.qrserver.com/v1/create-qr-code/?size=280x280&data='+encodeURIComponent(url);const modal=document.createElement('div');modal.className='qr-modal';modal.onclick=(e)=>{if(e.target===modal)modal.remove();};modal.innerHTML='<div class="qr-modal-content" onclick="event.stopPropagation()"><h3 style="color:#ff6b35">📱 '+esc(storeName)+'</h3><img src="'+qr+'" style="width:100%;border-radius:10px"><button class="green" onclick="navigator.share?navigator.share({title:\''+esc(storeName)+'\',url:\''+url+'\'}):navigator.clipboard.writeText(\''+url+'\')">🔗</button><button class="red" onclick="this.parentElement.parentElement.remove()">✕</button></div>';document.body.appendChild(modal);}
+
+async function openImageGallery(productId){
+  const pr=(()=>{for(const sid in allProductsCache){const found=allProductsCache[sid].find(p=>p.id===productId);if(found)return found;}return null;})();
+  if(!pr)return;
+  let urls=[];
+  try{urls=JSON.parse(pr.image_urls||'[]');}catch(e){}
+  if(urls.length===0&&pr.image_url)urls=[pr.image_url];
+  if(urls.length===0)return;
+  let currentIndex=0;
+  const modal=document.createElement('div');
+  modal.className='qr-modal';
+  modal.style.cssText='background:rgba(0,0,0,0.95);z-index:99999';
+  const render=()=>{
+    modal.innerHTML='<div style="position:relative;max-width:100%;width:100%;height:100%;display:flex;align-items:center;justify-content:center" onclick="event.stopPropagation()">'+
+      '<button onclick="this.parentElement.parentElement.remove()" style="position:absolute;top:20px;left:20px;width:45px;height:45px;border-radius:50%;background:white;color:#333;font-size:20px;font-weight:bold;border:none;cursor:pointer;z-index:10">✕</button>'+
+      '<span style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.9);color:#333;padding:8px 15px;border-radius:20px;font-size:14px;font-weight:bold">'+(currentIndex+1)+' / '+urls.length+'</span>'+
+      '<img src="'+esc(urls[currentIndex])+'" style="max-width:95%;max-height:80%;border-radius:15px;object-fit:contain">'+
+      (urls.length>1?
+        '<button onclick="window._galleryPrev()" style="position:absolute;left:15px;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.9);color:#333;font-size:22px;font-weight:bold;border:none;cursor:pointer">‹</button>'+
+        '<button onclick="window._galleryNext()" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.9);color:#333;font-size:22px;font-weight:bold;border:none;cursor:pointer">›</button>'+
+        '<div style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;gap:8px">'+
+          urls.map((_,i)=>'<span onclick="window._galleryGo('+i+')" style="width:10px;height:10px;border-radius:50%;background:'+(i===currentIndex?'white':'rgba(255,255,255,0.4)')+';cursor:pointer;display:inline-block"></span>').join('')+
+        '</div>'
+      :'')+
+    '</div>';
+    modal.onclick=()=>modal.remove();
+  };
+  window._galleryPrev=()=>{currentIndex=(currentIndex-1+urls.length)%urls.length;render();};
+  window._galleryNext=()=>{currentIndex=(currentIndex+1)%urls.length;render();};
+  window._galleryGo=(i)=>{currentIndex=i;render();};
+  render();
+  document.body.appendChild(modal);
+}
+
+function initMap(){if(map)return;document.getElementById('map').style.display='block';map=L.map('map').setView([30.4278,-9.5981],13);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19}).addTo(map);map.on('click',e=>setMarker(e.latlng.lat,e.latlng.lng));setTimeout(()=>map.invalidateSize(),200);}
+function setMarker(lat,lng){selectedLat=lat;selectedLng=lng;if(marker)marker.setLatLng([lat,lng]);else{marker=L.marker([lat,lng],{draggable:true}).addTo(map);marker.on('dragend',()=>{const p=marker.getLatLng();selectedLat=p.lat;selectedLng=p.lng;updateLocationStatus();});}updateLocationStatus();}
+function updateLocationStatus(){const s=document.getElementById('location-status');if(selectedLat&&selectedLng){s.innerHTML='✅ '+selectedLat.toFixed(4)+', '+selectedLng.toFixed(4);s.style.color='#00C853';}}
+function getMyLocation(){initMap();const s=document.getElementById('location-status');s.textContent='⏳ جاري تحديد موقعك...';s.style.color='#FFB300';if(!navigator.geolocation){s.textContent='❌ المتصفح لا يدعم GPS';s.style.color='#FF3D00';return;}navigator.geolocation.getCurrentPosition(p=>{map.setView([p.coords.latitude,p.coords.longitude],16);setMarker(p.coords.latitude,p.coords.longitude);},err=>{const msgs={1:'🚫 تم رفض إذن الموقع.',2:'📡 الموقع غير متوفر.',3:'⏱️ انتهى وقت الانتظار.'};s.textContent=msgs[err.code]||'⚠️ خطأ';s.style.color='#FF3D00';},{enableHighAccuracy:true,timeout:10000,maximumAge:0});}
+
+async function exportOrdersCSV(){try{const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);if(!ms||ms.length===0){show('⚠️ ما عندكش متجر',false);return;}const{data:orders}=await DB.from('orders').select('*').in('store_id',ms.map(s=>s.id));if(!orders||orders.length===0){show('⚠️ ما كاينش طلبات',false);return;}let csv='\uFEFF'+'ID,Date,Customer,Phone,Address,Total,Payment,Status\n';orders.forEach(o=>{csv+='"'+o.id.substring(0,6)+'","'+(o.created_at||'')+'","'+(o.customer_name||'').replace(/"/g,'""')+'","'+(o.customer_phone||'')+'","'+(o.delivery_address||'').replace(/"/g,'""')+'","'+o.total_price+'","'+(o.payment_method||'')+'","'+(o.status||'')+'"\n';});const b=new Blob([csv],{type:'text/csv;charset=utf-8;'});const l=document.createElement('a');l.href=URL.createObjectURL(b);l.download='orders-'+Date.now()+'.csv';l.click();show('✅ تم تحميل Excel',true);}catch(e){show('❌ '+e.message,false);}}
+
+async function showFavorites(){document.getElementById('favorites-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');await loadFavorites();}
+function hideFavorites(){document.getElementById('favorites-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
+async function loadFavorites(){const l=document.getElementById('favorites-list');l.innerHTML='⏳';const{data:favs}=await DB.from('favorites').select('*').eq('customer_id',currentUser.id);if(!favs||favs.length===0){l.innerHTML='<p style="text-align:center;color:#888">❤️</p>';return;}const ids=favs.map(f=>f.product_id);const{data:products}=await DB.from('products').select('*').in('id',ids);if(!products||products.length===0){l.innerHTML='-';return;}l.innerHTML='';products.forEach(pr=>{const d=document.createElement('div');d.className='product-item';const img=pr.image_url?'<img src="'+esc(pr.image_url)+'" class="product-img" onerror="this.style.display=\'none\'">':'';const price=(pr.daily_deal&&pr.deal_price)?pr.deal_price:pr.price;d.innerHTML='<div style="display:flex;align-items:center;gap:10px">'+img+'<div><b>'+esc(pr.name)+'</b>'+esc(price)+' DH</div></div><div><button class="add-cart-btn" onclick="addToCart(\''+pr.id+'\', \''+esc(pr.name).replace(/'/g,"\\'")+'\', '+price+', \''+pr.store_id+'\')">➕</button><button class="red small-btn" onclick="toggleFavorite(\''+pr.id+'\')">🗑️</button></div>';l.appendChild(d);});}
+async function toggleFavorite(pid){try{const{data:ex}=await DB.from('favorites').select('id').eq('customer_id',currentUser.id).eq('product_id',pid).single();if(ex){await DB.from('favorites').delete().eq('id',ex.id);favoritesCache.delete(pid);show('✅',true);}else{await DB.from('favorites').insert([{customer_id:currentUser.id,product_id:pid}]);favoritesCache.add(pid);show('❤️',true);}loadStores();if(!document.getElementById('favorites-box').classList.contains('hidden'))loadFavorites();}catch(e){show('❌',false);}}
+
+async function showMyCoupons(){document.getElementById('coupons-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');await loadCoupons();}
+function hideCoupons(){document.getElementById('coupons-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
+async function loadCoupons(){const l=document.getElementById('coupons-list');l.innerHTML='⏳';const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);if(!ms||ms.length===0){l.innerHTML='-';return;}const{data:cp}=await DB.from('coupons').select('*').in('store_id',ms.map(s=>s.id));if(!cp||cp.length===0){l.innerHTML='-';return;}l.innerHTML=cp.map(c=>'<div class="coupon-banner"><div><div class="coupon-code">'+esc(c.code)+'</div><div style="font-size:11px">'+(c.discount_type==='percent'?esc(c.discount_value)+'%':esc(c.discount_value)+' DH')+'</div></div><button class="red small-btn" onclick="deleteCoupon(\''+c.id+'\')" style="margin:0">🗑️</button></div>').join('');}
+async function createCoupon(){const code=document.getElementById('cp-code').value.toUpperCase().trim();const type=document.getElementById('cp-type').value;const value=parseFloat(document.getElementById('cp-value').value);const min=parseFloat(document.getElementById('cp-min').value)||0;const max=parseInt(document.getElementById('cp-max').value)||100;if(!code||!value){show('⚠️',false);return;}const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id).limit(1);if(!ms||ms.length===0){show('⚠️',false);return;}try{await DB.from('coupons').insert([{store_id:ms[0].id,owner_id:currentUser.id,code,discount_type:type,discount_value:value,min_order:min,max_uses:max}]);show('✅',true);['cp-code','cp-value','cp-min'].forEach(id=>document.getElementById(id).value='');await loadCoupons();}catch(e){show('❌',false);}}
+async function deleteCoupon(id){if(!confirm('?'))return;try{await DB.from('coupons').delete().eq('id',id);show('✅',true);await loadCoupons();}catch(e){show('❌',false);}}
+async function applyCoupon(){const code=document.getElementById('coupon-input').value.toUpperCase().trim();if(!code||cart.length===0)return;const sid=cart[0].storeId;const total=cart.reduce((s,c)=>s+c.price*c.qty,0);try{const{data:c}=await DB.from('coupons').select('*').eq('code',code).eq('store_id',sid).eq('is_active',true).single();if(!c){show('❌',false);appliedCoupon=null;updateCouponResult();return;}if(c.used_count>=c.max_uses){show('❌',false);return;}if(c.min_order>0&&total<c.min_order){show('⚠️',false);return;}appliedCoupon=c;updateCouponResult();show('✅',true);}catch(e){show('❌',false);appliedCoupon=null;updateCouponResult();}}
+function updateCouponResult(){const el=document.getElementById('coupon-result');if(!appliedCoupon){el.innerHTML='';return;}const total=cart.reduce((s,c)=>s+c.price*c.qty,0);const d=appliedCoupon.discount_type==='percent'?(total*appliedCoupon.discount_value/100):appliedCoupon.discount_value;el.innerHTML='<div style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;padding:10px;border-radius:8px;margin-top:8px;font-size:13px;text-align:center">🎟️ '+esc(appliedCoupon.code)+': -'+d.toFixed(0)+' DH</div>';loadCart();}
+
+async function openChat(orderId,title){currentChatOrderId=orderId;document.getElementById('chat-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');document.getElementById('chat-title').textContent='💬 '+title;document.getElementById('chat-input').value='';let w=document.getElementById('auto-replies-wrap');if(w){if(currentRole==='merchant'||currentRole==='driver'){w.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"><button class="small-btn green" type="button" onclick="sendQuickReply(\'👋\')">👋</button><button class="small-btn blue" type="button" onclick="sendQuickReply(\'🚗\')">🚗</button><button class="small-btn orange" type="button" onclick="sendQuickReply(\'📍\')">📍</button></div>';}else{w.innerHTML='';}}await loadChatMessages();startChatRealtime(orderId);document.getElementById('chat-box').scrollIntoView({behavior:'smooth'});}
+function startChatRealtime(orderId){stopChatRealtime();try{window.chatChannel=DB.channel('c-'+orderId+'-'+Date.now()).on('postgres_changes',{event:'*',schema:'public',table:'messages',filter:'order_id=eq.'+orderId},(payload)=>{if(payload.eventType==='INSERT'){if(payload.new.sender_id!==currentUser.id){loadChatMessages();playBeep();}}else if(payload.eventType==='DELETE'){loadChatMessages();}}).subscribe();}catch(e){}}
+function stopChatRealtime(){if(window.chatChannel){try{DB.removeChannel(window.chatChannel);}catch(e){}window.chatChannel=null;}}
+async function deleteMessage(msgId){if(!confirm('حذف الرسالة؟'))return;try{await DB.from('messages').delete().eq('id',msgId).eq('sender_id',currentUser.id);show('✅',true);loadChatMessages();}catch(e){show('❌',false);}}
+function sendQuickReply(t2){document.getElementById('chat-input').value=t2;sendChatMessage();}
+async function loadChatMessages(){if(!currentChatOrderId)return;const c=document.getElementById('chat-messages');const{data:msgs,error}=await DB.from('messages').select('*').eq('order_id',currentChatOrderId).order('created_at',{ascending:true});if(error){c.innerHTML='❌';return;}if(!msgs||msgs.length===0){c.innerHTML='<p style="text-align:center;color:#888">💬</p>';return;}c.innerHTML=msgs.map(m=>{const isMine=m.sender_id===currentUser.id;const tm=m.created_at?new Date(m.created_at).toLocaleTimeString('ar-MA',{hour:'2-digit',minute:'2-digit'}):'';const del=isMine?'<button class="del-msg-btn" onclick="deleteMessage(\''+m.id+'\')">🗑️</button>':'';const img=m.image_url?'<img src="'+esc(m.image_url)+'" class="chat-img" onclick="window.open(\''+esc(m.image_url)+'\',\'_blank\')">':'';const txt=m.message&&m.message!=='📷 صورة'?'<div>'+esc(m.message)+'</div>':'';return '<div class="chat-msg '+(isMine?'chat-mine':'chat-theirs')+'">'+(!isMine?'<div class="chat-name">'+esc(m.sender_name||'')+'</div>':'')+'<div style="display:flex;justify-content:space-between;align-items:start;gap:8px"><div>'+txt+img+'</div>'+del+'</div><div class="chat-meta">'+esc(tm)+'</div></div>';}).join('');c.scrollTop=c.scrollHeight;}
+async function sendChatMessage(){if(!currentChatOrderId)return;const i=document.getElementById('chat-input');const txt=i.value.trim();if(!txt)return;try{await DB.from('messages').insert([{order_id:currentChatOrderId,sender_id:currentUser.id,sender_name:currentProfile?.full_name||'User',sender_role:currentRole,message:txt}]);i.value='';await loadChatMessages();}catch(e){show('❌',false);}}
+async function sendChatImage(file){if(!currentChatOrderId||!file)return;show('⏳ جاري رفع الصورة...',true);try{const compressed=await compressImage(file,800,0.7);const fn='chat-'+Date.now()+'-'+Math.random().toString(36).substr(2,9)+'.jpg';const{error:ue}=await DB.storage.from('product-images').upload(fn,compressed,{contentType:'image/jpeg'});if(ue)throw ue;const{data:ud}=DB.storage.from('product-images').getPublicUrl(fn);await DB.from('messages').insert([{order_id:currentChatOrderId,sender_id:currentUser.id,sender_name:currentProfile?.full_name||'User',sender_role:currentRole,message:'📷 صورة',image_url:ud.publicUrl}]);show('✅',true);await loadChatMessages();}catch(e){show('❌',false);}}
+function closeChat(){document.getElementById('chat-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');currentChatOrderId=null;stopChatRealtime();}
+
+async function updatePendingBadge(){const b=document.getElementById('pending-badge');if(!b||currentRole!=='merchant'){if(b)b.style.display='none';return 0;}try{const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);if(!ms||ms.length===0){b.style.display='none';return 0;}const{data:p}=await DB.from('orders').select('id').in('store_id',ms.map(s=>s.id)).eq('status','pending');const n=p?.length||0;if(n>0){b.textContent=n;b.style.display='inline-block';}else b.style.display='none';return n;}catch(e){return 0;}}
+async function toggleAllStores(){try{const{data:ms}=await DB.from('stores').select('id, is_open').eq('owner_id',currentUser.id);if(!ms||ms.length===0){show('⚠️',false);return;}const n=!(ms[0].is_open!==false);for(const s of ms)await DB.from('stores').update({is_open:n}).eq('id',s.id);document.getElementById('toggle-stores-btn').textContent=n?'🔒 إغلاق المتاجر':'🔓 فتح المتاجر';show(n?'✅':'🔒',true);loadStores();}catch(e){show('❌',false);}}
+
+async function doSignup(){const e=document.getElementById('s-email').value,p=document.getElementById('s-pass').value,n=document.getElementById('s-name').value,ph=document.getElementById('s-phone').value,r=document.getElementById('s-role').value,g=document.getElementById('s-gender').value;if(!e||!p||!r){show('⚠️',false);return;}show('⏳',true);try{const res=await DB.auth.signUp({email:e,password:p});if(res.error)throw res.error;if(res.data.user)await DB.from('profiles').upsert([{id:res.data.user.id,full_name:n,phone:ph,role:r,gender:g}]);show('✅',true);}catch(err){show('❌ '+err.message,false);}}
+
+async function doLogin(){const e=document.getElementById('l-email').value,p=document.getElementById('l-pass').value;if(!e||!p){show('⚠️',false);return;}show('⏳',true);try{const r=await DB.auth.signInWithPassword({email:e,password:p});if(r.error)throw r.error;currentUser=r.data.user;const pp=await DB.from('profiles').select('*').eq('id',r.data.user.id).single();currentProfile=pp.data;currentRole=pp.data?.role;['signup-box','login-box'].forEach(id=>document.getElementById(id).classList.add('hidden'));['dash-box','stores-box','cart-box','orders-box','add-store-box'].forEach(id=>document.getElementById(id).classList.remove('hidden'));document.getElementById('welcome').textContent='أهلاً '+(pp.data?.full_name||e);document.getElementById('role').textContent=roleAr[currentRole]||'-';document.getElementById('notif-bell').style.display='flex';if(currentRole==='merchant'){document.getElementById('stats-btn').style.display='block';document.getElementById('store-btn').style.display='block';document.getElementById('toggle-stores-btn').style.display='block';document.getElementById('coupons-btn').style.display='block';document.getElementById('csv-btn').style.display='block';}else if(currentRole==='driver'){document.getElementById('stats-btn').style.display='block';}else if(currentRole==='customer'){document.getElementById('favorites-btn').style.display='block';}if(pp.data?.is_admin)document.getElementById('admin-btn').style.display='block';if(pp.data){if(pp.data.full_name)document.getElementById('co-name').value=pp.data.full_name;if(pp.data.phone)document.getElementById('co-phone').value=pp.data.phone;}loadStores();loadCart();loadOrders();await loadNotifCount();if(notifCountInterval)clearInterval(notifCountInterval);notifCountInterval=setInterval(loadNotifCount,30000);if(currentRole==='merchant')setTimeout(async()=>{lastPendingCount=await updatePendingBadge();},1500);if(window.autoRefreshInterval)clearInterval(window.autoRefreshInterval);window.autoRefreshInterval=setInterval(async()=>{loadOrders();if(currentRole==='merchant'){lastPendingCount=await updatePendingBadge();}},60000);startNotificationPolling();if(currentRole==='merchant')startRealtimeOrders();show('✅',true);}catch(err){show('❌ '+err.message,false);}}
+
+async function doLogout(){await DB.auth.signOut();if(realtimeChannel){try{DB.removeChannel(realtimeChannel);}catch(e){}realtimeChannel=null;}stopChatRealtime();currentUser=null;currentRole=null;currentProfile=null;cart=[];appliedCoupon=null;editingProductId=null;lastPendingCount=0;selectedLat=null;selectedLng=null;selectedPayment='cash';scheduleMode='now';favoritesCache=new Set();multipleImagesQueue=[];if(marker&&map){map.removeLayer(marker);marker=null;}if(chatInterval){clearInterval(chatInterval);chatInterval=null;}if(notifInterval){clearInterval(notifInterval);notifInterval=null;}if(notifCountInterval){clearInterval(notifCountInterval);notifCountInterval=null;}currentChatOrderId=null;allStoresCache={};allProductsCache={};updateFloatCart();['dash-box','signup-box','login-box','add-store-box','store-form-box','stores-box','product-form-box','cart-box','orders-box','profile-box','stats-box','about-box','chat-box','coupons-box','favorites-box','notif-box','admin-box'].forEach(id=>document.getElementById(id).classList.add('hidden'));document.getElementById('signup-box').classList.remove('hidden');document.getElementById('login-box').classList.remove('hidden');document.getElementById('notif-bell').style.display='none';document.getElementById('admin-btn').style.display='none';if(window.autoRefreshInterval){clearInterval(window.autoRefreshInterval);window.autoRefreshInterval=null;}show('✅',true);}
+
+function showStoreForm(){if(currentRole!=='merchant'){show('❌',false);return;}document.getElementById('store-form-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');}
+function hideStoreForm(){document.getElementById('store-form-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
+
+async function uploadAvatar(file){if(!file)return;show('⏳ جاري رفع الصورة...',true);try{const compressed=await compressImage(file,400,0.8);const fname='avatar-'+currentUser.id+'-'+Date.now()+'.jpg';const{error:ue}=await DB.storage.from('product-images').upload(fname,compressed,{contentType:'image/jpeg',upsert:true});if(ue)throw ue;const{data:ud}=DB.storage.from('product-images').getPublicUrl(fname);await DB.from('profiles').update({avatar_url:ud.publicUrl}).eq('id',currentUser.id);currentProfile.avatar_url=ud.publicUrl;show('✅ تم تحديث الصورة',true);showProfile();}catch(e){show('❌ '+e.message,false);}}
+
+async function showProfile(){document.getElementById('profile-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');if(!currentProfile)return;const avatarEl=document.getElementById('profile-avatar');if(currentProfile.avatar_url){avatarEl.innerHTML='<img src="'+esc(currentProfile.avatar_url)+'" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid var(--primary);margin:0 auto;display:block">';}else{avatarEl.innerHTML='<div style="text-align:center;font-size:80px">'+getAvatar(currentRole,currentProfile.gender)+'</div>';}document.getElementById('profile-name-display').textContent=currentProfile.full_name||'';document.getElementById('profile-email-display').textContent=currentUser.email||'';document.getElementById('pf-name').value=currentProfile.full_name||'';document.getElementById('pf-phone').value=currentProfile.phone||'';document.getElementById('pf-email').value=currentUser.email||'';let h='';try{if(currentRole==='customer'){const{data:o}=await DB.from('orders').select('id, status, total_price').eq('customer_id',currentUser.id);const tt=o?.length||0;const sp=o?.filter(x=>x.status==='delivered').reduce((s,x)=>s+parseFloat(x.total_price||0),0)||0;const{data:cr}=await DB.from('customer_ratings').select('stars').eq('customer_id',currentUser.id);const avg=cr&&cr.length>0?(cr.reduce((a,x)=>a+x.stars,0)/cr.length).toFixed(1):'-';h='<div class="profile-stat"><div class="profile-stat-num">'+tt+'</div><div class="profile-stat-label">📋</div></div><div class="profile-stat"><div class="profile-stat-num">'+avg+'</div><div class="profile-stat-label">⭐</div></div><div class="profile-stat"><div class="profile-stat-num">'+sp+'</div><div class="profile-stat-label">💰</div></div>';}else if(currentRole==='merchant'){const{data:s}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);const ids=s?.map(x=>x.id)||[];let oc=0,rev=0;if(ids.length>0){const{data:o}=await DB.from('orders').select('status, total_price').in('store_id',ids);oc=o?.length||0;rev=o?.filter(x=>x.status==='delivered').reduce((a,x)=>a+parseFloat(x.total_price||0),0)||0;}h='<div class="profile-stat"><div class="profile-stat-num">'+(s?.length||0)+'</div><div class="profile-stat-label">🏪</div></div><div class="profile-stat"><div class="profile-stat-num">'+oc+'</div><div class="profile-stat-label">📋</div></div><div class="profile-stat"><div class="profile-stat-num">'+rev+'</div><div class="profile-stat-label">💰</div></div>';}else if(currentRole==='driver'){const{data:d}=await DB.from('orders').select('id, total_price').eq('status','delivered').eq('driver_id',currentUser.id);const{data:r}=await DB.from('driver_ratings').select('stars').eq('driver_id',currentUser.id);const avg=r&&r.length>0?r.reduce((a,x)=>a+x.stars,0)/r.length:0;const c=d?d.reduce((a,x)=>a+parseFloat(x.total_price||0)*0.1,0):0;h='<div class="profile-stat"><div class="profile-stat-num">'+(d?.length||0)+'</div><div class="profile-stat-label">🚗</div></div><div class="profile-stat"><div class="profile-stat-num">'+(avg||'-')+'</div><div class="profile-stat-label">⭐</div></div><div class="profile-stat"><div class="profile-stat-num">'+c.toFixed(0)+'</div><div class="profile-stat-label">💰</div></div>';}}catch(e){}document.getElementById('profile-stats').innerHTML=h;document.getElementById('profile-box').scrollIntoView({behavior:'smooth'});}
+
+function hideProfile(){document.getElementById('profile-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
+async function doUpdateProfile(){const n=document.getElementById('pf-name').value,p=document.getElementById('pf-phone').value;if(!n){show('⚠️',false);return;}try{await DB.from('profiles').update({full_name:n,phone:p}).eq('id',currentUser.id);currentProfile.full_name=n;currentProfile.phone=p;document.getElementById('welcome').textContent='أهلاً '+n;document.getElementById('co-name').value=n;document.getElementById('co-phone').value=p;show('✅',true);setTimeout(hideProfile,1000);}catch(e){show('❌',false);}}
+async function doDeleteAccount(){if(!confirm('⚠️ حذف الحساب نهائياً؟'))return;if(!confirm('🔴 متأكد 100%؟'))return;if(prompt('اكتب "نعم" للتأكيد:')!=='نعم'){show('❌ إلغاء',false);return;}show('⏳',true);try{const{error}=await DB.rpc('delete_my_account');if(error)throw error;show('✅ تم الحذف',true);setTimeout(async()=>{await DB.auth.signOut();location.reload();},1500);}catch(e){show('❌ '+e.message,false);}}
+
+async function showStats(){
+  document.getElementById('stats-box').classList.remove('hidden');
+  document.getElementById('add-store-box').classList.add('hidden');
+  const c=document.getElementById('stats-content');
+  c.innerHTML='⏳';
+  try{
+    if(currentRole==='merchant'){
+      const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);
+      if(!ms||ms.length===0){c.innerHTML='-';return;}
+      const{data:o}=await DB.from('orders').select('*').in('store_id',ms.map(s=>s.id));
+      if(!o||o.length===0){c.innerHTML='-';return;}
+      const now=Date.now();
+      const week=o.filter(x=>new Date(x.created_at).getTime()>=now-7*24*3600*1000);
+      const month=o.filter(x=>new Date(x.created_at).getTime()>=now-30*24*3600*1000);
+      const wr=week.filter(x=>x.status==='delivered').reduce((s,x)=>s+parseFloat(x.total_price),0);
+      const mr=month.filter(x=>x.status==='delivered').reduce((s,x)=>s+parseFloat(x.total_price),0);
+      const tr=o.filter(x=>x.status==='delivered').reduce((s,x)=>s+parseFloat(x.total_price),0);
+      const dayLabels=[],dayOrders=[],dayRev=[];
+      for(let i=6;i>=0;i--){const d=new Date(now-i*24*3600*1000);const start=new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();const end=start+24*3600*1000;const dayO=o.filter(x=>{const t=new Date(x.created_at).getTime();return t>=start&&t<end;});dayLabels.push(d.toLocaleDateString('ar-MA',{weekday:'short'}));dayOrders.push(dayO.length);dayRev.push(dayO.filter(x=>x.status==='delivered').reduce((s,x)=>s+parseFloat(x.total_price),0));}
+      const{data:oi}=await DB.from('order_items').select('product_name, quantity, price').in('order_id',o.map(x=>x.id));
+      const productCount={};(oi||[]).forEach(it=>{const n=it.product_name;if(!productCount[n])productCount[n]={qty:0,rev:0};productCount[n].qty+=it.quantity;productCount[n].rev+=it.quantity*parseFloat(it.price);});
+      const topProducts=Object.entries(productCount).sort((a,b)=>b[1].qty-a[1].qty).slice(0,5);
+      c.innerHTML='<div style="font-size:14px;font-weight:bold;margin-bottom:10px">📊 آخر 7 أيام</div><div style="background:white;border-radius:10px;padding:10px;margin-bottom:15px"><canvas id="chart-orders" style="max-height:180px"></canvas></div><div style="font-size:14px;font-weight:bold;margin-bottom:10px">💰 الإيرادات (7 أيام)</div><div style="background:white;border-radius:10px;padding:10px;margin-bottom:15px"><canvas id="chart-rev" style="max-height:180px"></canvas></div><div style="font-size:14px;font-weight:bold;margin-bottom:10px">🏆 الأكثر مبيعاً</div><div style="background:white;border-radius:10px;padding:10px;margin-bottom:15px;border:1px solid #e9ecef">'+(topProducts.length===0?'<div style="text-align:center;color:#888">ما كاينش</div>':topProducts.map((p,i)=>'<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #f0f0f0;font-size:13px"><span>'+['🥇','🥈','🥉','4️⃣','5️⃣'][i]+' '+esc(p[0])+'</span><span><b>'+p[1].qty+'</b> × • <b>'+p[1].rev.toFixed(0)+'</b> DH</span></div>').join(''))+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px"><div class="stat-card" style="background:#e7f3ff"><div class="stat-num" style="color:#2196F3">'+week.length+'</div><div class="stat-label">📋 أسبوع</div></div><div class="stat-card" style="background:#d4edda"><div class="stat-num" style="color:#00C853">'+wr.toFixed(0)+'</div><div class="stat-label">💰 أسبوع</div></div><div class="stat-card" style="background:#f3e5f5"><div class="stat-num" style="color:#7B1FA2">'+month.length+'</div><div class="stat-label">📋 شهر</div></div><div class="stat-card" style="background:#fff3cd"><div class="stat-num" style="color:#FFB300">'+mr.toFixed(0)+'</div><div class="stat-label">💰 شهر</div></div></div><div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:12px;border-radius:10px;text-align:center;margin-top:10px"><b style="color:#2E7D32">💰 الإجمالي: '+tr.toFixed(0)+' DH ('+o.length+' طلب)</b></div>';
+      setTimeout(()=>{try{const co={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}};new Chart(document.getElementById('chart-orders'),{type:'bar',data:{labels:dayLabels,datasets:[{data:dayOrders,backgroundColor:'rgba(33,150,243,0.7)',borderRadius:6}]},options:{...co,scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});new Chart(document.getElementById('chart-rev'),{type:'line',data:{labels:dayLabels,datasets:[{data:dayRev,borderColor:'#00C853',backgroundColor:'rgba(0,200,83,0.1)',fill:true,tension:0.3,borderWidth:3,pointRadius:5,pointBackgroundColor:'#00C853'}]},options:{...co,scales:{y:{beginAtZero:true}}}});}catch(e){console.error(e);}},100);
+    }else if(currentRole==='driver'){
+      const{data:d}=await DB.from('orders').select('*').eq('status','delivered').eq('driver_id',currentUser.id);
+      const rev=d?d.reduce((s,x)=>s+parseFloat(x.total_price),0):0;
+      const{data:r}=await DB.from('driver_ratings').select('stars').eq('driver_id',currentUser.id);
+      const avg=r&&r.length>0?(r.reduce((a,x)=>a+x.stars,0)/r.length).toFixed(1):'-';
+      c.innerHTML='<div class="stat-card" style="background:#fff3cd"><div class="stat-num" style="color:#FFB300">⭐ '+avg+'</div></div><div class="stat-card" style="background:#d4edda;margin-top:10px"><div class="stat-num" style="color:#00C853">'+(d?.length||0)+'</div><div class="stat-label">🎉</div></div><div class="stat-card" style="background:#e7f3ff;margin-top:10px"><div class="stat-num" style="color:#2196F3">'+(rev*0.1).toFixed(0)+'</div><div class="stat-label">💵</div></div>';
+    }
+  }catch(e){c.innerHTML='❌ '+e.message;}
+}
+
+function hideStats(){document.getElementById('stats-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
+async function doAddStore(){if(currentRole!=='merchant'){show('❌',false);return;}const n=document.getElementById('st-name').value,d=document.getElementById('st-desc').value,a=document.getElementById('st-address').value,p=document.getElementById('st-promo').value;const op=document.getElementById('st-open').value,cl=document.getElementById('st-close').value;if(!n){show('⚠️',false);return;}try{await DB.from('stores').insert([{owner_id:currentUser.id,name:n,description:d,address:a,is_open:true,promo_text:p||null,promo_active:p?true:false,opening_time:op,closing_time:cl}]);show('✅',true);['st-name','st-desc','st-address','st-promo'].forEach(id=>document.getElementById(id).value='');hideStoreForm();loadStores();}catch(e){show('❌',false);}}
+
+async function loadStores(){const l=document.getElementById('stores-list');l.innerHTML='⏳';if(currentRole==='customer'&&currentUser){const{data:favs}=await DB.from('favorites').select('product_id').eq('customer_id',currentUser.id);favoritesCache=new Set((favs||[]).map(f=>f.product_id));}const{data:stores,error}=await DB.from('stores').select('*');if(error||!stores||stores.length===0){l.innerHTML='-';return;}stores.sort((a,b)=>(b.is_featured?1:0)-(a.is_featured?1:0));allStoresCache={};allProductsCache={};for(const s of stores){allStoresCache[s.id]=s;const{data:p}=await DB.from('products').select('*').eq('store_id',s.id);allProductsCache[s.id]=p||[];const{data:r}=await DB.from('ratings').select('stars').eq('store_id',s.id);allStoresCache[s.id]._rating=r&&r.length>0?r.reduce((a,x)=>a+x.stars,0)/r.length:0;allStoresCache[s.id]._ratingCount=r?.length||0;}renderStores(stores);}
+
+async function toggleFeatured(id,val){try{const{data:s}=await DB.from('stores').select('owner_id').eq('id',id).single();if(!s||s.owner_id!==currentUser.id){show('❌',false);return;}await DB.from('stores').update({is_featured:val}).eq('id',id);show(val?'⭐ تم التمييز':'✅ إلغاء',true);loadStores();}catch(e){show('❌',false);}}
+async function toggleProductFeatured(id,val){try{const{data:p}=await DB.from('products').select('store_id').eq('id',id).single();if(!p){show('❌',false);return;}const{data:s}=await DB.from('stores').select('owner_id').eq('id',p.store_id).single();if(!s||s.owner_id!==currentUser.id){show('❌',false);return;}await DB.from('products').update({is_featured:val}).eq('id',id);show(val?'⭐ منتج مميز':'✅ إلغاء',true);loadStores();}catch(e){show('❌',false);}}
+
+async function deleteStore(id,name){if(!confirm('🗑️ مسح المتجر "'+name+'"؟'))return;const{data:s}=await DB.from('stores').select('owner_id').eq('id',id).single();if(!s||s.owner_id!==currentUser.id){show('❌',false);return;}const{data:a}=await DB.from('orders').select('id').eq('store_id',id).in('status',['pending','accepted','delivering']);if(a&&a.length>0){show('⚠️ عندك '+a.length+' طلب نشط!',false);return;}show('⏳',true);try{const{data:prods}=await DB.from('products').select('image_url, image_urls').eq('store_id',id);let fns=[];(prods||[]).forEach(p=>{if(p.image_url&&p.image_url.includes('product-images'))fns.push(p.image_url.split('/').pop().split('?')[0]);try{const arr=JSON.parse(p.image_urls||'[]');arr.forEach(u=>{if(u&&u.includes('product-images'))fns.push(u.split('/').pop().split('?')[0]);});}catch(e){}});if(fns.length>0){try{await DB.storage.from('product-images').remove(fns);}catch(e){}}await DB.from('products').delete().eq('store_id',id);await DB.from('coupons').delete().eq('store_id',id);await DB.from('ratings').delete().eq('store_id',id);const{error}=await DB.from('stores').delete().eq('id',id);if(error)throw error;show('✅',true);loadStores();}catch(e){show('❌ '+e.message,false);}}
+
+function renderStores(stores){
+  const l=document.getElementById('stores-list');
+  l.innerHTML='';
+  stores.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='store-item'+(s.is_featured?' featured':'');
+    const autoOpen=isStoreOpenByHours(s);
+    const isOpen=s.is_open!==false&&autoOpen;
+    const st=isOpen?'<span class="store-status" style="background:linear-gradient(135deg,#00C853,#00A344);color:white">✅</span>':'<span class="store-status" style="background:linear-gradient(135deg,#FF3D00,#D32F2F);color:white">🔒</span>';
+    const r=s._ratingCount>0?'⭐ '+s._rating.toFixed(1)+' ('+s._ratingCount+')':'⭐ -';
+    const fb=s.is_featured?'<span class="featured-badge">⭐ مميز</span>':'';
+    const promo=(s.promo_active&&s.promo_text)?'<div class="promo-banner">📢 '+esc(s.promo_text)+'</div>':'';
+    const h=(s.opening_time&&s.closing_time)?'<p class="hours-line">🕐 '+esc(s.opening_time)+' - '+esc(s.closing_time)+'</p>':'';
+    d.innerHTML='<h3>'+fb+'🏪 '+esc(s.name)+'</h3>'+promo+st+h+'<p>'+esc(s.description||'')+'</p><p>📍 '+esc(s.address||'')+'</p><div class="rating-line">'+r+'</div><div id="reviews-'+s.id+'" style="margin-top:10px"></div><div id="prod-'+s.id+'"></div>';
+    l.appendChild(d);
+    if(currentRole==='merchant'&&s.owner_id===currentUser.id){
+      const b=document.createElement('button');b.className='purple small-btn';b.textContent='📦';b.onclick=()=>showProductForm(s.id,s.name);d.appendChild(b);
+      const qb=document.createElement('button');qb.className='blue small-btn';qb.textContent='📱 QR';qb.onclick=()=>shareStoreQR(s.id,s.name);d.appendChild(qb);
+      const f2=document.createElement('button');f2.className=s.is_featured?'orange small-btn':'blue small-btn';f2.textContent=s.is_featured?'⭐ إلغاء التمييز':'⭐ تمييز';f2.onclick=()=>toggleFeatured(s.id,!s.is_featured);d.appendChild(f2);
+      const db=document.createElement('button');db.className='red small-btn';db.textContent='🗑️';db.onclick=()=>deleteStore(s.id,s.name);d.appendChild(db);
+    }
+    if(currentRole==='customer'){
+      const b=document.createElement('button');b.className='orange small-btn';
+      DB.from('ratings').select('stars').eq('store_id',s.id).eq('customer_id',currentUser.id).single().then(r=>{b.textContent=r.data?'⭐ '+r.data.stars+'/5':'⭐';b.onclick=()=>rateStore(s.id);});
+      d.appendChild(b);
+      setTimeout(()=>showStoreReviews(s.id),100);
+    }
+    const pc=document.getElementById('prod-'+s.id);
+    const p=(Array.isArray(s._products)?s._products:(allProductsCache[s.id]||[]));
+    if(p.length===0)pc.innerHTML='-';
+    else{
+      pc.innerHTML='<b style="font-size:13px;color:#666">📦</b>';
+      p.forEach(pr=>{
+        const pd=document.createElement('div');
+        pd.className='product-item'+(pr.daily_deal?' deal':'');
+        let btn='';
+        const price=(pr.daily_deal&&pr.deal_price)?pr.deal_price:pr.price;
+        if(currentRole==='customer'){
+          const heart=favoritesCache.has(pr.id)?'❤️':'🤍';
+          btn='<button class="add-cart-btn" onclick="addToCart(\''+pr.id+'\', \''+esc(pr.name).replace(/'/g,"\\'")+'\', '+price+', \''+pr.store_id+'\')">➕</button><button class="pink small-btn" onclick="toggleFavorite(\''+pr.id+'\')">'+heart+'</button>';
+        }else if(currentRole==='merchant'){
+          const fbtn='<button class="'+(pr.is_featured?'orange':'blue')+' small-btn" onclick="toggleProductFeatured(\''+pr.id+'\', '+(!pr.is_featured)+')">'+(pr.is_featured?'⭐':'⭐+')+'</button>';
+          const urlsJson = esc(JSON.stringify(pr.image_urls || [])).replace(/'/g,"\\'");
+          btn='<button class="blue small-btn" onclick="editProduct(\''+pr.id+'\', \''+esc(pr.name).replace(/'/g,"\\'")+'\', '+pr.price+', \''+esc(pr.description||'').replace(/'/g,"\\'")+'\', \''+esc(pr.image_url||'')+'\', \''+s.id+'\', \''+urlsJson+'\')">✏️</button>'+fbtn+'<button class="red small-btn" onclick="deleteProduct(\''+pr.id+'\', \''+s.id+'\')">🗑️</button>';
+        }
+        const img=pr.image_url?'<img src="'+esc(pr.image_url)+'" class="product-img" onerror="this.style.display=\'none\'" onclick="openImageGallery(\''+pr.id+'\')" style="cursor:pointer">':'';
+        const ph=pr.daily_deal&&pr.deal_price?'<span class="old-price">'+esc(pr.price)+'</span><span class="new-price">'+esc(pr.deal_price)+' DH</span>':esc(pr.price)+' DH';
+        const dbadge=(pr.is_featured?'<span class="featured-badge" style="position:absolute;top:-8px;right:8px">⭐</span>':'')+(pr.daily_deal?'<span class="deal-badge">🎉</span>':'');
+        let imgCount='';
+        try{const arr=JSON.parse(pr.image_urls||'[]');if(arr.length>1)imgCount='<span style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,0.7);color:white;padding:2px 6px;border-radius:6px;font-size:10px">📷 '+arr.length+'</span>';}catch(e){}
+        pd.innerHTML=dbadge+'<div style="display:flex;align-items:center;gap:10px;position:relative">'+img+imgCount+'<div><b>'+esc(pr.name)+'</b>'+ph+'</div></div><div>'+btn+'</div>';
+        pc.appendChild(pd);
+      });
+    }
+  });
+}
+
+function applyFilters(){const s=document.getElementById('search-input').value.toLowerCase().trim();const minP=parseFloat(document.getElementById('filter-min-price').value);const maxP=parseFloat(document.getElementById('filter-max-price').value);const minR=parseFloat(document.getElementById('filter-rating').value);const sort=document.getElementById('filter-sort').value;const onlyOpen=document.getElementById('filter-open')&&document.getElementById('filter-open').checked;const onlyPromo=document.getElementById('filter-promo')&&document.getElementById('filter-promo').checked;const onlyFav=document.getElementById('filter-fav')&&document.getElementById('filter-fav').checked;const onlyDeals=document.getElementById('filter-deals')&&document.getElementById('filter-deals').checked;const onlyFeatured=document.getElementById('filter-featured')&&document.getElementById('filter-featured').checked;const all=Object.values(allStoresCache);const filtered=[];all.forEach(store=>{if(onlyOpen&&!isStoreOpenByHours(store))return;if(onlyOpen&&store.is_open===false)return;if(onlyPromo&&!(store.promo_active&&store.promo_text))return;if(onlyFeatured&&!store.is_featured)return;const p=allProductsCache[store.id]||[];const sTextOk=s===''||store.name.toLowerCase().includes(s)||(store.description||'').toLowerCase().includes(s);const sRateOk=!minR||(store._rating||0)>=minR;let matched=p.filter(x=>{const txt=(x.name+' '+(x.description||'')).toLowerCase();const txtOk=s===''||txt.includes(s)||sTextOk;const price=(x.daily_deal&&x.deal_price)?x.deal_price:x.price;const priceOk=(isNaN(minP)||price>=minP)&&(isNaN(maxP)||price<=maxP);const favOk=!onlyFav||favoritesCache.has(x.id);const dealOk=!onlyDeals||x.daily_deal;return txtOk&&priceOk&&favOk&&dealOk;});if(matched.length>0&&sRateOk)filtered.push({...store,_products:matched});else if(matched.length===0&&sTextOk&&sRateOk&&s!=='')filtered.push({...store,_products:p});});if(sort==='price-asc'||sort==='price-desc')filtered.forEach(x=>x._products.sort((a,b)=>{const pa=(a.daily_deal&&a.deal_price)?a.deal_price:a.price;const pb=(b.daily_deal&&b.deal_price)?b.deal_price:b.price;return sort==='price-asc'?pa-pb:pb-pa;}));else if(sort==='name-asc')filtered.forEach(x=>x._products.sort((a,b)=>a.name.localeCompare(b.name,'ar')));else if(sort==='rating-desc')filtered.sort((a,b)=>(b._rating||0)-(a._rating||0));if(filtered.length===0){document.getElementById('stores-list').innerHTML='-';return;}renderStores(filtered.map(s=>({...s})));}
+function resetFilters(){['search-input','filter-min-price','filter-max-price','filter-rating','filter-sort'].forEach(id=>document.getElementById(id).value='');['filter-open','filter-promo','filter-fav','filter-deals','filter-featured'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});loadStores();}
+
+async function rateStore(id){const s=prompt('⭐ 1-5','5');if(!s)return;const n=parseInt(s);if(n<1||n>5)return;try{await DB.from('ratings').insert([{store_id:id,customer_id:currentUser.id,stars:n}]);show('✅',true);loadStores();}catch(e){show('❌',false);}}
+async function deleteProduct(id,s){if(!confirm('حذف المنتج؟'))return;try{const{data:pr}=await DB.from('products').select('image_url, image_urls').eq('id',id).single();let fns=[];if(pr&&pr.image_url&&pr.image_url.includes('product-images'))fns.push(pr.image_url.split('/').pop().split('?')[0]);try{const arr=JSON.parse(pr?.image_urls||'[]');arr.forEach(u=>{if(u&&u.includes('product-images'))fns.push(u.split('/').pop().split('?')[0]);});}catch(e){}if(fns.length>0){try{await DB.storage.from('product-images').remove(fns);}catch(e){}}await DB.from('products').delete().eq('id',id);show('✅',true);loadStores();}catch(e){show('❌',false);}}
+
+function editProduct(id,n,p,d,i,s,imageUrls){
+  editingProductId=id;
+  currentStoreId=s;
+  multipleImagesQueue=[];
+  document.getElementById('pr-name').value=n;
+  document.getElementById('pr-price').value=p;
+  document.getElementById('pr-desc').value=d;
+  document.getElementById('pr-image').value='';
+  document.getElementById('pr-deal').checked=false;
+  document.getElementById('pr-featured').checked=false;
+  document.getElementById('pr-deal-price').style.display='none';
+  let urls=[];
+  try{urls=JSON.parse(imageUrls||'[]');}catch(e){}
+  if(urls.length===0&&i){urls=[i];}
+  const pv=document.getElementById('image-preview');
+  if(urls.length===0){pv.innerHTML='';}
+  else{pv.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px">'+urls.map(u=>'<img src="'+esc(u)+'" style="width:70px;height:70px;border-radius:8px;object-fit:cover;border:2px solid #ffb300">').join('')+'</div>';}
+  document.getElementById('product-form-box').classList.remove('hidden');
+}
+
+function showProductForm(sid,sn){editingProductId=null;currentStoreId=sid;multipleImagesQueue=[];document.getElementById('product-store-name').textContent=sn;['pr-name','pr-desc','pr-price','pr-image','pr-deal-price'].forEach(id=>document.getElementById(id).value='');document.getElementById('pr-deal').checked=false;document.getElementById('pr-featured').checked=false;document.getElementById('pr-deal-price').style.display='none';document.getElementById('image-preview').innerHTML='';document.getElementById('product-form-box').classList.remove('hidden');}
+function hideProductForm(){document.getElementById('product-form-box').classList.add('hidden');currentStoreId=null;editingProductId=null;multipleImagesQueue=[];document.getElementById('image-preview').innerHTML='';}
+
+async function doAddProduct(){
+  const n=document.getElementById('pr-name').value;
+  const d=document.getElementById('pr-desc').value;
+  const p=document.getElementById('pr-price').value;
+  const u=document.getElementById('pr-image').value;
+  const isDeal=document.getElementById('pr-deal').checked;
+  const isFeat=document.getElementById('pr-featured').checked;
+  const dp=document.getElementById('pr-deal-price').value;
+  const files=document.getElementById('pr-image-file').files;
+  if(!n||!p){show('⚠️',false);return;}
+  show('⏳ جاري الرفع...',true);
+  try{
+    let urls=[];
+    const allFiles=files&&files.length>0?Array.from(files):(multipleImagesQueue.length>0?multipleImagesQueue.map(x=>x.file):[]);
+    const toUpload=allFiles.slice(0,5);
+    for(const f of toUpload){
+      const c=await compressImage(f,800,0.7);
+      const fn='p-'+Date.now()+'-'+Math.random().toString(36).substr(2,9)+'.jpg';
+      const{error:ue}=await DB.storage.from('product-images').upload(fn,c,{cacheControl:'3600',upsert:false,contentType:'image/jpeg'});
+      if(ue)throw ue;
+      const publicUrl=DB.storage.from('product-images').getPublicUrl(fn).data.publicUrl;
+      urls.push(publicUrl);
+    }
+    if(u&&urls.length===0){urls.push(u);}
+    const mainImage=urls[0]||null;
+    const data={name:n,description:d,price:parseFloat(p),image_url:mainImage,image_urls:urls,daily_deal:isDeal,deal_price:isDeal?parseFloat(dp):null,is_featured:isFeat};
+    if(editingProductId){await DB.from('products').update(data).eq('id',editingProductId);}
+    else{data.store_id=currentStoreId;await DB.from('products').insert([data]);}
+    multipleImagesQueue=[];
+    show('✅',true);
+    hideProductForm();
+    loadStores();
+  }catch(e){show('❌ '+e.message,false);}
+}
+
+function addToCart(pid,n,p,sid){if(cart.length>0&&cart[0].storeId!==sid){show('⚠️ لا يمكن الطلب من متجرين',false);return;}const ex=cart.find(c=>c.prodId===pid);if(ex)ex.qty+=1;else cart.push({prodId:pid,name:n,price:p,storeId:sid,qty:1});show('✅',true);loadCart();updateFloatCart();}
+function loadCart(){updateFloatCart();const l=document.getElementById('cart-list'),t2=document.getElementById('cart-total'),cf=document.getElementById('checkout-fields');if(cart.length===0){l.innerHTML='<p style="text-align:center;color:#888">-</p>';t2.classList.add('hidden');cf.classList.add('hidden');appliedCoupon=null;document.getElementById('coupon-result').innerHTML='';return;}l.innerHTML='';let total=0;cart.forEach((c,i)=>{total+=c.price*c.qty;const d=document.createElement('div');d.className='cart-item';d.innerHTML='<div><b>'+esc(c.name)+'</b> - '+esc(c.price)+' × '+esc(c.qty)+'</div><button class="red small-btn" onclick="removeFromCart('+i+')">❌</button>';l.appendChild(d);});let ft=total;if(appliedCoupon){const d=appliedCoupon.discount_type==='percent'?(total*appliedCoupon.discount_value/100):appliedCoupon.discount_value;ft=Math.max(0,total-d);t2.innerHTML='💰 '+total+' → <b>'+ft.toFixed(0)+' DH</b>';}else{t2.textContent='💰 '+total+' DH';}t2.classList.remove('hidden');cf.classList.remove('hidden');}
+function removeFromCart(i){cart.splice(i,1);if(cart.length===0)appliedCoupon=null;loadCart();updateFloatCart();}
+function clearCart(){cart=[];appliedCoupon=null;selectedLat=null;selectedLng=null;if(marker&&map){map.removeLayer(marker);marker=null;}document.getElementById('location-status').textContent='';loadCart();updateFloatCart();}
+
+async function doCheckout(){if(cart.length===0){show('⚠️',false);return;}const cn=document.getElementById('co-name').value,cp=document.getElementById('co-phone').value,ca=document.getElementById('co-address').value;if(!cn||!cp||!ca){show('⚠️',false);vibrate(100);return;}const total=cart.reduce((s,c)=>s+c.price*c.qty,0);let ft=total;if(appliedCoupon){const d=appliedCoupon.discount_type==='percent'?(total*appliedCoupon.discount_value/100):appliedCoupon.discount_value;ft=Math.max(0,total-d);}const sid=cart[0].storeId;let sa=null,isS=false;if(scheduleMode==='later'){const tv=document.getElementById('sched-time').value;if(!tv){show('⚠️',false);return;}sa=new Date(tv).toISOString();isS=true;}let ps='unpaid',pr=null;if(selectedPayment==='card'){ps='pending_online';pr='REF-'+Date.now();}show('⏳',true);try{const{data:od,error:oe}=await DB.from('orders').insert([{customer_id:currentUser.id,store_id:sid,status:'pending',total_price:ft,delivery_address:ca,customer_phone:cp,customer_name:cn,latitude:selectedLat,longitude:selectedLng,payment_method:selectedPayment,scheduled_at:sa,is_scheduled:isS,payment_status:ps,payment_ref:pr}]).select();if(oe)throw oe;const oid=od[0].id;const items=cart.map(c=>({order_id:oid,product_id:c.prodId,product_name:c.name,price:c.price,quantity:c.qty}));await DB.from('order_items').insert(items);if(appliedCoupon)await DB.from('coupons').update({used_count:appliedCoupon.used_count+1}).eq('id',appliedCoupon.id);try{const{data:st}=await DB.from('stores').select('owner_id').eq('id',sid).single();if(st&&st.owner_id)await pushNotif(st.owner_id,'🔔 طلب جديد!',(cn||'زبون')+' - '+ft+' DH');}catch(e){}const earned=Math.floor(ft/10);if(earned>0&&currentProfile){const cur=currentProfile.loyalty_points||0;await DB.from('profiles').update({loyalty_points:cur+earned}).eq('id',currentUser.id);currentProfile.loyalty_points=cur+earned;}playBeep();vibrate([200,100,200]);show('🎉 تم إرسال طلبك بنجاح!',true);cart=[];appliedCoupon=null;selectedLat=null;selectedLng=null;selectedPayment='cash';scheduleMode='now';if(marker&&map){map.removeLayer(marker);marker=null;}document.getElementById('location-status').textContent='';document.getElementById('coupon-input').value='';selectPay('cash');loadCart();updateFloatCart();loadOrders();}catch(e){show('❌ '+e.message,false);vibrate(500);}}
+
+async function claimOrder(id){try{const{data,error}=await DB.from('orders').update({status:'delivering',driver_id:currentUser.id}).eq('id',id).is('driver_id',null).in('status',['accepted','delivering']).select();if(error)throw error;if(!data||data.length===0){show('⚠️',false);return;}show('✅',true);playBeep();vibrate(150);loadOrders();}catch(e){show('❌ '+e.message,false);}}
+async function openDriverMap(orderId){try{const{data:o}=await DB.from('orders').select('driver_lat, driver_lng, latitude, longitude, delivery_address').eq('id',orderId).single();let url;if(o&&o.driver_lat&&o.driver_lng){url='https://www.google.com/maps?q='+o.driver_lat+','+o.driver_lng;}else if(o&&o.latitude&&o.longitude){url='https://www.google.com/maps?q='+o.latitude+','+o.longitude;}else{url='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(o?.delivery_address||'Agadir Maroc');}window.open(url,'_blank');}catch(e){show('❌',false);}}
+
+function setReviewStars(n){reviewStars=n;document.getElementById('review-stars-display').textContent='⭐'.repeat(n);}
+function openReviewModal(orderId,storeId){reviewOrderId=orderId;reviewStoreId=storeId;reviewStars=5;document.getElementById('review-stars-display').textContent='⭐⭐⭐⭐⭐';document.getElementById('review-comment').value='';document.getElementById('review-image-preview').innerHTML='';document.getElementById('review-image-file').value='';document.getElementById('review-image-gallery').value='';var m=document.getElementById('review-modal');m.classList.remove('hidden');m.style.display='flex';}
+function closeReviewModal(){var m=document.getElementById('review-modal');if(m){m.classList.add('hidden');m.style.display='none';}reviewOrderId=null;reviewStoreId=null;reviewStars=5;try{document.getElementById('review-comment').value='';document.getElementById('review-image-preview').innerHTML='';document.getElementById('review-stars-display').textContent='⭐⭐⭐⭐⭐';document.getElementById('review-image-file').value='';document.getElementById('review-image-gallery').value='';}catch(e){}}
+async function submitReview(){if(!reviewOrderId||!reviewStoreId)return;var c=document.getElementById('review-comment').value.trim();var f=document.getElementById('review-image-file').files[0]||document.getElementById('review-image-gallery').files[0];show('⏳ جاري الإرسال...',true);try{var iu=null;if(f){var cp=await compressImage(f,800,0.7);var fn='review-'+Date.now()+'-'+Math.random().toString(36).substr(2,9)+'.jpg';var up=await DB.storage.from('product-images').upload(fn,cp,{contentType:'image/jpeg'});if(up.error)throw up.error;iu=DB.storage.from('product-images').getPublicUrl(fn).data.publicUrl;}await DB.from('ratings').insert([{store_id:reviewStoreId,customer_id:currentUser.id,stars:reviewStars,comment:c||null,image_url:iu}]);show('⭐ شكراً على التقييم!',true);closeReviewModal();loadStores();}catch(e){show('❌ '+e.message,false);}}
+async function showStoreReviews(storeId){const l=document.getElementById('reviews-'+storeId);if(!l)return;l.innerHTML='⏳';try{const{data:rs}=await DB.from('ratings').select('*').eq('store_id',storeId).not('comment','is',null).order('created_at',{ascending:false}).limit(5);if(!rs||rs.length===0){l.innerHTML='<div style="text-align:center;color:#888;font-size:12px;padding:5px">ما كاينش مراجعات بعد</div>';return;}let h='<b style="font-size:13px;color:#666">📝 المراجعات:</b>';for(const r of rs){let n='زبون',av='👤';try{const{data:p}=await DB.from('profiles').select('full_name, avatar_url, gender, role').eq('id',r.customer_id).single();if(p){n=p.full_name||'زبون';av=p.avatar_url?'<img src="'+esc(p.avatar_url)+'" style="width:24px;height:24px;border-radius:50%;object-fit:cover;vertical-align:middle">':getAvatar(p.role,p.gender);}}catch(e){}const s='⭐'.repeat(r.stars||5);const dt=r.created_at?new Date(r.created_at).toLocaleDateString('ar-MA'):'';const img=r.image_url?'<img src="'+esc(r.image_url)+'" style="max-width:100%;border-radius:8px;margin-top:6px" onclick="window.open(\''+esc(r.image_url)+'\',\'_blank\')">':'';h+='<div style="background:#f8f9fa;padding:10px;border-radius:8px;margin:6px 0;font-size:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px;align-items:center"><b style="color:var(--primary)">'+av+' '+esc(n)+'</b><span style="color:#ff9800">'+s+'</span></div>'+(r.comment?'<div style="color:#555">'+esc(r.comment)+'</div>':'')+img+'<div style="color:#aaa;font-size:10px;margin-top:4px">📅 '+esc(dt)+'</div></div>';}l.innerHTML=h;}catch(e){l.innerHTML='';}}
+
+function showAdminPanel(){if(!currentProfile||!currentProfile.is_admin){show('❌ ماشي مصرح',false);return;}document.getElementById('admin-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');adminTab('overview');}
+function hideAdminPanel(){document.getElementById('admin-box').classList.add('hidden');document.getElementById('add-store-box').classList.remove('hidden');}
+async function adminTab(tab){['overview','users','orders','stores'].forEach(x=>{const b=document.getElementById('tab-'+x);if(b)b.style.background=(x===tab)?'linear-gradient(135deg,#C2185B,#880E4F)':'linear-gradient(135deg,#2196F3,#1565C0)';});const c=document.getElementById('admin-content');c.innerHTML='⏳';try{if(tab==='overview')await adminLoadOverview(c);else if(tab==='users')await adminLoadUsers(c);else if(tab==='orders')await adminLoadOrders(c);else if(tab==='stores')await adminLoadStores(c);}catch(e){c.innerHTML='❌';}}
+async function adminLoadOverview(c){const{data:u}=await DB.from('profiles').select('id, role');const{data:o}=await DB.from('orders').select('id, total_price, status');const{data:s}=await DB.from('stores').select('id, is_featured');const tu=u?.length||0,cu=u?.filter(x=>x.role==='customer').length||0,mu=u?.filter(x=>x.role==='merchant').length||0,du=u?.filter(x=>x.role==='driver').length||0;const to=o?.length||0,pe=o?.filter(x=>x.status==='pending').length||0,de=o?.filter(x=>x.status==='delivering').length||0,dl=o?.filter(x=>x.status==='delivered').length||0,ca=o?.filter(x=>x.status==='cancelled').length||0;const rev=o?.filter(x=>x.status==='delivered').reduce((a,x)=>a+parseFloat(x.total_price||0),0)||0;const ts=s?.length||0,fs=s?.filter(x=>x.is_featured).length||0;c.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px"><div style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);padding:15px;border-radius:10px;text-align:center"><div style="font-size:24px;font-weight:bold;color:#1976D2">'+tu+'</div><div style="font-size:12px">👥</div></div><div style="background:linear-gradient(135deg,#f3e5f5,#e1bee7);padding:15px;border-radius:10px;text-align:center"><div style="font-size:24px;font-weight:bold;color:#7B1FA2">'+to+'</div><div style="font-size:12px">📋</div></div><div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:15px;border-radius:10px;text-align:center"><div style="font-size:24px;font-weight:bold;color:#388E3C">'+rev.toFixed(0)+'</div><div style="font-size:12px">💰</div></div><div style="background:linear-gradient(135deg,#fff3e0,#ffe0b2);padding:15px;border-radius:10px;text-align:center"><div style="font-size:24px;font-weight:bold;color:#F57C00">'+ts+'</div><div style="font-size:12px">🏪</div></div></div><div style="background:white;padding:15px;border-radius:10px;border:1px solid #e9ecef;margin-bottom:10px"><b>👥 المستخدمين:</b><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px"><div style="text-align:center;padding:8px;background:#e7f3ff;border-radius:8px"><div style="font-size:18px;font-weight:bold;color:#2196F3">'+cu+'</div><div style="font-size:11px">🛒</div></div><div style="text-align:center;padding:8px;background:#fff3cd;border-radius:8px"><div style="font-size:18px;font-weight:bold;color:#FFB300">'+mu+'</div><div style="font-size:11px">🏪</div></div><div style="text-align:center;padding:8px;background:#d4edda;border-radius:8px"><div style="font-size:18px;font-weight:bold;color:#00C853">'+du+'</div><div style="font-size:11px">🚚</div></div></div></div><div style="background:white;padding:15px;border-radius:10px;border:1px solid #e9ecef"><b>📋 الطلبات:</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div style="padding:8px;background:#fff3cd;border-radius:8px;display:flex;justify-content:space-between"><span>⏳</span><b>'+pe+'</b></div><div style="padding:8px;background:#cce5ff;border-radius:8px;display:flex;justify-content:space-between"><span>🚗</span><b>'+de+'</b></div><div style="padding:8px;background:#d4edda;border-radius:8px;display:flex;justify-content:space-between"><span>🎉</span><b>'+dl+'</b></div><div style="padding:8px;background:#ffe0e0;border-radius:8px;display:flex;justify-content:space-between"><span>❌</span><b>'+ca+'</b></div></div></div><div style="background:linear-gradient(135deg,#fff8e1,#fffbf0);padding:15px;border-radius:10px;border:2px solid #FFB300;margin-top:10px"><b style="color:#FF6F00">⭐ المميزة: '+fs+' من '+ts+'</b></div>';}
+async function adminLoadUsers(c){const{data:u,error}=await DB.from('profiles').select('id, full_name, phone, role, gender, created_at').order('created_at',{ascending:false}).limit(100);if(error){c.innerHTML='❌';return;}if(!u||u.length===0){c.innerHTML='ما كاينش';return;}const rf=window._adminRoleFilter||'';const f=rf?u.filter(x=>x.role===rf):u;const re={customer:'🛒',merchant:'🏪',driver:'🚚'};let h='<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap"><button class="small-btn '+(rf===''?'green':'blue')+'" onclick="window._adminRoleFilter=\'\';adminTab(\'users\')">👥 ('+u.length+')</button><button class="small-btn '+(rf==='customer'?'green':'blue')+'" onclick="window._adminRoleFilter=\'customer\';adminTab(\'users\')">🛒</button><button class="small-btn '+(rf==='merchant'?'green':'blue')+'" onclick="window._adminRoleFilter=\'merchant\';adminTab(\'users\')">🏪</button><button class="small-btn '+(rf==='driver'?'green':'blue')+'" onclick="window._adminRoleFilter=\'driver\';adminTab(\'users\')">🚚</button></div>';f.forEach(x=>{const d=x.created_at?new Date(x.created_at).toLocaleDateString('ar-MA'):'-';const av=getAvatar(x.role,x.gender);h+='<div style="background:white;padding:12px;border-radius:10px;margin-bottom:8px;border:1px solid #e9ecef;display:flex;align-items:center;gap:10px"><div style="font-size:32px">'+av+'</div><div style="flex:1;min-width:0"><div style="font-weight:bold;color:#333">'+esc(x.full_name||'بلا اسم')+'</div><div style="font-size:12px;color:#888">'+(re[x.role]||'')+' '+esc(x.phone||'-')+'</div><div style="font-size:11px;color:#aaa">📅 '+d+'</div></div></div>';});c.innerHTML=h;}
+async function adminLoadOrders(c){const{data:o,error}=await DB.from('orders').select('*').order('created_at',{ascending:false}).limit(50);if(error||!o){c.innerHTML='❌';return;}const st={pending:'⏳',accepted:'✅',delivering:'🚗',delivered:'🎉',cancelled:'❌'};const co={pending:'#fff3cd',accepted:'#cce5ff',delivering:'#e7f3ff',delivered:'#d4edda',cancelled:'#ffe0e0'};let h='';o.forEach(x=>{const dt=x.created_at?new Date(x.created_at).toLocaleString('ar-MA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'-';h+='<div style="background:'+(co[x.status]||'white')+';padding:10px;border-radius:8px;margin-bottom:6px;font-size:12px"><b style="color:var(--primary)">📦 #'+esc(x.id.substring(0,6))+'</b> - <b>'+esc(x.total_price)+' DH</b> - '+esc(dt)+'<br>👤 '+esc(x.customer_name||'')+' - 📞 '+esc(x.customer_phone||'')+'<br>📍 '+esc(x.delivery_address||'')+' <b>'+(st[x.status]||x.status)+'</b></div>';});c.innerHTML=h;}
+async function adminLoadStores(c){const{data:s,error}=await DB.from('stores').select('*').order('created_at',{ascending:false});if(error||!s){c.innerHTML='❌';return;}c.innerHTML='<div style="margin-bottom:10px">'+s.length+' متجر</div>';s.forEach(st=>{const d=document.createElement('div');d.style.cssText='background:white;padding:12px;border-radius:10px;margin-bottom:8px;border:1px solid #e9ecef;font-size:13px';d.innerHTML='<b style="color:var(--primary)">'+(st.is_featured?'⭐ ':'')+'🏪 '+esc(st.name)+'</b> '+(st.is_open?'<span style="color:#00C853">✅</span>':'<span style="color:#FF3D00">🔒</span>');const b=document.createElement('button');b.className=st.is_featured?'orange small-btn':'blue small-btn';b.textContent=st.is_featured?'⭐ إلغاء':'⭐ تمييز';b.style.marginTop='6px';b.onclick=()=>{DB.from('stores').update({is_featured:!st.is_featured}).eq('id',st.id).then(()=>{show('✅',true);adminTab('stores');});};d.appendChild(b);c.appendChild(d);});}
+
+async function loadOrders(){const l=document.getElementById('orders-list');l.innerHTML='⏳';let q=DB.from('orders').select('*').order('created_at',{ascending:false});if(currentRole==='customer')q=q.eq('customer_id',currentUser.id);else if(currentRole==='merchant'){const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);if(ms&&ms.length>0)q=q.in('store_id',ms.map(s=>s.id));else{l.innerHTML='-';return;}}else if(currentRole==='driver')q=q.or('status.eq.accepted,and(status.eq.delivering,driver_id.eq.'+currentUser.id+')');const filter=document.getElementById('order-filter').value;if(filter)q=q.eq('status',filter);const{data:orders,error}=await q;if(error){l.innerHTML='❌';return;}document.getElementById('orders-count').textContent='('+(orders?.length||0)+')';if(!orders||orders.length===0){l.innerHTML='-';return;}l.innerHTML='';const stAr={pending:'⏳ انتظار',accepted:'✅ مقبولة',delivering:'🚗 في الطريق',delivered:'🎉 موصلة',cancelled:'❌ ملغاة'};for(const o of orders){const d=document.createElement('div');d.className='order-item';const{data:items}=await DB.from('order_items').select('*').eq('order_id',o.id);let ph='';if(items&&items.length>0)ph='<div class="order-products">'+items.map(it=>'• '+esc(it.product_name)+' × '+esc(it.quantity)).join('<br>')+'</div>';const dt=o.created_at?new Date(o.created_at).toLocaleString('ar-MA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'-';const payTxt=o.payment_method==='card'?'💳':'💵';let dh='';if(currentRole==='customer'&&o.driver_id&&(o.status==='delivering'||o.status==='delivered')){const{data:dr}=await DB.from('profiles').select('full_name, phone').eq('id',o.driver_id).single();if(dr)dh='<div style="background:#e7f3ff;padding:8px;border-radius:8px;margin-top:8px">🚚 '+esc(dr.full_name||'')+'<br>📞 '+esc(dr.phone||'')+'</div>';}d.innerHTML='<b>📦 #'+esc(o.id.substring(0,6))+'</b><br><div class="order-date">🕐 '+esc(dt)+'</div>👤 '+esc(o.customer_name||'')+'<br>📞 '+esc(o.customer_phone||'')+'<br>📍 '+esc(o.delivery_address||'')+'<br>💰 <b>'+esc(o.total_price)+' DH</b> • '+payTxt+'<br>'+(stAr[o.status]||o.status)+ph+dh;const cb=document.createElement('button');cb.className='green small-btn';cb.textContent='💬';cb.onclick=()=>openChat(o.id,'#'+o.id.substring(0,6));d.appendChild(cb);const pi=document.createElement('button');pi.className='teal small-btn';pi.textContent='🖨️';pi.onclick=()=>printInvoice(o.id);d.appendChild(pi);const cp=document.createElement('button');cp.className='pink small-btn';cp.textContent='📋';cp.onclick=()=>navigator.clipboard.writeText(o.id).then(()=>show('✅',true));d.appendChild(cp);if(currentRole==='customer'&&(o.status==='delivered'||o.status==='cancelled')){const rb=document.createElement('button');rb.className='orange small-btn';rb.textContent='🔁';rb.onclick=()=>reorder(o.id);d.appendChild(rb);}if(currentRole==='customer'&&o.status==='delivered'){const{data:exR}=await DB.from('driver_ratings').select('id').eq('order_id',o.id).eq('customer_id',currentUser.id).single();const{data:exS}=await DB.from('ratings').select('id').eq('store_id',o.store_id).eq('customer_id',currentUser.id).single();const rd=document.createElement('div');rd.style.marginTop='10px';let btn1=o.driver_id?(exR?'<button class="small-btn green">✅ الموصل</button>':'<button class="orange small-btn" onclick="rateDriver(\''+o.id+'\', \''+o.driver_id+'\')">⭐ الموصل</button>'):'';let btn2=exS?'<button class="small-btn green">✅ المتجر</button>':'<button class="pink small-btn" onclick="openReviewModal(\''+o.id+'\', \''+o.store_id+'\')">⭐ المتجر + 📷</button>';rd.innerHTML=btn1+' '+btn2;d.appendChild(rd);}if(currentRole==='customer'&&o.status==='delivering'&&o.driver_id){const bd=document.createElement('div');bd.style.marginTop='10px';const tb=document.createElement('button');tb.className='green small-btn';tb.textContent='📍 موقع الموصل';tb.onclick=()=>openDriverMap(o.id);bd.appendChild(tb);d.appendChild(bd);}if(currentRole==='driver'&&o.status==='accepted'&&!o.driver_id){const bd=document.createElement('div');bd.style.marginTop='10px';const b2=document.createElement('button');b2.className='green small-btn';b2.textContent='🛵 خذ الطلب';b2.onclick=()=>claimOrder(o.id);bd.appendChild(b2);d.appendChild(bd);}if(currentRole==='merchant'&&o.status==='pending'){const bd=document.createElement('div');bd.style.marginTop='10px';bd.innerHTML='<button class="green small-btn" onclick="updateOrderStatus(\''+o.id+'\', \'accepted\')">✅</button><button class="red small-btn" onclick="updateOrderStatus(\''+o.id+'\', \'cancelled\')">❌</button>';d.appendChild(bd);}if(currentRole==='customer'&&o.status==='pending'){const bd=document.createElement('div');bd.style.marginTop='10px';bd.innerHTML='<button class="red small-btn" onclick="cancelOrder(\''+o.id+'\')">❌</button>';d.appendChild(bd);}if(currentRole==='merchant'&&o.status==='accepted'){const bd=document.createElement('div');bd.style.marginTop='10px';bd.innerHTML='<button class="blue small-btn" onclick="updateOrderStatus(\''+o.id+'\', \'delivering\')">🚗</button>';d.appendChild(bd);}if(currentRole==='driver'&&o.status==='delivering'&&o.driver_id===currentUser.id){const bd=document.createElement('div');bd.style.marginTop='10px';bd.innerHTML='<button class="green small-btn" onclick="updateOrderStatus(\''+o.id+'\', \'delivered\')">✅</button>';d.appendChild(bd);}if((currentRole==='merchant'||currentRole==='driver')&&o.customer_phone){let pn=o.customer_phone.replace(/\D/g,'');if(pn.startsWith('0'))pn='212'+pn.substring(1);const wa=document.createElement('button');wa.className='whatsapp small-btn';wa.textContent='📱';wa.onclick=()=>window.open('https://wa.me/'+pn,'_blank');d.appendChild(wa);const ca2=document.createElement('button');ca2.className='blue small-btn';ca2.textContent='📞';ca2.onclick=()=>window.location.href='tel:'+pn;d.appendChild(ca2);}l.appendChild(d);}}
+function filterOrders(){const s=document.getElementById('orders-search').value.toLowerCase().trim();document.querySelectorAll('.order-item').forEach(o=>{const t=o.textContent.toLowerCase();const c=o.querySelector('b');const code=c?c.textContent.toLowerCase():'';const cm=code.includes(s)||code.includes('#'+s)||code.replace('#','').includes(s);o.style.display=(s===''||t.includes(s)||cm)?'block':'none';});}
+async function cancelOrder(id){if(!confirm('?'))return;try{await DB.from('orders').update({status:'cancelled'}).eq('id',id).eq('customer_id',currentUser.id);show('✅',true);loadOrders();}catch(e){show('❌',false);}}
+async function updateOrderStatus(id,st){try{const{data:o,error:oe}=await DB.from('orders').select('customer_id, store_id, driver_id').eq('id',id).single();if(oe||!o){show('❌',false);return;}let allowed=false;if(currentRole==='merchant'){const{data:ms}=await DB.from('stores').select('id').eq('owner_id',currentUser.id);allowed=!!(ms&&ms.some(s=>s.id===o.store_id));}else if(currentRole==='driver'){allowed=(o.driver_id===currentUser.id);}else if(currentRole==='customer'){allowed=(o.customer_id===currentUser.id&&st==='cancelled');}if(!allowed){show('❌',false);return;}await DB.from('orders').update({status:st}).eq('id',id);show('✅',true);try{const{data:o2}=await DB.from('orders').select('customer_id').eq('id',id).single();if(o2&&o2.customer_id){const m={accepted:'✅ تم قبول طلبك',delivering:'🚗 الموصل في الطريق',delivered:'🎉 تم توصيل طلبك',cancelled:'❌ تم إلغاء طلبك'};await pushNotif(o2.customer_id,'📦 SoukExpress',m[st]||st);}}catch(e){}loadOrders();if(currentRole==='merchant')lastPendingCount=await updatePendingBadge();}catch(e){show('❌',false);}}
+async function rateDriver(oid,did){const s=prompt('⭐ 1-5','5');if(!s)return;const n=parseInt(s);if(n<1||n>5)return;try{await DB.from('driver_ratings').insert([{order_id:oid,customer_id:currentUser.id,driver_id:did,stars:n}]);show('✅',true);loadOrders();}catch(e){show('❌',false);}}
+</script>
+</body>
+</html>
