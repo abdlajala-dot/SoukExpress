@@ -219,7 +219,7 @@ button:active{transform:scale(0.97)}
 </div>
 <div class="box hidden" id="about-box">
 <h2>ℹ️ عن التطبيق</h2>
-<div style="text-align:center;padding:10px 0"><div style="font-size:60px;margin-bottom:10px">🛒</div><h3 style="color:var(--primary);margin:5px 0">SoukExpress</h3><p style="color:#888;font-size:13px">v4.3.0</p></div>
+<div style="text-align:center;padding:10px 0"><div style="font-size:60px;margin-bottom:10px">🛒</div><h3 style="color:var(--primary);margin:5px 0">SoukExpress</h3><p style="color:#888;font-size:13px">v4.4.0</p></div>
 <p style="line-height:1.8;font-size:14px">🚚 منصة توصيل سريع بأكادير.</p>
 <button class="whatsapp" onclick="supportWhatsApp()">💬 تواصل</button>
 <button class="red" onclick="hideAbout()">إغلاق</button>
@@ -320,8 +320,11 @@ button:active{transform:scale(0.97)}
 <input type="file" id="chat-image-input" accept="image/*" style="display:none">
 <button class="red" onclick="closeChat()" style="margin-top:10px">🔙 رجوع</button>
 </div>
-<div class="qr-modal hidden" id="review-modal">
-  <div style="background:white;padding:20px;border-radius:20px;max-width:400px;width:100%">
+
+<!-- ⭐ REVIEW MODAL — مع إصلاح ✕ -->
+<div class="qr-modal hidden" id="review-modal" onclick="if(event.target===this)closeReviewModal()">
+  <div style="background:white;padding:20px;border-radius:20px;max-width:400px;width:100%;position:relative">
+    <button onclick="closeReviewModal()" style="position:absolute;top:10px;left:10px;width:36px;height:36px;padding:0;border-radius:50%;background:linear-gradient(135deg,#FF3D00,#D32F2F);color:white;font-size:18px;font-weight:bold;cursor:pointer;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.2);z-index:10">✕</button>
     <h3 style="text-align:center;margin:0 0 15px 0;color:var(--primary)">⭐ قيّم تجربتك</h3>
     <div style="text-align:center;font-size:40px;margin:15px 0" id="review-stars-display">⭐⭐⭐⭐⭐</div>
     <div style="display:flex;justify-content:center;gap:8px;margin-bottom:15px">
@@ -344,6 +347,7 @@ button:active{transform:scale(0.97)}
     <button class="red" onclick="closeReviewModal()" style="margin-top:8px">✕ إلغاء</button>
   </div>
 </div>
+
 <div class="box hidden" id="admin-box">
 <h2 style="color:var(--primary)">🔐 لوحة الإدارة</h2>
 <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:15px">
@@ -371,8 +375,8 @@ button:active{transform:scale(0.97)}
 <div class="footer">© 2026 SoukExpress Maroc</div>
 </div>
 <button class="float-wa" onclick="supportWhatsApp()">💬</button>
-<button class="float-cart" onclick="scrollToCart()">🛒<span id="cart-float-count" class="float-cart-count">0</span></button>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <button class="float-cart" onclick="scrollToCart()">🛒<span id="cart-float-count" class="float-cart-count">0</span></button>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const supaURL='https://hzinjliwqixlsdqdvuma.supabase.co';
 const supaKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6aW5qbGl3cWl4bHNkcWR2dW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4OTE2NjAsImV4cCI6MjEwNzQ2NzY2MH0.575Tnk-RJOjJ7KhQdbxJOOKeDSBVxteBslZSoUDIyNs';
@@ -411,6 +415,9 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(e.target && e.target.id === 'avatar-input'){ const f = e.target.files[0]; if(f) uploadAvatar(f); e.target.value=''; }
     if(e.target && (e.target.id==='pr-image-file' || e.target.id==='pr-image-gallery')){ const f=e.target.files[0]; const p=document.getElementById('image-preview'); if(!f){p.innerHTML='';return;} const r=new FileReader(); r.onload=ev=>p.innerHTML='<img src="'+ev.target.result+'" style="max-width:150px;border-radius:10px">'; r.readAsDataURL(f); }
     if(e.target && (e.target.id === 'review-image-file' || e.target.id === 'review-image-gallery')){ const f = e.target.files[0]; const p = document.getElementById('review-image-preview'); if(!f){ p.innerHTML=''; return; } const r = new FileReader(); r.onload = ev => p.innerHTML = '<img src="'+ev.target.result+'" style="max-width:150px;border-radius:10px">'; r.readAsDataURL(f); }
+  });
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') closeReviewModal();
   });
 });
 function selectSched(mode){scheduleMode=mode;document.getElementById('sched-now').classList.toggle('selected',mode==='now');document.getElementById('sched-later').classList.toggle('selected',mode==='later');document.querySelectorAll('input[name="sched"]').forEach(r=>r.checked=r.value===mode);const el=document.getElementById('sched-time');el.style.display=mode==='later'?'block':'none';if(mode==='later'){const tz=new Date().getTimezoneOffset();const d=new Date(Date.now()+3600000-tz*60000);el.value=d.toISOString().slice(0,16);const now=new Date(Date.now()-tz*60000);el.min=now.toISOString().slice(0,16);}}
@@ -478,6 +485,65 @@ function hideProfile(){document.getElementById('profile-box').classList.add('hid
 async function doUpdateProfile(){const n=document.getElementById('pf-name').value,p=document.getElementById('pf-phone').value;if(!n){show('⚠️',false);return;}try{await DB.from('profiles').update({full_name:n,phone:p}).eq('id',currentUser.id);currentProfile.full_name=n;currentProfile.phone=p;document.getElementById('welcome').textContent='أهلاً '+n;document.getElementById('co-name').value=n;document.getElementById('co-phone').value=p;show('✅',true);setTimeout(hideProfile,1000);}catch(e){show('❌',false);}}
 async function doDeleteAccount(){if(!confirm('⚠️ حذف الحساب نهائياً؟'))return;if(!confirm('🔴 متأكد 100%؟'))return;if(prompt('اكتب "نعم" للتأكيد:')!=='نعم'){show('❌ إلغاء',false);return;}show('⏳',true);try{const{error}=await DB.rpc('delete_my_account');if(error)throw error;show('✅ تم الحذف',true);setTimeout(async()=>{await DB.auth.signOut();location.reload();},1500);}catch(e){show('❌ '+e.message,false);}}
 
+// ═══ REVIEWS — مع الإصلاح ═══
+function setReviewStars(n){
+  reviewStars=n;
+  document.getElementById('review-stars-display').textContent='⭐'.repeat(n);
+}
+function openReviewModal(orderId,storeId){
+  reviewOrderId=orderId;
+  reviewStoreId=storeId;
+  reviewStars=5;
+  document.getElementById('review-stars-display').textContent='⭐⭐⭐⭐⭐';
+  document.getElementById('review-comment').value='';
+  document.getElementById('review-image-preview').innerHTML='';
+  document.getElementById('review-image-file').value='';
+  document.getElementById('review-image-gallery').value='';
+  var m=document.getElementById('review-modal');
+  m.classList.remove('hidden');
+  m.style.display='flex';
+}
+function closeReviewModal(){
+  var m=document.getElementById('review-modal');
+  if(m){
+    m.classList.add('hidden');
+    m.style.display='none';
+  }
+  reviewOrderId=null;
+  reviewStoreId=null;
+  reviewStars=5;
+  try{
+    document.getElementById('review-comment').value='';
+    document.getElementById('review-image-preview').innerHTML='';
+    document.getElementById('review-stars-display').textContent='⭐⭐⭐⭐⭐';
+    document.getElementById('review-image-file').value='';
+    document.getElementById('review-image-gallery').value='';
+  }catch(e){}
+}
+async function submitReview(){
+  if(!reviewOrderId||!reviewStoreId)return;
+  var c=document.getElementById('review-comment').value.trim();
+  var f=document.getElementById('review-image-file').files[0]||document.getElementById('review-image-gallery').files[0];
+  show('⏳ جاري الإرسال...',true);
+  try{
+    var iu=null;
+    if(f){
+      var cp=await compressImage(f,800,0.7);
+      var fn='review-'+Date.now()+'-'+Math.random().toString(36).substr(2,9)+'.jpg';
+      var up=await DB.storage.from('product-images').upload(fn,cp,{contentType:'image/jpeg'});
+      if(up.error)throw up.error;
+      iu=DB.storage.from('product-images').getPublicUrl(fn).data.publicUrl;
+    }
+    await DB.from('ratings').insert([{store_id:reviewStoreId,customer_id:currentUser.id,stars:reviewStars,comment:c||null,image_url:iu}]);
+    show('⭐ شكراً على التقييم!',true);
+    closeReviewModal();
+    loadStores();
+  }catch(e){
+    show('❌ '+e.message,false);
+  }
+}
+async function showStoreReviews(storeId){const l=document.getElementById('reviews-'+storeId);if(!l)return;l.innerHTML='⏳';try{const{data:rs}=await DB.from('ratings').select('*').eq('store_id',storeId).not('comment','is',null).order('created_at',{ascending:false}).limit(5);if(!rs||rs.length===0){l.innerHTML='<div style="text-align:center;color:#888;font-size:12px;padding:5px">ما كاينش مراجعات بعد</div>';return;}let h='<b style="font-size:13px;color:#666">📝 المراجعات:</b>';for(const r of rs){let n='زبون',av='👤';try{const{data:p}=await DB.from('profiles').select('full_name, avatar_url, gender, role').eq('id',r.customer_id).single();if(p){n=p.full_name||'زبون';av=p.avatar_url?'<img src="'+esc(p.avatar_url)+'" style="width:24px;height:24px;border-radius:50%;object-fit:cover;vertical-align:middle">':getAvatar(p.role,p.gender);}}catch(e){}const s='⭐'.repeat(r.stars||5);const dt=r.created_at?new Date(r.created_at).toLocaleDateString('ar-MA'):'';const img=r.image_url?'<img src="'+esc(r.image_url)+'" style="max-width:100%;border-radius:8px;margin-top:6px" onclick="window.open(\''+esc(r.image_url)+'\',\'_blank\')">':'';h+='<div style="background:#f8f9fa;padding:10px;border-radius:8px;margin:6px 0;font-size:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px;align-items:center"><b style="color:var(--primary)">'+av+' '+esc(n)+'</b><span style="color:#ff9800">'+s+'</span></div>'+(r.comment?'<div style="color:#555">'+esc(r.comment)+'</div>':'')+img+'<div style="color:#aaa;font-size:10px;margin-top:4px">📅 '+esc(dt)+'</div></div>';}l.innerHTML=h;}catch(e){l.innerHTML='';}}
+
 // ═══ STATS WITH CHART.JS ═══
 async function showStats(){
   document.getElementById('stats-box').classList.remove('hidden');
@@ -543,13 +609,6 @@ function clearCart(){cart=[];appliedCoupon=null;selectedLat=null;selectedLng=nul
 async function doCheckout(){if(cart.length===0){show('⚠️',false);return;}const cn=document.getElementById('co-name').value,cp=document.getElementById('co-phone').value,ca=document.getElementById('co-address').value;if(!cn||!cp||!ca){show('⚠️',false);vibrate(100);return;}const total=cart.reduce((s,c)=>s+c.price*c.qty,0);let ft=total;if(appliedCoupon){const d=appliedCoupon.discount_type==='percent'?(total*appliedCoupon.discount_value/100):appliedCoupon.discount_value;ft=Math.max(0,total-d);}const sid=cart[0].storeId;let sa=null,isS=false;if(scheduleMode==='later'){const tv=document.getElementById('sched-time').value;if(!tv){show('⚠️',false);return;}sa=new Date(tv).toISOString();isS=true;}let ps='unpaid',pr=null;if(selectedPayment==='card'){ps='pending_online';pr='REF-'+Date.now();}show('⏳',true);try{const{data:od,error:oe}=await DB.from('orders').insert([{customer_id:currentUser.id,store_id:sid,status:'pending',total_price:ft,delivery_address:ca,customer_phone:cp,customer_name:cn,latitude:selectedLat,longitude:selectedLng,payment_method:selectedPayment,scheduled_at:sa,is_scheduled:isS,payment_status:ps,payment_ref:pr}]).select();if(oe)throw oe;const oid=od[0].id;const items=cart.map(c=>({order_id:oid,product_id:c.prodId,product_name:c.name,price:c.price,quantity:c.qty}));await DB.from('order_items').insert(items);if(appliedCoupon)await DB.from('coupons').update({used_count:appliedCoupon.used_count+1}).eq('id',appliedCoupon.id);try{const{data:st}=await DB.from('stores').select('owner_id').eq('id',sid).single();if(st&&st.owner_id)await pushNotif(st.owner_id,'🔔 طلب جديد!',(cn||'زبون')+' - '+ft+' DH');}catch(e){}const earned=Math.floor(ft/10);if(earned>0&&currentProfile){const cur=currentProfile.loyalty_points||0;await DB.from('profiles').update({loyalty_points:cur+earned}).eq('id',currentUser.id);currentProfile.loyalty_points=cur+earned;}playBeep();vibrate([200,100,200]);show('🎉 تم إرسال طلبك بنجاح!',true);cart=[];appliedCoupon=null;selectedLat=null;selectedLng=null;selectedPayment='cash';scheduleMode='now';if(marker&&map){map.removeLayer(marker);marker=null;}document.getElementById('location-status').textContent='';document.getElementById('coupon-input').value='';selectPay('cash');loadCart();updateFloatCart();loadOrders();}catch(e){show('❌ '+e.message,false);vibrate(500);}}
 async function claimOrder(id){try{const{data,error}=await DB.from('orders').update({status:'delivering',driver_id:currentUser.id}).eq('id',id).is('driver_id',null).in('status',['accepted','delivering']).select();if(error)throw error;if(!data||data.length===0){show('⚠️',false);return;}show('✅',true);playBeep();vibrate(150);loadOrders();}catch(e){show('❌ '+e.message,false);}}
 async function openDriverMap(orderId){try{const{data:o}=await DB.from('orders').select('driver_lat, driver_lng, latitude, longitude, delivery_address').eq('id',orderId).single();let url;if(o&&o.driver_lat&&o.driver_lng){url='https://www.google.com/maps?q='+o.driver_lat+','+o.driver_lng;}else if(o&&o.latitude&&o.longitude){url='https://www.google.com/maps?q='+o.latitude+','+o.longitude;}else{url='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(o?.delivery_address||'Agadir Maroc');}window.open(url,'_blank');}catch(e){show('❌',false);}}
-
-// ═══ REVIEWS ═══
-function setReviewStars(n){reviewStars=n;document.getElementById('review-stars-display').textContent='⭐'.repeat(n);}
-function openReviewModal(orderId,storeId){reviewOrderId=orderId;reviewStoreId=storeId;reviewStars=5;document.getElementById('review-stars-display').textContent='⭐⭐⭐⭐⭐';document.getElementById('review-comment').value='';document.getElementById('review-image-preview').innerHTML='';document.getElementById('review-image-file').value='';document.getElementById('review-image-gallery').value='';document.getElementById('review-modal').classList.remove('hidden');}
-function closeReviewModal(){document.getElementById('review-modal').classList.add('hidden');reviewOrderId=null;reviewStoreId=null;}
-async function submitReview(){if(!reviewOrderId||!reviewStoreId)return;const c=document.getElementById('review-comment').value.trim();const f=document.getElementById('review-image-file').files[0]||document.getElementById('review-image-gallery').files[0];show('⏳',true);try{let iu=null;if(f){const cp=await compressImage(f,800,0.7);const fn='review-'+Date.now()+'-'+Math.random().toString(36).substr(2,9)+'.jpg';const{error:ue}=await DB.storage.from('product-images').upload(fn,cp,{contentType:'image/jpeg'});if(ue)throw ue;iu=DB.storage.from('product-images').getPublicUrl(fn).data.publicUrl;}await DB.from('ratings').insert([{store_id:reviewStoreId,customer_id:currentUser.id,stars:reviewStars,comment:c||null,image_url:iu}]);show('⭐ شكراً!',true);closeReviewModal();loadStores();}catch(e){show('❌ '+e.message,false);}}
-async function showStoreReviews(storeId){const l=document.getElementById('reviews-'+storeId);if(!l)return;l.innerHTML='⏳';try{const{data:rs}=await DB.from('ratings').select('*').eq('store_id',storeId).not('comment','is',null).order('created_at',{ascending:false}).limit(5);if(!rs||rs.length===0){l.innerHTML='<div style="text-align:center;color:#888;font-size:12px;padding:5px">ما كاينش مراجعات بعد</div>';return;}let h='<b style="font-size:13px;color:#666">📝 المراجعات:</b>';for(const r of rs){let n='زبون',av='👤';try{const{data:p}=await DB.from('profiles').select('full_name, avatar_url, gender, role').eq('id',r.customer_id).single();if(p){n=p.full_name||'زبون';av=p.avatar_url?'<img src="'+esc(p.avatar_url)+'" style="width:24px;height:24px;border-radius:50%;object-fit:cover;vertical-align:middle">':getAvatar(p.role,p.gender);}}catch(e){}const s='⭐'.repeat(r.stars||5);const dt=r.created_at?new Date(r.created_at).toLocaleDateString('ar-MA'):'';const img=r.image_url?'<img src="'+esc(r.image_url)+'" style="max-width:100%;border-radius:8px;margin-top:6px" onclick="window.open(\''+esc(r.image_url)+'\',\'_blank\')">':'';h+='<div style="background:#f8f9fa;padding:10px;border-radius:8px;margin:6px 0;font-size:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px;align-items:center"><b style="color:var(--primary)">'+av+' '+esc(n)+'</b><span style="color:#ff9800">'+s+'</span></div>'+(r.comment?'<div style="color:#555">'+esc(r.comment)+'</div>':'')+img+'<div style="color:#aaa;font-size:10px;margin-top:4px">📅 '+esc(dt)+'</div></div>';}l.innerHTML=h;}catch(e){l.innerHTML='';}}
 
 // ═══ ADMIN ═══
 function showAdminPanel(){if(!currentProfile||!currentProfile.is_admin){show('❌ ماشي مصرح',false);return;}document.getElementById('admin-box').classList.remove('hidden');document.getElementById('add-store-box').classList.add('hidden');adminTab('overview');}
