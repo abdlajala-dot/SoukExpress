@@ -569,13 +569,12 @@ async function registerPushSubscription() {
     }
     const subJSON = subscription.toJSON();
     const { error } = await DB.from('push_subscriptions').upsert([
-      { 
-        user_id: currentUser.id, 
-        endpoint: subJSON.endpoint,
-        p256dh: subJSON.keys.p256dh,
-        auth: subJSON.keys.auth
-      }
-    ], { onConflict: 'user_id' });
+  { 
+    user_id: currentUser.id, 
+    subscription: subJSON,
+    updated_at: new Date().toISOString()
+  }
+], { onConflict: 'user_id' });
     
     if (error) throw error;
     show('✅ الإشعارات مفعلة بنجاح', true);
