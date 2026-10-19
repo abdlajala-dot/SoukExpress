@@ -568,8 +568,8 @@ async function registerPushSubscription() {
       });
     }
     const subJSON = subscription.toJSON();
-   alert('Subscription: ' + JSON.stringify(subJSON));
-    const { error } = await DB.from('push_subscriptions').upsert([
+  
+   const { error } = await DB.from('push_subscriptions').upsert([
   { 
     user_id: currentUser.id, 
     subscription: subJSON,
