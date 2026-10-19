@@ -555,10 +555,8 @@ function urlBase64ToUint8Array(base64String) {
   }
   return outputArray;
 }
-
 async function registerPushSubscription() {
   try {
-    if (!currentUser) { show('❌ خاصك تدخل للحساب الأول', false); return; }
     const registration = await navigator.serviceWorker.ready;
     let subscription = await registration.pushManager.getSubscription();
     if (!subscription) {
@@ -568,18 +566,16 @@ async function registerPushSubscription() {
       });
     }
     const subJSON = subscription.toJSON();
-  
-   const { error } = await DB.from('push_subscriptions').upsert([
-  { 
-    user_id: currentUser.id, 
-    subscription: subJSON,
-    updated_at: new Date().toISOString()
-  }
-], { onConflict: 'user_id' });
-    
+    const { error } = await DB.from('push_subscriptions').upsert([
+      { 
+        user_id: currentUser.id, 
+        subscription: subJSON,
+        updated_at: new Date().toISOString()
+      }
+    ], { onConflict: 'user_id' });
     if (error) throw error;
     show('✅ الإشعارات مفعلة بنجاح', true);
-    if(typeof playBeep === 'function') playBeep();
+    playBeep();
   } catch (err) {
     console.error('Push registration error:', err);
     show('❌ ' + err.message, false);
