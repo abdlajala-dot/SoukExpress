@@ -390,7 +390,7 @@ button:disabled{opacity:0.6;cursor:not-allowed}
 const supaURL='https://hzinjliwqixlsdqdvuma.supabase.co';
 const supaKEY='sb_publishable_7fcm9t-vqo3QosvH_jAYMQ_xCG3QtsZ';
 const DB=window.supabase.createClient(supaURL,supaKEY);
-const VAPID_PUBLIC_KEY = 'BI5Z3gT5v6K8yL9mN2pQ4rS7tU1wX0yZ8aB3cD6eF9gH2iJ5kL8mN1oP4qR7sT0uV3wX6yZ9aB2cD5eF8gH';
+const VAPID_PUBLIC_KEY = 'BL7nqRcx1r5t644KUIk2X5rsJYWDqtjwAO19vR5KXhqBxLmxT7oRQTJLEVvxLAVgllffX9ITRyc_m7pYwpje18E';
 
 const translations = {
   ar: { header_sub: "🚚 منصة التوصيل السريع - أكادير", offline: "📴 بلا إنترنت", signup_title: "🚀 تسجيل حساب جديد", login_title: "🔐 تسجيل الدخول", welcome: "👋 مرحبا!", add_store: "➕ إضافة متجر جديد", profile: "👤 حسابي", about: "ℹ️ عن التطبيق", share: "📤 شارك التطبيق", support: "💬 الدعم الفني", install: "📲 ثبّت التطبيق", notifications: "🔔 تفعيل الإشعارات", stats: "إحصائيات المتجر", toggle_stores: "🔒 إغلاق المتاجر", coupons: "🎟️ كودات الخصم", export_excel: "📊 تصدير Excel", favorites: "❤️ المفضلة", admin: "🔐 لوحة الإدارة", logout: "🚪 تسجيل الخروج", name: "الاسم الكامل", phone: "رقم الهاتف", email: "البريد الإلكتروني", password: "كلمة السر (6+)", role_placeholder: "اختر نوع الحساب...", role_customer: "🛒 زبون", role_merchant: "🏪 تاجر", role_driver: "🚚 موصل", gender_male: "👨 ذكر", gender_female: "👩 أنثى", signup_btn: "تسجيل", login_btn: "دخول", add_store_title: "🏪 إضافة متجر جديد", store_name: "اسم المتجر", store_desc: "وصف المتجر", address: "العنوان", work_hours: "🕐 ساعات العمل (من - إلى)", promo: "📢 إعلان/عرض (اختياري)", save_store: "حفظ المتجر", cancel: "إلغاء", click_change_photo: "📷 اضغط لتغيير الصورة", edit: "✏️ تعديل:", save: "💾 حفظ", close: "إغلاق", delete_account: "🗑️ حذف الحساب نهائياً", about_desc: "🚚 منصة توصيل سريع بأكادير.", contact: "💬 تواصل", stats_title: "📊 الإحصائيات", create_coupon: "➕ إنشاء كود:", discount_percent: "💯 نسبة (%)", discount_fixed: "💰 مبلغ ثابت", value: "القيمة", min_order: "الحد الأدنى (اختياري)", max_uses: "أقصى استعمالات", create: "🎟️ إنشاء", stores: "🏪 المتاجر", search: "🔍 ابحث...", from_price: "💰 من (درهم)", to_price: "💰 إلى (درهم)", all_ratings: "⭐ جميع التقييمات", sort: "🔄 ترتيب", price_asc: "💰 الأقل سعراً", price_desc: "💰 الأغلى", name_asc: "🔤 أبجدي", rating_desc: "⭐ الأعلى تقييماً", only_open: "✅ المفتوحة فقط", only_promo: "📢 فيها عروض", only_fav: "❤️ المفضلة فقط", only_deals: "🎉 عروض اليوم فقط", only_featured: "⭐ المتاجر المميزة فقط", reset_filters: "🔄 إعادة تعيين", add_product: "📦 إضافة منتج", product_name: "اسم المنتج", description: "الوصف", price: "السعر (درهم)", product_images: "📸 صور المنتج (حتى 5):", camera: "📷 الكاميرا", gallery_multi: "🖼️ المعرض (متعدد)", pick_5_images: "💡 تقدر تختار حتى 5 صور", image_link: "🔗 رابط صورة", daily_deal: "🎉 عرض اليوم", deal_price: "💰 سعر العرض", featured_product: "⭐ منتج مميز", save_product: "حفظ المنتج", cart: "🛒 السلة", coupon_input: "🎟️ كود خصم؟", apply: "تطبيق", delivery_info: "📍 معلومات التوصيل:", delivery_address: "عنوان التوصيل", use_my_location: "🎯 استعمل موقعي", share_location: "📤 شارك موقعي واتساب", delivery_time: "📅 وقت التوصيل:", now: "⚡ دابا (فوراً)", schedule: "🕐 جدول وقت", payment_method: "💳 طريقة الدفع:", cash: "💵 نقداً عند التسليم", card: "💳 بطاقة بنكية (قريباً)", confirm_order: "✅ تأكيد الطلب", clear_cart: "🗑️ تفريغ السلة", chat_title: "💬 المحادثة", chat_input: "✍️ رسالة...", back: "🔙 رجوع", rate_experience: "⭐ قيّم تجربتك", review_comment: "💬 اكتب تعليقك (اختياري)", image_optional: "📷 صورة (اختياري):", gallery: "🖼️ معرض", submit_review: "✅ إرسال التقييم", overview: "📊 نظرة", orders: "📋 الطلبات", search_order: "🔍 ابحث بالكود أو الاسم...", all_orders: "📋 كل الطلبات", pending: "⏳ انتظار", accepted: "✅ مقبولة", delivering: "🚗 في الطريق", delivered: "🎉 موصلة", cancelled: "❌ ملغاة" },
@@ -1022,8 +1022,70 @@ async function doCheckout(ev){
   }catch(e){show('❌ '+e.message,false);vibrate(500);}finally{setBtnLoading(btn,false,'✅ تأكيد الطلب');}
 }
 
-async function claimOrder(id){try{const{data,error}=await DB.from('orders').update({status:'delivering',driver_id:currentUser.id}).eq('id',id).is('driver_id',null).in('status',['accepted','delivering']).select();if(error)throw error;if(!data||data.length===0){show('⚠️',false);return;}show('✅',true);playBeep();vibrate(150);loadOrders();}catch(e){show('❌ '+e.message,false);}}
-async function openDriverMap(orderId){try{const{data:o}=await DB.from('orders').select('driver_lat, driver_lng, latitude, longitude, delivery_address').eq('id',orderId).single();let url;if(o&&o.driver_lat&&o.driver_lng){url='https://www.google.com/maps?q='+o.driver_lat+','+o.driver_lng;}else if(o&&o.latitude&&o.longitude){url='https://www.google.com/maps?q='+o.latitude+','+o.longitude;}else{url='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(o?.delivery_address||'Agadir Maroc');}window.open(url,'_blank');}catch(e){show('❌',false);}}
+async function claimOrder(id) {
+  try {
+    const { data, error } = await DB.from('orders')
+      .update({ status: 'delivering', driver_id: currentUser.id })
+      .eq('id', id)
+      .is('driver_id', null)
+      .in('status', ['accepted', 'delivering'])
+      .select();
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      show('⚠️ الطلب ماشي متوفر دابا', false);
+      return;
+    }
+    show('✅ خديتي الطلب، بدا تتبع الموقع', true);
+    playBeep();
+    vibrate(150);
+    loadOrders();
+
+    if (navigator.geolocation) {
+      if (window.driverLocationInterval) clearInterval(window.driverLocationInterval);
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        await DB.from('orders').update({
+          driver_lat: pos.coords.latitude,
+          driver_lng: pos.coords.longitude
+        }).eq('id', id);
+      });
+      window.driverLocationInterval = setInterval(() => {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+          await DB.from('orders').update({
+            driver_lat: pos.coords.latitude,
+            driver_lng: pos.coords.longitude
+          }).eq('id', id);
+        });
+      }, 30000);
+    } else {
+      show('⚠️ المتصفح ما كيدعمش GPS', false);
+    }
+  } catch (e) {
+    show('❌ ' + e.message, false);
+  }
+}
+
+async function openDriverMap(orderId) {
+  try {
+    const { data: o, error } = await DB.from('orders')
+      .select('driver_lat, driver_lng, delivery_address')
+      .eq('id', orderId)
+      .single();
+    if (error) throw error;
+    if (o && o.driver_lat && o.driver_lng) {
+      const url = `https://www.google.com/maps?q=${o.driver_lat},${o.driver_lng}`;
+      window.open(url, '_blank');
+    } else if (o && o.delivery_address) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.delivery_address)}`;
+      window.open(url, '_blank');
+      show('⚠️ موقع السائق المباشر مازال ما توفرش، هادا عنوان التوصيل', true);
+    } else {
+      show('⚠️ موقع السائق مازال ما توفرش', false);
+    }
+  } catch (e) {
+    console.error(e);
+    show('❌ وقع خطأ فـ جلب الموقع', false);
+  }
+}
 
 function setReviewStars(n){reviewStars=n;document.getElementById('review-stars-display').textContent='⭐'.repeat(n);}
 function openReviewModal(orderId,storeId){reviewOrderId=orderId;reviewStoreId=storeId;reviewStars=5;document.getElementById('review-stars-display').textContent='⭐⭐⭐⭐⭐';document.getElementById('review-comment').value='';document.getElementById('review-image-preview').innerHTML='';document.getElementById('review-image-file').value='';document.getElementById('review-image-gallery').value='';var m=document.getElementById('review-modal');m.classList.remove('hidden');m.style.display='flex';}
