@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="google-site-verification" content="XXXXXXXXXXXXXXXXXXXX" />
 <title>SoukExpress</title>
-<meta name="description" content="SoukExpress - منصة التوصيل السريع بأكادير. اطلب من أفضل المتاجر، تتبع طلبك، واستفد من عروض حصرية.">
 <meta name="theme-color" content="#FF6B00">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -26,7 +24,6 @@ button:active { transform: scale(0.97); }
 .purple { background: #9C27B0; color: white; }
 .teal { background: #00BCD4; color: white; }
 .pink { background: #FF4081; color: white; }
-.whatsapp { background: #25D366; color: white; }
 input, select, textarea { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #E0E0E0; background: #FFF; font-family: 'Tajawal', sans-serif; font-size: 15px; margin-bottom: 10px; }
 input:focus { border-color: var(--primary); outline: none; }
 
@@ -69,16 +66,22 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 .nav-icon { font-size: 22px; }
 
 .order-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: var(--shadow); font-size: 14px; border: 1px solid #f0f0f0;}
-.order-products { background: #F8F9FA; padding: 10px; border-radius: 10px; margin: 10px 0; font-size: 13px; color: #555; }
 .cart-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; }
 
 .qr-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99997; display: flex; align-items: flex-end; justify-content: center; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+/* لوحة التاجر */
+.dash-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.dash-card { background: #FFF; padding: 15px; border-radius: 15px; box-shadow: var(--shadow); text-align: right; }
+.dash-card span { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
+.dash-card b { font-size: 22px; color: var(--primary); }
 </style>
 </head>
 <body>
 <div id="msg" class="hidden"></div>
 
+<!-- الزبون (الرئيسية) -->
 <div class="box" id="stores-box" style="padding: 0; background: transparent; box-shadow: none;">
     <div class="main-header">
         <div class="user-info">
@@ -113,6 +116,7 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
     <div id="stores-list" class="stores-grid"></div>
 </div>
 
+<!-- تسجيل الدخول -->
 <div class="box hidden" id="login-box">
 <h2>🔐 تسجيل الدخول</h2>
 <input type="email" id="l-email" placeholder="البريد الإلكتروني">
@@ -121,6 +125,7 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 <button class="blue" onclick="document.getElementById('login-box').classList.add('hidden');document.getElementById('signup-box').classList.remove('hidden')">حساب جديد</button>
 </div>
 
+<!-- تسجيل حساب -->
 <div class="box hidden" id="signup-box">
 <h2>🚀 تسجيل حساب جديد</h2>
 <input type="text" id="s-name" placeholder="الاسم الكامل">
@@ -132,20 +137,54 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 <button class="blue" onclick="document.getElementById('signup-box').classList.add('hidden');document.getElementById('login-box').classList.remove('hidden')">دخول</button>
 </div>
 
-<div class="box hidden" id="dash-box">
-<h2>👋 مرحبا!</h2>
-<p id="welcome" style="text-align:center; margin-bottom:15px; font-weight:bold;"></p>
-<button class="orange" onclick="showStoreForm()" id="store-btn" style="display:none">➕ إضافة متجر جديد</button>
-<button class="purple" onclick="showStats()" id="stats-btn" style="display:none">📊 الإحصائيات</button>
-<button class="teal" onclick="showMyCoupons()" id="coupons-btn" style="display:none">🎟️ كودات الخصم</button>
-<button class="red" onclick="doLogout()" style="margin-top:20px;">🚪 تسجيل الخروج</button>
+<!-- لوحة التاجر -->
+<div class="box hidden" id="merchant-dash">
+    <div class="main-header" style="margin-bottom:20px;">
+        <div class="user-info">
+            <div class="user-avatar" style="font-size:16px; color:var(--primary); font-weight:bold;">🏪</div>
+            <div>
+                <span class="greeting" id="merchant-name">لوحة التاجر</span>
+                <span class="location">إدارة المتجر</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dash-stats">
+        <div class="dash-card"><span>الطلبات المعلقة</span><b id="pending-count">0</b></div>
+        <div class="dash-card"><span>إجمالي المبيعات</span><b id="total-sales" style="color:var(--secondary);">0 DH</b></div>
+    </div>
+
+    <h3 style="font-size:16px; margin-bottom:10px;">📋 الطلبات الجديدة</h3>
+    <div id="merchant-orders-list" style="margin-bottom:20px;"></div>
+
+    <h3 style="font-size:16px; margin-bottom:10px;">📦 منتجاتي</h3>
+    <div id="merchant-products-list"></div>
+
+    <button class="red" onclick="doLogout()" style="margin-top:20px;">🚪 تسجيل الخروج</button>
 </div>
 
+<!-- واجهة الموصل -->
+<div class="box hidden" id="driver-dash">
+    <div class="main-header" style="margin-bottom:20px;">
+        <div class="user-info">
+            <div class="user-avatar" style="font-size:16px; color:var(--primary); font-weight:bold;">🚚</div>
+            <div>
+                <span class="greeting">لوحة الموصل</span>
+                <span class="location">الطلبات المتاحة</span>
+            </div>
+        </div>
+    </div>
+    <div id="driver-orders-list"></div>
+    <button class="red" onclick="doLogout()" style="margin-top:20px;">🚪 تسجيل الخروج</button>
+</div>
+
+<!-- الطلبات -->
 <div class="box hidden" id="orders-box">
 <h2>📋 الطلبات</h2>
 <div id="orders-list"></div>
 </div>
 
+<!-- السلة -->
 <div class="box hidden" id="cart-box">
 <h2>🛒 السلة</h2>
 <div id="cart-list"></div>
@@ -158,23 +197,26 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 </div>
 </div>
 
+<!-- حسابي -->
 <div class="box hidden" id="profile-box">
 <h2>👤 حسابي</h2>
 <div id="profile-stats" style="text-align:center; margin-bottom:20px;"></div>
 <button class="red" onclick="doLogout()">🚪 تسجيل الخروج</button>
 </div>
 
+<!-- شاشة المنتجات -->
 <div id="store-modal" class="qr-modal hidden" onclick="if(event.target===this)this.classList.add('hidden')">
     <div style="background:white; border-radius:20px 20px 0 0; width:100%; max-width:500px; height:80vh; display:flex; flex-direction:column; overflow:hidden; animation: slideUp 0.3s ease;" onclick="event.stopPropagation()">
         <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid #eee;">
-            <h3 id="modal-store-name" style="margin:0; color:var(--primary); font-size:18px;">اسم المتجر</h3>
+            <h3 id="modal-store-name" style="margin:0; color:var(--primary); font-size:18px;">المتجر</h3>
             <button onclick="document.getElementById('store-modal').classList.add('hidden')" style="background:#FF3D00; color:white; width:32px; height:32px; border-radius:50%; font-weight:bold; border:none; font-size:16px; display:flex; align-items:center; justify-content:center; padding:0; margin:0;">✕</button>
         </div>
         <div id="modal-products-list" style="flex:1; overflow-y:auto; padding:15px; background:#F8F9FA;"></div>
     </div>
 </div>
 
-<div class="bottom-nav">
+<!-- شريط التنقل السفلي -->
+<div class="bottom-nav" id="bottom-nav">
     <div class="bottom-nav-item active" onclick="showScreen('stores-box', this)">
         <span class="nav-icon">🏠</span><span>الرئيسية</span>
     </div>
@@ -199,7 +241,6 @@ let currentUser=null, currentRole=null, currentProfile=null;
 let cart=[], allStoresCache={}, allProductsCache={};
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
 function show(txt,ok){const m=document.getElementById('msg');m.textContent=txt;m.className=ok?'ok':'err';m.classList.remove('hidden');setTimeout(()=>m.classList.add('hidden'),4000);}
 function setBtnLoading(btn,loading,txt){if(!btn)return;if(loading){btn.disabled=true;btn.dataset.orig=btn.textContent;btn.textContent='⏳...';}else{btn.disabled=false;btn.textContent=txt||btn.dataset.orig||'✅';}}
 
@@ -217,7 +258,7 @@ function showScreen(screenId, navEl) {
 async function doLogin(ev) {
     const btn=ev?ev.target:null;
     const e=document.getElementById('l-email').value, p=document.getElementById('l-pass').value;
-    if(!e||!p){show('⚠️ ملء جميع الحقول',false);return;}
+    if(!e||!p){show('⚠️ ملء الحقول',false);return;}
     setBtnLoading(btn,true);
     try{
         const r=await DB.auth.signInWithPassword({email:e,password:p});
@@ -228,20 +269,23 @@ async function doLogin(ev) {
         
         document.getElementById('login-box').classList.add('hidden');
         document.getElementById('signup-box').classList.add('hidden');
-        
+        document.getElementById('bottom-nav').classList.remove('hidden');
+
         if(currentRole === 'merchant'){
-            document.getElementById('dash-box').classList.remove('hidden');
-            document.getElementById('store-btn').style.display='block';
-            document.getElementById('stats-btn').style.display='block';
-            document.getElementById('coupons-btn').style.display='block';
-            document.getElementById('welcome').textContent = 'أهلاً ' + (pp.data?.full_name || e);
+            document.getElementById('merchant-dash').classList.remove('hidden');
+            document.getElementById('bottom-nav').classList.add('hidden'); // نخفي شريط التنقل
+            document.getElementById('merchant-name').textContent = 'أهلاً ' + (pp.data?.full_name || e);
+            loadMerchantDashboard();
+        } else if(currentRole === 'driver') {
+            document.getElementById('driver-dash').classList.remove('hidden');
+            document.getElementById('bottom-nav').classList.add('hidden');
+            loadDriverDashboard();
         } else {
             document.getElementById('stores-box').classList.remove('hidden');
             document.getElementById('welcome-text').textContent = 'مرحباً، ' + (pp.data?.full_name || e);
+            loadStores();
         }
-        
-        loadStores();
-        show('✅ تم الدخول بنجاح',true);
+        show('✅ تم الدخول',true);
     }catch(err){show('❌ '+err.message,false);}
     finally{setBtnLoading(btn,false,'دخول');}
 }
@@ -255,7 +299,7 @@ async function doSignup(ev){
         const res=await DB.auth.signUp({email:e,password:p});
         if(res.error)throw res.error;
         if(res.data.user) await DB.from('profiles').upsert([{id:res.data.user.id,full_name:n,phone:ph,role:r}]);
-        show('✅ تم التسجيل، يمكنك الدخول الآن',true);
+        show('✅ تم التسجيل',true);
         document.getElementById('signup-box').classList.add('hidden');
         document.getElementById('login-box').classList.remove('hidden');
     }catch(err){show('❌ '+err.message,false);}
@@ -267,8 +311,10 @@ async function doLogout(){
     currentUser=null; currentRole=null;
     document.querySelectorAll('.box').forEach(b => b.classList.add('hidden'));
     document.getElementById('login-box').classList.remove('hidden');
+    document.getElementById('bottom-nav').classList.add('hidden');
 }
 
+// الزبون (المتاجر)
 async function loadStores(){
     const l=document.getElementById('stores-list');
     if(!l) return;
@@ -288,28 +334,17 @@ async function loadStores(){
 function renderStores(stores){
   const l=document.getElementById('stores-list');
   l.innerHTML='';
-  
-  if(stores.length === 0){
-    l.innerHTML = '<div style="text-align:center; padding:20px; color:#888; grid-column: 1/-1;">لا توجد متاجر حالياً</div>';
-    return;
-  }
-
   stores.forEach(s=>{
     const d=document.createElement('div');
     d.className='store-card';
     const imgUrl = s.image_url || 'https://cdn-icons-png.flaticon.com/512/869/869636.png'; 
-    
     d.innerHTML = `
       <img src="${esc(imgUrl)}" alt="${esc(s.name)}">
       <h4>${esc(s.name)}</h4>
       <p style="color:#00C853;">● مفتوح</p>
       <div style="margin-top:8px; font-size:12px; font-weight:bold; color:#FF6B00;">⭐ 4.8</div>
     `;
-    
-    d.onclick = () => {
-        openStoreModal(s.id, s.name);
-    };
-    
+    d.onclick = () => openStoreModal(s.id, s.name);
     l.appendChild(d);
   });
 }
@@ -320,26 +355,16 @@ function resetFilters(){ loadStores(); }
 function openStoreModal(storeId, storeName) {
     document.getElementById('modal-store-name').textContent = storeName;
     const list = document.getElementById('modal-products-list');
-    list.innerHTML = '⏳ جاري التحميل...';
-    document.getElementById('store-modal').classList.remove('hidden');
-    
     const products = allProductsCache[storeId] || [];
-    
-    if(products.length === 0) {
-        list.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">لا توجد منتجات فـ هاد المتجر حالياً</div>';
-        return;
-    }
-    
+    document.getElementById('store-modal').classList.remove('hidden');
+    if(products.length === 0) { list.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">لا توجد منتجات حالياً</div>'; return; }
     list.innerHTML = '';
     products.forEach(pr => {
         const d = document.createElement('div');
         d.className = 'cart-item';
         d.style.flexDirection = 'column';
         d.style.alignItems = 'flex-start';
-        d.style.padding = '15px';
-        
         const img = pr.image_url ? `<img src="${esc(pr.image_url)}" style="width:60px; height:60px; border-radius:10px; object-fit:cover;">` : `<div style="width:60px; height:60px; border-radius:10px; background:#eee; display:flex; align-items:center; justify-content:center; font-size:24px;">📦</div>`;
-        
         d.innerHTML = `
             <div style="display:flex; gap:15px; width:100%;">
                 ${img}
@@ -389,21 +414,17 @@ async function doCheckout(ev){
   const cn=document.getElementById('co-name').value, cp=document.getElementById('co-phone').value, ca=document.getElementById('co-address').value;
   if(!cn||!cp||!ca){show('⚠️ ملء معلومات التوصيل',false);return;}
   setBtnLoading(btn,true);
-  
   const total=cart.reduce((s,c)=>s+c.price*c.qty,0);
   const sid=cart[0].storeId;
-  
   try{
     const{data:od,error:oe}=await DB.from('orders').insert([{
       customer_id:currentUser.id, store_id:sid, status:'pending', total_price:total,
       delivery_address:ca, customer_phone:cp, customer_name:cn, payment_method:'cash'
     }]).select();
-    
     if(oe) throw oe;
     const oid=od[0].id;
     const items=cart.map(c=>({order_id:oid, product_id:c.prodId, product_name:c.name, price:c.price, quantity:c.qty}));
     await DB.from('order_items').insert(items);
-    
     show('🎉 تم إرسال طلبك بنجاح!',true);
     cart=[]; loadCart();
     document.querySelectorAll('.bottom-nav-item')[1].click(); 
@@ -447,12 +468,109 @@ function showProfile() {
         <p style="color:var(--primary); font-weight:bold; margin-top:10px;">${currentRole === 'customer' ? '🛒 زبون' : currentRole === 'merchant' ? '🏪 تاجر' : '🚚 موصل'}</p>
     `;
 }
+function showNotifications(){ show('🔔 لا توجد إشعارات جديدة', true); }   
+// --- لوحة تحكم التاجر ---
+async function loadMerchantDashboard() {
+    const { data: stores } = await DB.from('stores').select('*').eq('owner_id', currentUser.id);
+    if (!stores || stores.length === 0) {
+        document.getElementById('merchant-orders-list').innerHTML = '<p style="color:#888; font-size:13px;">ما عندكش متجر. تواصل مع الإدارة.</p>';
+        return;
+    }
+    const storeIds = stores.map(s => s.id);
+    
+    const { data: orders } = await DB.from('orders').select('*').in('store_id', storeIds).order('created_at', {ascending:false});
+    const pending = orders ? orders.filter(o => o.status === 'pending') : [];
+    const delivered = orders ? orders.filter(o => o.status === 'delivered') : [];
+    
+    document.getElementById('pending-count').textContent = pending.length;
+    document.getElementById('total-sales').textContent = delivered.reduce((sum, o) => sum + parseFloat(o.total_price), 0) + ' DH';
+    
+    const oList = document.getElementById('merchant-orders-list');
+    if (pending.length === 0) {
+        oList.innerHTML = '<p style="color:#888; font-size:13px;">لا توجد طلبات جديدة.</p>';
+    } else {
+        oList.innerHTML = '';
+        pending.forEach(o => {
+            const d = document.createElement('div');
+            d.className = 'order-item';
+            d.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <b>📦 #${o.id.substring(0,6)}</b>
+                    <span style="color:var(--primary); font-weight:bold;">${o.total_price} DH</span>
+                </div>
+                👤 ${esc(o.customer_name)}<br>📞 ${esc(o.customer_phone)}<br>📍 ${esc(o.delivery_address)}
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button class="green" style="padding:10px; margin:0;" onclick="updateOrderStatus('${o.id}', 'accepted')">✅ قبول</button>
+                    <button class="red" style="padding:10px; margin:0;" onclick="updateOrderStatus('${o.id}', 'cancelled')">❌ رفض</button>
+                </div>
+            `;
+            oList.appendChild(d);
+        });
+    }
 
-function showStoreForm(){ show('قريباً: إضافة متجر', true); }
-function showStats(){ show('قريباً: الإحصائيات', true); }
-function showMyCoupons(){ show('قريباً: كودات الخصم', true); }
-function showNotifications(){ show('🔔 لا توجد إشعارات جديدة', true); }
+    // عرض المنتجات ديال التاجر
+    const pList = document.getElementById('merchant-products-list');
+    let allProds = [];
+    for(const sid of storeIds) {
+        const { data: p } = await DB.from('products').select('*').eq('store_id', sid);
+        if(p) allProds = allProds.concat(p);
+    }
+    if(allProds.length === 0) {
+        pList.innerHTML = '<p style="color:#888; font-size:13px;">ما عندكش منتجات.</p>';
+    } else {
+        pList.innerHTML = '';
+        allProds.forEach(pr => {
+            const d = document.createElement('div');
+            d.className = 'cart-item';
+            d.innerHTML = `<div><b>${esc(pr.name)}</b><br><span style="color:var(--primary)">${pr.price} DH</span></div>`;
+            pList.appendChild(d);
+        });
+    }
+}
 
+async function updateOrderStatus(orderId, newStatus) {
+    try {
+        await DB.from('orders').update({ status: newStatus }).eq('id', orderId);
+        show(newStatus === 'accepted' ? '✅ تم قبول الطلب' : '❌ تم رفض الطلب', true);
+        loadMerchantDashboard(); 
+    } catch(e) {
+        show('❌ خطأ فـ التحديث', false);
+    }
+}
+
+// --- لوحة تحكم الموصل ---
+async function loadDriverDashboard() {
+    const { data: orders } = await DB.from('orders').select('*').eq('status', 'accepted');
+    const list = document.getElementById('driver-orders-list');
+    if (!orders || orders.length === 0) {
+        list.innerHTML = '<p style="color:#888; text-align:center;">لا توجد طلبات متاحة دابا.</p>';
+        return;
+    }
+    list.innerHTML = '';
+    orders.forEach(o => {
+        const d = document.createElement('div');
+        d.className = 'order-item';
+        d.innerHTML = `
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <b>📦 #${o.id.substring(0,6)}</b>
+                <span style="color:var(--primary); font-weight:bold;">${o.total_price} DH</span>
+            </div>
+            👤 ${esc(o.customer_name)}<br>📍 ${esc(o.delivery_address)}
+            <button class="green" style="margin-top:15px;" onclick="claimOrder('${o.id}')">🚀 قبول التوصيل</button>
+        `;
+        list.appendChild(d);
+    });
+}
+
+async function claimOrder(orderId) {
+    try {
+        await DB.from('orders').update({ status: 'delivering', driver_id: currentUser.id }).eq('id', orderId);
+        show('✅ تم قبول التوصيل', true);
+        loadDriverDashboard();
+    } catch(e) { show('❌ خطأ', false); }
+}
+
+// --- التحقق من الجلسة عند التحميل ---
 window.addEventListener('DOMContentLoaded', () => {
     DB.auth.getSession().then(({data:{session}}) => {
         if(session) {
@@ -462,18 +580,22 @@ window.addEventListener('DOMContentLoaded', () => {
                 currentRole = data?.role;
                 document.getElementById('login-box').classList.add('hidden');
                 document.getElementById('signup-box').classList.add('hidden');
+                document.getElementById('bottom-nav').classList.remove('hidden');
                 
                 if(currentRole === 'merchant'){
-                    document.getElementById('dash-box').classList.remove('hidden');
-                    document.getElementById('store-btn').style.display='block';
-                    document.getElementById('stats-btn').style.display='block';
-                    document.getElementById('coupons-btn').style.display='block';
-                    document.getElementById('welcome').textContent = 'أهلاً ' + (data?.full_name || session.user.email);
+                    document.getElementById('merchant-dash').classList.remove('hidden');
+                    document.getElementById('bottom-nav').classList.add('hidden');
+                    document.getElementById('merchant-name').textContent = 'أهلاً ' + (data?.full_name || session.user.email);
+                    loadMerchantDashboard();
+                } else if(currentRole === 'driver') {
+                    document.getElementById('driver-dash').classList.remove('hidden');
+                    document.getElementById('bottom-nav').classList.add('hidden');
+                    loadDriverDashboard();
                 } else {
                     document.getElementById('stores-box').classList.remove('hidden');
                     document.getElementById('welcome-text').textContent = 'مرحباً، ' + (data?.full_name || session.user.email);
+                    loadStores();
                 }
-                loadStores();
             });
         } else {
             document.getElementById('login-box').classList.remove('hidden');
@@ -482,4 +604,4 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-</html>
+</html>    
