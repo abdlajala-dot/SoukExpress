@@ -149,6 +149,19 @@ button:disabled{opacity:0.6;cursor:not-allowed}
 [data-theme="dark"] .hours-line{color:#aaa}
 [data-theme="dark"] .qr-modal-content{background:#1e1e1e;color:#e0e0e0}
 [data-theme="dark"] .chat-theirs{background:#2a2a2a;color:#e0e0e0}
+.promo-banner-souk{width:100%;max-width:500px;margin:0 auto 15px auto;background:#fff;border-radius:15px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 20px rgba(0,0,0,0.1)}
+.promo-banner-souk .header{background:linear-gradient(135deg,#d81b60,#ad1457);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;color:white}
+.promo-banner-souk .logo-area{display:flex;align-items:center;gap:10px}
+.promo-banner-souk .logo-icon{font-size:24px;background:rgba(255,255,255,0.2);width:40px;height:40px;display:flex;justify-content:center;align-items:center;border-radius:50%}
+.promo-banner-souk .logo-text h1{font-size:18px;font-weight:900;margin:0}
+.promo-banner-souk .logo-text p{font-size:11px;opacity:0.9;margin:0}
+.promo-banner-souk .cta-btn{background:#ffca28;color:#000;padding:8px 15px;border-radius:20px;text-decoration:none;font-weight:bold;font-size:12px}
+.promo-banner-souk .services-container{display:flex;padding:15px;gap:8px;background:#f8f9fa}
+.promo-banner-souk .service-card{background:white;flex:1;border-radius:10px;padding:10px;text-align:center;border-top:3px solid #d81b60}
+.promo-banner-souk .service-icon{font-size:24px;margin-bottom:5px}
+.promo-banner-souk .service-card h3{font-size:12px;color:#333;margin:5px 0}
+.promo-banner-souk .service-card p{font-size:10px;color:#666}
+.promo-banner-souk .footer-note{font-size:9px;color:#aaa;text-align:center;padding:5px}
 </style>
 </head>
 <body>
@@ -170,9 +183,39 @@ button:disabled{opacity:0.6;cursor:not-allowed}
 </div>
 <p style="margin-top:6px" data-i18n="header_sub">🚚 منصة التوصيل السريع - أكادير</p>
 </div>
-<div class="container">
+ <div class="container">
 <div id="msg" class="hidden"></div>
-<div id="offline-banner" class="hidden" style="background:linear-gradient(135deg,#FFB300,#FF6F00);color:white;padding:10px;text-align:center;font-weight:bold;font-size:14px;border-radius:10px;margin-bottom:10px" data-i18n="offline">📴 Offline</div>
+<div class="promo-banner-souk">
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-icon">🛒</div>
+      <div class="logo-text">
+        <h1>SoukExpress</h1>
+        <p>منصة التوصيل السريع - أكادير</p>
+      </div>
+    </div>
+    <a href="#" class="cta-btn">حمل التطبيق 📲</a>
+  </div>
+  <div class="services-container">
+    <div class="service-card">
+      <div class="service-icon">🛍️</div>
+      <h3>تسوق بسهولة</h3>
+      <p>اطلب من أفضل المتاجر</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🚚</div>
+      <h3>توصيل سريع</h3>
+      <p>إلى باب منزلك</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏪</div>
+      <h3>سجّل كتاجر</h3>
+      <p>واعرض منتجاتك</p>
+    </div>
+  </div>
+  <div class="footer-note">تطبق الشروط والأحكام. SoukExpress 2026</div>
+</div>
+ <div id="offline-banner" class="hidden" style="background:linear-gradient(135deg,#FFB300,#FF6F00);color:white;padding:10px;text-align:center;font-weight:bold;font-size:14px;border-radius:10px;margin-bottom:10px" data-i18n="offline">📴 Offline</div>
 <div class="box" id="signup-box">
 <h2 data-i18n="signup_title">🚀 تسجيل حساب جديد</h2>
 <input type="text" id="s-name" data-i18n-placeholder="name" placeholder="الاسم الكامل">
