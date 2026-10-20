@@ -14,28 +14,23 @@
 :root { --primary: #FF6B00; --secondary: #00C853; --bg: #F8F9FA; --text: #2D2D2D; --muted: #888; --card: #FFF; --shadow: 0 4px 15px rgba(0,0,0,0.06); }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
 body { background: var(--bg); color: var(--text); max-width: 500px; margin: 0 auto; padding-bottom: 80px; }
-
 button { font-family: 'Tajawal', sans-serif; font-weight: 700; border-radius: 12px; border: none; padding: 14px; cursor: pointer; transition: 0.2s; width: 100%; font-size: 15px; margin-bottom: 10px;}
 button:active { transform: scale(0.97); }
 .green { background: var(--secondary); color: white; }
 .blue { background: #2196F3; color: white; }
 .red { background: #FF3D00; color: white; }
 .orange { background: var(--primary); color: white; }
-.purple { background: #9C27B0; color: white; }
 .teal { background: #00BCD4; color: white; }
-.pink { background: #FF4081; color: white; }
+.purple { background: #9C27B0; color: white; }
 input, select, textarea { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #E0E0E0; background: #FFF; font-family: 'Tajawal', sans-serif; font-size: 15px; margin-bottom: 10px; }
 input:focus { border-color: var(--primary); outline: none; }
-
 .box { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
 .hidden { display: none !important; }
 h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--primary); }
-
 #msg { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 30px; font-weight: bold; z-index: 99999; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: slideDown 0.3s ease; }
 #msg.ok { background: var(--secondary); color: white; }
 #msg.err { background: #FF3D00; color: white; }
 @keyframes slideDown { from { top: -50px; opacity: 0; } to { top: 20px; opacity: 1; } }
-
 .main-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: white; border-radius: 0 0 20px 20px; box-shadow: var(--shadow); margin-bottom: 15px; }
 .user-info { display: flex; align-items: center; gap: 10px; }
 .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #FFF3EB; display: flex; align-items: center; justify-content: center; font-size: 20px;}
@@ -52,26 +47,20 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; margin-bottom: 15px; }
 .section-header h3 { margin: 0; font-size: 18px; font-weight: 800; }
 .section-header a { color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 700; }
-
 .stores-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 0 20px 20px 20px; }
 .store-card { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: var(--shadow); cursor: pointer; transition: 0.2s;}
 .store-card:active { transform: scale(0.97); }
 .store-card img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; }
 .store-card h4 { margin: 0 0 5px 0; font-size: 15px; font-weight: 800; }
 .store-card p { margin: 0; font-size: 12px; color: var(--muted); }
-
 .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #FFFFFF; display: flex; justify-content: space-around; align-items: center; padding: 10px 0 15px 0; border-radius: 25px 25px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 9999; }
 .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: var(--muted); font-size: 11px; font-weight: 700; gap: 4px; width: 25%; cursor: pointer; }
 .bottom-nav-item.active { color: var(--primary); }
 .nav-icon { font-size: 22px; }
-
 .order-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: var(--shadow); font-size: 14px; border: 1px solid #f0f0f0;}
 .cart-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; }
-
 .qr-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99997; display: flex; align-items: flex-end; justify-content: center; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-/* لوحة التاجر */
 .dash-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
 .dash-card { background: #FFF; padding: 15px; border-radius: 15px; box-shadow: var(--shadow); text-align: right; }
 .dash-card span { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
@@ -81,7 +70,6 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 <body>
 <div id="msg" class="hidden"></div>
 
-<!-- الزبون (الرئيسية) -->
 <div class="box" id="stores-box" style="padding: 0; background: transparent; box-shadow: none;">
     <div class="main-header">
         <div class="user-info">
@@ -93,39 +81,36 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
         </div>
         <button class="notif-btn" onclick="showNotifications()">🔔</button>
     </div>
-
     <div class="search-container">
         <input type="text" id="search-input" placeholder="ابحث عن متجر أو منتج..." oninput="applyFilters()">
         <span class="search-icon">🔍</span>
     </div>
-
     <div class="promo-banner-new">
         <div class="promo-text">
             <h2>كل ما تحتاجه<br>يصل إليك بسرعة</h2>
             <p>من متجرك المفضل إلى باب منزلك</p>
-            <button class="promo-btn" onclick="showScreen('stores-box', document.querySelectorAll('.bottom-nav-item')[0])">اطلب الآن ←</button>
+            <button class="promo-btn" onclick="showScreen('stores-box', document.querySelectorAll('#customer-nav .bottom-nav-item')[0])">اطلب الآن ←</button>
         </div>
         <div style="font-size:80px; position:absolute; left:10px; bottom:-15px; opacity:0.2;">🛵</div>
     </div>
-
     <div class="section-header">
         <h3>🏪 المتاجر القريبة</h3>
         <a href="#" onclick="resetFilters()">عرض الكل ‹</a>
     </div>
-    
     <div id="stores-list" class="stores-grid"></div>
 </div>
 
-<!-- تسجيل الدخول -->
-<div class="box hidden" id="login-box">
-<h2>🔐 تسجيل الدخول</h2>
-<input type="email" id="l-email" placeholder="البريد الإلكتروني">
-<input type="password" id="l-pass" placeholder="كلمة السر">
-<button class="green" onclick="doLogin(event)">دخول</button>
-<button class="blue" onclick="document.getElementById('login-box').classList.add('hidden');document.getElementById('signup-box').classList.remove('hidden')">حساب جديد</button>
+<div class="box hidden" id="login-box" style="text-align:center;">
+    <div style="font-size:80px; margin-bottom:10px;">🛵</div>
+    <h2 style="margin-bottom:20px;">مرحباً بعودتك</h2>
+    <p style="color:#888; margin-bottom:20px; font-size:14px;">سجل دخولك باش تطلب من المتاجر</p>
+    <input type="email" id="l-email" placeholder="البريد الإلكتروني" style="text-align:right;">
+    <input type="password" id="l-pass" placeholder="كلمة السر" style="text-align:right;">
+    <button class="green" onclick="doLogin(event)" style="margin-top:10px;">تسجيل الدخول</button>
+    <div style="margin:15px 0; color:#ccc;">أو</div>
+    <button class="blue" onclick="document.getElementById('login-box').classList.add('hidden');document.getElementById('signup-box').classList.remove('hidden')">إنشاء حساب جديد</button>
 </div>
 
-<!-- تسجيل حساب -->
 <div class="box hidden" id="signup-box">
 <h2>🚀 تسجيل حساب جديد</h2>
 <input type="text" id="s-name" placeholder="الاسم الكامل">
@@ -137,8 +122,7 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 <button class="blue" onclick="document.getElementById('signup-box').classList.add('hidden');document.getElementById('login-box').classList.remove('hidden')">دخول</button>
 </div>
 
-<!-- لوحة التاجر -->
-<div class="box hidden" id="merchant-dash">
+<div class="box hidden" id="merchant-dash" style="padding-bottom: 90px;">
     <div class="main-header" style="margin-bottom:20px;">
         <div class="user-info">
             <div class="user-avatar" style="font-size:16px; color:var(--primary); font-weight:bold;">🏪</div>
@@ -148,22 +132,26 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
             </div>
         </div>
     </div>
-
     <div class="dash-stats">
         <div class="dash-card"><span>الطلبات المعلقة</span><b id="pending-count">0</b></div>
         <div class="dash-card"><span>إجمالي المبيعات</span><b id="total-sales" style="color:var(--secondary);">0 DH</b></div>
     </div>
-
-    <h3 style="font-size:16px; margin-bottom:10px;">📋 الطلبات الجديدة</h3>
-    <div id="merchant-orders-list" style="margin-bottom:20px;"></div>
-
-    <h3 style="font-size:16px; margin-bottom:10px;">📦 منتجاتي</h3>
-    <div id="merchant-products-list"></div>
-
-    <button class="red" onclick="doLogout()" style="margin-top:20px;">🚪 تسجيل الخروج</button>
+    <div id="merchant-orders-section">
+        <h3 style="font-size:16px; margin-bottom:10px;">📋 الطلبات الجديدة</h3>
+        <div id="merchant-orders-list" style="margin-bottom:20px;"></div>
+    </div>
+    <div id="merchant-products-section">
+        <h3 style="font-size:16px; margin-bottom:10px;">📦 منتجاتي</h3>
+        <div id="merchant-products-list"></div>
+    </div>
 </div>
 
-<!-- واجهة الموصل -->
+<div class="bottom-nav hidden" id="merchant-nav">
+    <div class="bottom-nav-item active" onclick="showMerchantTab('orders', this)"><span class="nav-icon">📋</span><span>الطلبات</span></div>
+    <div class="bottom-nav-item" onclick="showMerchantTab('products', this)"><span class="nav-icon">📦</span><span>المنتجات</span></div>
+    <div class="bottom-nav-item" onclick="doLogout()"><span class="nav-icon">🚪</span><span>خروج</span></div>
+</div>
+
 <div class="box hidden" id="driver-dash">
     <div class="main-header" style="margin-bottom:20px;">
         <div class="user-info">
@@ -174,17 +162,19 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
             </div>
         </div>
     </div>
+    <div id="driver-map-container" class="hidden" style="margin-bottom:15px;">
+        <div id="map" style="height:250px; border-radius:15px; box-shadow:var(--shadow); z-index:1;"></div>
+    </div>
+    <h3 style="font-size:16px; margin-bottom:10px;">📋 الطلبات</h3>
     <div id="driver-orders-list"></div>
     <button class="red" onclick="doLogout()" style="margin-top:20px;">🚪 تسجيل الخروج</button>
 </div>
 
-<!-- الطلبات -->
 <div class="box hidden" id="orders-box">
 <h2>📋 الطلبات</h2>
 <div id="orders-list"></div>
 </div>
 
-<!-- السلة -->
 <div class="box hidden" id="cart-box">
 <h2>🛒 السلة</h2>
 <div id="cart-list"></div>
@@ -197,14 +187,12 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 </div>
 </div>
 
-<!-- حسابي -->
 <div class="box hidden" id="profile-box">
 <h2>👤 حسابي</h2>
 <div id="profile-stats" style="text-align:center; margin-bottom:20px;"></div>
 <button class="red" onclick="doLogout()">🚪 تسجيل الخروج</button>
 </div>
 
-<!-- شاشة المنتجات -->
 <div id="store-modal" class="qr-modal hidden" onclick="if(event.target===this)this.classList.add('hidden')">
     <div style="background:white; border-radius:20px 20px 0 0; width:100%; max-width:500px; height:80vh; display:flex; flex-direction:column; overflow:hidden; animation: slideUp 0.3s ease;" onclick="event.stopPropagation()">
         <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid #eee;">
@@ -215,20 +203,23 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
     </div>
 </div>
 
-<!-- شريط التنقل السفلي -->
-<div class="bottom-nav" id="bottom-nav">
-    <div class="bottom-nav-item active" onclick="showScreen('stores-box', this)">
-        <span class="nav-icon">🏠</span><span>الرئيسية</span>
+<div id="add-product-modal" class="qr-modal hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div style="background:white; border-radius:20px; width:90%; max-width:400px; padding:20px; animation: slideUp 0.3s ease;" onclick="event.stopPropagation()">
+        <h3 style="margin-bottom:15px; color:var(--primary); text-align:center;">➕ إضافة منتج جديد</h3>
+        <input type="text" id="np-name" placeholder="اسم المنتج">
+        <input type="number" id="np-price" placeholder="الثمن (درهم)">
+        <textarea id="np-desc" placeholder="وصف قصير (اختياري)" rows="2"></textarea>
+        <input type="text" id="np-image" placeholder="🔗 رابط صورة المنتج (اختياري)">
+        <button class="green" onclick="saveNewProduct(event)" style="margin-top:10px;">💾 حفظ المنتج</button>
+        <button class="red" onclick="document.getElementById('add-product-modal').classList.add('hidden')">إلغاء</button>
     </div>
-    <div class="bottom-nav-item" onclick="showScreen('orders-box', this)">
-        <span class="nav-icon">📦</span><span>الطلبات</span>
-    </div>
-    <div class="bottom-nav-item" onclick="showScreen('cart-box', this)">
-        <span class="nav-icon">🛒</span><span>السلة</span>
-    </div>
-    <div class="bottom-nav-item" onclick="showScreen('profile-box', this)">
-        <span class="nav-icon">👤</span><span>حسابي</span>
-    </div>
+</div>
+
+<div class="bottom-nav hidden" id="customer-nav">
+    <div class="bottom-nav-item active" onclick="showScreen('stores-box', this)"><span class="nav-icon">🏠</span><span>الرئيسية</span></div>
+    <div class="bottom-nav-item" onclick="showScreen('orders-box', this)"><span class="nav-icon">📦</span><span>الطلبات</span></div>
+    <div class="bottom-nav-item" onclick="showScreen('cart-box', this)"><span class="nav-icon">🛒</span><span>السلة</span></div>
+    <div class="bottom-nav-item" onclick="showScreen('profile-box', this)"><span class="nav-icon">👤</span><span>حسابي</span></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -247,12 +238,21 @@ function setBtnLoading(btn,loading,txt){if(!btn)return;if(loading){btn.disabled=
 function showScreen(screenId, navEl) {
     document.querySelectorAll('.box').forEach(b => b.classList.add('hidden'));
     document.getElementById(screenId).classList.remove('hidden');
-    document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('#customer-nav .bottom-nav-item').forEach(el => el.classList.remove('active'));
     if(navEl) navEl.classList.add('active');
     
     if(screenId === 'orders-box') loadOrders();
     if(screenId === 'profile-box') showProfile();
     if(screenId === 'cart-box') loadCart();
+}
+
+function showMerchantTab(tab, navEl) {
+    document.querySelectorAll('#merchant-nav .bottom-nav-item').forEach(el => el.classList.remove('active'));
+    if(navEl) navEl.classList.add('active');
+    
+    document.getElementById('merchant-orders-section').style.display = tab === 'orders' ? 'block' : 'none';
+    document.getElementById('merchant-products-section').style.display = tab === 'products' ? 'block' : 'none';
+    document.querySelector('.dash-stats').style.display = tab === 'orders' ? 'grid' : 'none';
 }
 
 async function doLogin(ev) {
@@ -269,19 +269,21 @@ async function doLogin(ev) {
         
         document.getElementById('login-box').classList.add('hidden');
         document.getElementById('signup-box').classList.add('hidden');
-        document.getElementById('bottom-nav').classList.remove('hidden');
 
         if(currentRole === 'merchant'){
             document.getElementById('merchant-dash').classList.remove('hidden');
-            document.getElementById('bottom-nav').classList.add('hidden'); // نخفي شريط التنقل
+            document.getElementById('merchant-nav').classList.remove('hidden');
+            document.getElementById('customer-nav').classList.add('hidden');
             document.getElementById('merchant-name').textContent = 'أهلاً ' + (pp.data?.full_name || e);
             loadMerchantDashboard();
         } else if(currentRole === 'driver') {
             document.getElementById('driver-dash').classList.remove('hidden');
-            document.getElementById('bottom-nav').classList.add('hidden');
+            document.getElementById('customer-nav').classList.add('hidden');
+            document.getElementById('merchant-nav').classList.add('hidden');
             loadDriverDashboard();
         } else {
             document.getElementById('stores-box').classList.remove('hidden');
+            document.getElementById('customer-nav').classList.remove('hidden');
             document.getElementById('welcome-text').textContent = 'مرحباً، ' + (pp.data?.full_name || e);
             loadStores();
         }
@@ -311,10 +313,10 @@ async function doLogout(){
     currentUser=null; currentRole=null;
     document.querySelectorAll('.box').forEach(b => b.classList.add('hidden'));
     document.getElementById('login-box').classList.remove('hidden');
-    document.getElementById('bottom-nav').classList.add('hidden');
+    document.getElementById('customer-nav').classList.add('hidden');
+    document.getElementById('merchant-nav').classList.add('hidden');
 }
 
-// الزبون (المتاجر)
 async function loadStores(){
     const l=document.getElementById('stores-list');
     if(!l) return;
@@ -427,7 +429,7 @@ async function doCheckout(ev){
     await DB.from('order_items').insert(items);
     show('🎉 تم إرسال طلبك بنجاح!',true);
     cart=[]; loadCart();
-    document.querySelectorAll('.bottom-nav-item')[1].click(); 
+    document.querySelectorAll('#customer-nav .bottom-nav-item')[1].click(); 
   }catch(e){ show('❌ '+e.message,false); }
   finally{ setBtnLoading(btn,false,'✅ تأكيد الطلب'); }
 }
@@ -459,17 +461,36 @@ async function loadOrders(){
     });
 }
 
-function showProfile() {
+async function showProfile() {
     const stats = document.getElementById('profile-stats');
-    stats.innerHTML = `
-        <div style="font-size:60px; margin-bottom:10px;">👤</div>
-        <h3 style="margin-bottom:5px;">${esc(currentProfile?.full_name || 'مستخدم')}</h3>
-        <p style="color:#888; font-size:14px;">${currentUser?.email || ''}</p>
-        <p style="color:var(--primary); font-weight:bold; margin-top:10px;">${currentRole === 'customer' ? '🛒 زبون' : currentRole === 'merchant' ? '🏪 تاجر' : '🚚 موصل'}</p>
-    `;
+    stats.innerHTML = '⏳ جاري التحميل...';
+    try {
+        const { data: orders } = await DB.from('orders').select('total_price, status').eq('customer_id', currentUser.id);
+        const totalOrders = orders ? orders.length : 0;
+        const deliveredOrders = orders ? orders.filter(o => o.status === 'delivered') : [];
+        const totalSpent = deliveredOrders.reduce((sum, o) => sum + parseFloat(o.total_price), 0);
+
+        stats.innerHTML = `
+            <div style="font-size:60px; margin-bottom:10px;">👤</div>
+            <h3 style="margin-bottom:5px;">${esc(currentProfile?.full_name || 'مستخدم')}</h3>
+            <p style="color:#888; font-size:14px; margin-bottom:20px;">${currentUser?.email || ''}</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="store-card" style="cursor:default;">
+                    <div style="font-size:20px; font-weight:800; color:var(--primary);">${totalOrders}</div>
+                    <div style="font-size:12px; color:#888;">إجمالي الطلبات</div>
+                </div>
+                <div class="store-card" style="cursor:default;">
+                    <div style="font-size:20px; font-weight:800; color:var(--secondary);">${totalSpent} DH</div>
+                    <div style="font-size:12px; color:#888;">إجمالي المشتريات</div>
+                </div>
+            </div>
+            <p style="color:var(--primary); font-weight:bold; margin-top:20px;">${currentRole === 'customer' ? '🛒 زبون' : currentRole === 'merchant' ? '🏪 تاجر' : '🚚 موصل'}</p>
+        `;
+    } catch(e) { stats.innerHTML = '<p>خطأ فـ تحميل البيانات</p>'; }
 }
-function showNotifications(){ show('🔔 لا توجد إشعارات جديدة', true); }   
-// --- لوحة تحكم التاجر ---
+
+function showNotifications(){ show('🔔 لا توجد إشعارات جديدة', true); }
+
 async function loadMerchantDashboard() {
     const { data: stores } = await DB.from('stores').select('*').eq('owner_id', currentUser.id);
     if (!stores || stores.length === 0) {
@@ -477,7 +498,6 @@ async function loadMerchantDashboard() {
         return;
     }
     const storeIds = stores.map(s => s.id);
-    
     const { data: orders } = await DB.from('orders').select('*').in('store_id', storeIds).order('created_at', {ascending:false});
     const pending = orders ? orders.filter(o => o.status === 'pending') : [];
     const delivered = orders ? orders.filter(o => o.status === 'delivered') : [];
@@ -508,13 +528,23 @@ async function loadMerchantDashboard() {
         });
     }
 
-    // عرض المنتجات ديال التاجر
     const pList = document.getElementById('merchant-products-list');
     let allProds = [];
     for(const sid of storeIds) {
         const { data: p } = await DB.from('products').select('*').eq('store_id', sid);
         if(p) allProds = allProds.concat(p);
     }
+    
+    if(!document.getElementById('add-prod-btn')) {
+        const addBtn = document.createElement('button');
+        addBtn.id = 'add-prod-btn';
+        addBtn.className = 'orange';
+        addBtn.innerHTML = '➕ إضافة منتج جديد';
+        addBtn.style.marginBottom = '15px';
+        addBtn.onclick = () => document.getElementById('add-product-modal').classList.remove('hidden');
+        pList.parentNode.insertBefore(addBtn, pList);
+    }
+
     if(allProds.length === 0) {
         pList.innerHTML = '<p style="color:#888; font-size:13px;">ما عندكش منتجات.</p>';
     } else {
@@ -533,17 +563,41 @@ async function updateOrderStatus(orderId, newStatus) {
         await DB.from('orders').update({ status: newStatus }).eq('id', orderId);
         show(newStatus === 'accepted' ? '✅ تم قبول الطلب' : '❌ تم رفض الطلب', true);
         loadMerchantDashboard(); 
-    } catch(e) {
-        show('❌ خطأ فـ التحديث', false);
-    }
+    } catch(e) { show('❌ خطأ فـ التحديث', false); }
 }
 
-// --- لوحة تحكم الموصل ---
+async function saveNewProduct(ev) {
+    const btn = ev.target;
+    const name = document.getElementById('np-name').value;
+    const price = document.getElementById('np-price').value;
+    const desc = document.getElementById('np-desc').value;
+    const image = document.getElementById('np-image').value;
+    if(!name || !price) { show('⚠️ ملء الاسم والثمن', false); return; }
+    setBtnLoading(btn, true);
+    try {
+        const { data: stores } = await DB.from('stores').select('id').eq('owner_id', currentUser.id).limit(1);
+        if(!stores || stores.length === 0) throw new Error('ما عندكش متجر');
+        await DB.from('products').insert([{
+            store_id: stores[0].id, name: name, price: parseFloat(price), description: desc, image_url: image || null
+        }]);
+        show('✅ تمت إضافة المنتج', true);
+        document.getElementById('add-product-modal').classList.add('hidden');
+        document.getElementById('np-name').value = '';
+        document.getElementById('np-price').value = '';
+        document.getElementById('np-desc').value = '';
+        document.getElementById('np-image').value = '';
+        loadMerchantDashboard(); 
+    } catch(e) { show('❌ ' + e.message, false); }
+    finally { setBtnLoading(btn, false, '💾 حفظ المنتج'); }
+}
+
+let driverMapObj = null;
 async function loadDriverDashboard() {
     const { data: orders } = await DB.from('orders').select('*').eq('status', 'accepted');
     const list = document.getElementById('driver-orders-list');
     if (!orders || orders.length === 0) {
         list.innerHTML = '<p style="color:#888; text-align:center;">لا توجد طلبات متاحة دابا.</p>';
+        document.getElementById('driver-map-container').classList.add('hidden');
         return;
     }
     list.innerHTML = '';
@@ -556,21 +610,41 @@ async function loadDriverDashboard() {
                 <span style="color:var(--primary); font-weight:bold;">${o.total_price} DH</span>
             </div>
             👤 ${esc(o.customer_name)}<br>📍 ${esc(o.delivery_address)}
-            <button class="green" style="margin-top:15px;" onclick="claimOrder('${o.id}')">🚀 قبول التوصيل</button>
+            <button class="green" style="margin-top:15px;" onclick="acceptAndMapOrder('${o.id}', '${esc(o.delivery_address)}')">🗺️ عرض فـ الخريطة وقبول</button>
         `;
         list.appendChild(d);
     });
 }
 
-async function claimOrder(orderId) {
+async function acceptAndMapOrder(orderId, address) {
+    document.getElementById('driver-map-container').classList.remove('hidden');
+    if (!driverMapObj) {
+        driverMapObj = L.map('map').setView([30.4278, -9.5981], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(driverMapObj);
+    }
     try {
-        await DB.from('orders').update({ status: 'delivering', driver_id: currentUser.id }).eq('id', orderId);
-        show('✅ تم قبول التوصيل', true);
-        loadDriverDashboard();
-    } catch(e) { show('❌ خطأ', false); }
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Agadir, Morocco')}`);
+        const data = await res.json();
+        if(data && data.length > 0) {
+            const lat = data[0].lat;
+            const lon = data[0].lon;
+            driverMapObj.setView([lat, lon], 15);
+            L.marker([lat, lon]).addTo(driverMapObj).bindPopup("📍 موقع الزبون").openPopup();
+            setTimeout(() => driverMapObj.invalidateSize(), 200);
+        } else {
+            show('⚠️ ما لقيتش الإحداثيات', true);
+        }
+    } catch(e) { console.log(e); }
+
+    if(confirm("واش بغيتي تقبل هاد الطلب؟")) {
+        try {
+            await DB.from('orders').update({ status: 'delivering', driver_id: currentUser.id }).eq('id', orderId);
+            show('✅ تم قبول الطلب!', true);
+            loadDriverDashboard();
+        } catch(e) { show('❌ خطأ', false); }
+    }
 }
 
-// --- التحقق من الجلسة عند التحميل ---
 window.addEventListener('DOMContentLoaded', () => {
     DB.auth.getSession().then(({data:{session}}) => {
         if(session) {
@@ -580,19 +654,18 @@ window.addEventListener('DOMContentLoaded', () => {
                 currentRole = data?.role;
                 document.getElementById('login-box').classList.add('hidden');
                 document.getElementById('signup-box').classList.add('hidden');
-                document.getElementById('bottom-nav').classList.remove('hidden');
                 
                 if(currentRole === 'merchant'){
                     document.getElementById('merchant-dash').classList.remove('hidden');
-                    document.getElementById('bottom-nav').classList.add('hidden');
+                    document.getElementById('merchant-nav').classList.remove('hidden');
                     document.getElementById('merchant-name').textContent = 'أهلاً ' + (data?.full_name || session.user.email);
                     loadMerchantDashboard();
                 } else if(currentRole === 'driver') {
                     document.getElementById('driver-dash').classList.remove('hidden');
-                    document.getElementById('bottom-nav').classList.add('hidden');
                     loadDriverDashboard();
                 } else {
                     document.getElementById('stores-box').classList.remove('hidden');
+                    document.getElementById('customer-nav').classList.remove('hidden');
                     document.getElementById('welcome-text').textContent = 'مرحباً، ' + (data?.full_name || session.user.email);
                     loadStores();
                 }
@@ -604,4 +677,4 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-</html>    
+</html>
