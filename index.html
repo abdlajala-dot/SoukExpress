@@ -17,7 +17,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
 body { background: var(--bg); color: var(--text); max-width: 500px; margin: 0 auto; padding-bottom: 80px; }
 
-/* أزرار وحقول */
 button { font-family: 'Tajawal', sans-serif; font-weight: 700; border-radius: 12px; border: none; padding: 14px; cursor: pointer; transition: 0.2s; width: 100%; font-size: 15px; margin-bottom: 10px;}
 button:active { transform: scale(0.97); }
 .green { background: var(--secondary); color: white; }
@@ -31,18 +30,15 @@ button:active { transform: scale(0.97); }
 input, select, textarea { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #E0E0E0; background: #FFF; font-family: 'Tajawal', sans-serif; font-size: 15px; margin-bottom: 10px; }
 input:focus { border-color: var(--primary); outline: none; }
 
-/* بطائق */
 .box { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
 .hidden { display: none !important; }
 h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--primary); }
 
-/* الرسائل */
 #msg { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 30px; font-weight: bold; z-index: 99999; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: slideDown 0.3s ease; }
 #msg.ok { background: var(--secondary); color: white; }
 #msg.err { background: #FF3D00; color: white; }
 @keyframes slideDown { from { top: -50px; opacity: 0; } to { top: 20px; opacity: 1; } }
 
-/* الهيدر والبانر */
 .main-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: white; border-radius: 0 0 20px 20px; box-shadow: var(--shadow); margin-bottom: 15px; }
 .user-info { display: flex; align-items: center; gap: 10px; }
 .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #FFF3EB; display: flex; align-items: center; justify-content: center; font-size: 20px;}
@@ -60,7 +56,6 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 .section-header h3 { margin: 0; font-size: 18px; font-weight: 800; }
 .section-header a { color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 700; }
 
-/* شبكة المتاجر */
 .stores-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 0 20px 20px 20px; }
 .store-card { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: var(--shadow); cursor: pointer; transition: 0.2s;}
 .store-card:active { transform: scale(0.97); }
@@ -68,13 +63,11 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 .store-card h4 { margin: 0 0 5px 0; font-size: 15px; font-weight: 800; }
 .store-card p { margin: 0; font-size: 12px; color: var(--muted); }
 
-/* شريط التنقل السفلي */
 .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #FFFFFF; display: flex; justify-content: space-around; align-items: center; padding: 10px 0 15px 0; border-radius: 25px 25px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 9999; }
 .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: var(--muted); font-size: 11px; font-weight: 700; gap: 4px; width: 25%; cursor: pointer; }
 .bottom-nav-item.active { color: var(--primary); }
 .nav-icon { font-size: 22px; }
 
-/* طلبات */
 .order-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: var(--shadow); font-size: 14px; border: 1px solid #f0f0f0;}
 .order-products { background: #F8F9FA; padding: 10px; border-radius: 10px; margin: 10px 0; font-size: 13px; color: #555; }
 .cart-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; }
@@ -206,8 +199,6 @@ h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: var(--prim
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// الكود ديال الجافاسكريبت غيجي فـ الجزء 2 و 3
-</script>
 const supaURL='https://hzinjliwqixlsdqdvuma.supabase.co';
 const supaKEY='sb_publishable_7fcm9t-vqo3QosvH_jAYMQ_xCG3QtsZ';
 const DB=window.supabase.createClient(supaURL,supaKEY);
@@ -219,9 +210,8 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 
 function show(txt,ok){const m=document.getElementById('msg');m.textContent=txt;m.className=ok?'ok':'err';m.classList.remove('hidden');setTimeout(()=>m.classList.add('hidden'),4000);}
 function setBtnLoading(btn,loading,txt){if(!btn)return;if(loading){btn.disabled=true;btn.dataset.orig=btn.textContent;btn.textContent='⏳...';}else{btn.disabled=false;btn.textContent=txt||btn.dataset.orig||'✅';}}
-function isStoreOpenByHours(store){return true;} // مبسطة دابا
+function isStoreOpenByHours(store){return true;} 
 
-// --- التنقل بين الصفحات ---
 function showScreen(screenId, navEl) {
     document.querySelectorAll('.box').forEach(b => b.classList.add('hidden'));
     document.getElementById(screenId).classList.remove('hidden');
@@ -233,7 +223,6 @@ function showScreen(screenId, navEl) {
     if(screenId === 'cart-box') loadCart();
 }
 
-// --- تسجيل الدخول والخروج ---
 async function doLogin(ev) {
     const btn=ev?ev.target:null;
     const e=document.getElementById('l-email').value, p=document.getElementById('l-pass').value;
@@ -289,7 +278,6 @@ async function doLogout(){
     document.getElementById('login-box').classList.remove('hidden');
 }
 
-// --- تحميل المتاجر ---
 async function loadStores(){
     const l=document.getElementById('stores-list');
     if(!l) return;
@@ -327,7 +315,6 @@ function renderStores(stores){
       <div style="margin-top:8px; font-size:12px; font-weight:bold; color:#FF6B00;">⭐ 4.8</div>
     `;
     
-    // هنا غادي نقدرو نزيدو فتح المنتجات فـ المستقبل
     d.onclick = () => {
         show('متجر: ' + s.name, true);
     };
@@ -339,7 +326,6 @@ function renderStores(stores){
 function applyFilters(){ loadStores(); }
 function resetFilters(){ loadStores(); }
 
-// --- السلة والطلبات ---
 function addToCart(pid,n,p,sid){
   if(cart.length>0 && cart[0].storeId!==sid){show('⚠️ لا يمكن الطلب من متجرين',false);return;}
   const ex=cart.find(c=>c.prodId===pid);
@@ -391,7 +377,7 @@ async function doCheckout(ev){
     
     show('🎉 تم إرسال طلبك بنجاح!',true);
     cart=[]; loadCart();
-    document.querySelectorAll('.bottom-nav-item')[1].click(); // يروح للطلبات
+    document.querySelectorAll('.bottom-nav-item')[1].click(); 
   }catch(e){ show('❌ '+e.message,false); }
   finally{ setBtnLoading(btn,false,'✅ تأكيد الطلب'); }
 }
@@ -421,8 +407,8 @@ async function loadOrders(){
         `;
         l.appendChild(d);
     });
-    }
-// --- دوال إضافية (إحصائيات، متجر، إشعارات) ---
+}
+
 function showProfile() {
     const stats = document.getElementById('profile-stats');
     stats.innerHTML = `
@@ -438,7 +424,6 @@ function showStats(){ show('قريباً: الإحصائيات', true); }
 function showMyCoupons(){ show('قريباً: كودات الخصم', true); }
 function showNotifications(){ show('🔔 لا توجد إشعارات جديدة', true); }
 
-// --- إعدادات الخريطة (إذا كنت محتاجها) ---
 let map=null, marker=null;
 function initMap(){
     if(map) return;
@@ -449,14 +434,11 @@ function initMap(){
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 }
 
-// --- التعامل مع تغيير حجم الشاشة والوضع الليلي (اختياري) ---
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
 }
 
-// --- دالة لتفعيل الأزرار اللي كتستنى فـ التحميل ---
 window.addEventListener('DOMContentLoaded', () => {
-    // التحقق من وجود جلسة نشطة
     DB.auth.getSession().then(({data:{session}}) => {
         if(session) {
             currentUser = session.user;
@@ -479,7 +461,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 loadStores();
             });
         } else {
-            // إذا ما كانش جلسة، بين صفحة الدخول
             document.getElementById('login-box').classList.remove('hidden');
         }
     });
